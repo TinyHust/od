@@ -9,6 +9,7 @@
                     <li><a href="#uploaded-photo" role="tab" data-toggle="tab"><i class="fa fa-cloud visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['PHOTO_UPLOADED']) ? langs['PHOTO_UPLOADED'] : "Uploaded"}}</span></a></li>
                     <li><a href="#nbdesigner_url" role="tab" data-toggle="tab"><i class="fa fa-link visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['IMAGE_URL']) ? langs['IMAGE_URL'] : "Image Url"}}</span></a></li>
                     <li><a href="#nbdesigner_facebook" role="tab" data-toggle="tab"><i class="fa fa-facebook-square visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['FACEBOOK']) ? langs['FACEBOOK'] : "Facebook"}}</span></a></li>
+                    <li><a href="#nbdesigner_webcam" role="tab" data-toggle="tab"><i class="fa fa-camera visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['WEBCAM']) ? langs['WEBCAM'] : "Webcam"}}</span></a></li>
                 </ul>
             </div>
             <div class="modal-body">
@@ -75,6 +76,17 @@
                             </div>                            
                         </div>                        
                     </div>
+                    <div class="tab-pane" id="nbdesigner_webcam">
+                        <div class="row">
+                            <div class="col-xs-12" id="my_camera">
+                            </div>    
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12" id="my_result">
+                            </div>                            
+                        </div>  
+                        <button class="btn btn-primary shadow nbdesigner_upload" onclick="take_snapshot()">Snap</button>                     
+                    </div>                          
                 </div>
             </div>
         </div>
