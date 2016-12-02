@@ -366,7 +366,7 @@ class Nbdesigner_Plugin {
             );
         }
     }
-    public function nbdesigner_manager() {	        
+    public function nbdesigner_manager() {
         $defaults = $this->default_option;
         $hidden_field_name = 'nbdesigner_setting_hidden';
         $opt_name = 'nbdesigner';
