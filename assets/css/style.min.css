@@ -294,7 +294,7 @@ button.cancel:hover {
 }
 
 .nbdesigner_modal_tab {
-    margin-bottom: 0
+    margin-bottom: -1px
 }
 
 .nbdesigner_modal_tab li {
@@ -306,7 +306,8 @@ button.cancel:hover {
 }
 
 .nbdesigner_modal_tab li.active {
-    background: #fff
+    background: #fff;
+    border-bottom: 1px solid #fff;
 }
 
 .nbdesigner_modal_tab li a {
@@ -2817,4 +2818,38 @@ img.pattern_img {
     margin-left: 5px;
     margin-bottom: 5px;
     cursor: pointer;
+}
+.con-webcam {
+    width: 400px;
+    height: 300px;
+    margin: 0 auto;
+    text-align: center;
+}
+.con-webcam img {
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+.con-webcam.off {
+    padding-top: 40px;
+}
+.icon-camera {
+    color: #ddd;
+    font-size: 200px;
+    line-height: 200px;
+    display: inline-block;
+    border: 1px dashed #ddd;
+    border-radius: 15px;
+    opacity: 0.6;
+    padding: 20px;
+}
+.btn-primary[disabled] {
+    background-color: #ddd;
+}
+#nbdesigner_webcam button {
+    -webkit-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    transition: all 0.4s;
 }

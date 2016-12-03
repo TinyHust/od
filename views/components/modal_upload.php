@@ -9,7 +9,7 @@
                     <li><a href="#uploaded-photo" role="tab" data-toggle="tab"><i class="fa fa-cloud visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['PHOTO_UPLOADED']) ? langs['PHOTO_UPLOADED'] : "Uploaded"}}</span></a></li>
                     <li><a href="#nbdesigner_url" role="tab" data-toggle="tab"><i class="fa fa-link visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['IMAGE_URL']) ? langs['IMAGE_URL'] : "Image Url"}}</span></a></li>
                     <li><a href="#nbdesigner_facebook" role="tab" data-toggle="tab"><i class="fa fa-facebook-square visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['FACEBOOK']) ? langs['FACEBOOK'] : "Facebook"}}</span></a></li>
-                    <li><a href="#nbdesigner_webcam" role="tab" data-toggle="tab"><i class="fa fa-camera visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['WEBCAM']) ? langs['WEBCAM'] : "Webcam"}}</span></a></li>
+                    <li ng-if="hasGetUserMedia && !modeMobile" ng-click="initWebcam()"><a href="#nbdesigner_webcam" role="tab" data-toggle="tab"><i class="fa fa-camera visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['WEBCAM']) ? langs['WEBCAM'] : "Webcam"}}</span></a></li>
                 </ul>
             </div>
             <div class="modal-body">
@@ -76,16 +76,19 @@
                             </div>                            
                         </div>                        
                     </div>
-                    <div class="tab-pane" id="nbdesigner_webcam">
+                    <div ng-if="hasGetUserMedia && !modeMobile" class="tab-pane" id="nbdesigner_webcam">
                         <div class="row">
-                            <div class="col-xs-12" id="my_camera">
-                            </div>    
+                            <div class="col-xs-12 con-webcam" id="my_camera" ng-show="statusWebcam"></div>    
+                            <div class="col-xs-12 con-webcam off" ng-show="!statusWebcam">
+                                <i class="fa fa-camera icon-camera" aria-hidden="true"></i>
+                            </div>                               
                         </div>
-                        <div class="row">
-                            <div class="col-xs-12" id="my_result">
-                            </div>                            
-                        </div>  
-                        <button class="btn btn-primary shadow nbdesigner_upload" onclick="take_snapshot()">Snap</button>                     
+                        <div style="margin-top: 15px;">
+                            <button ng-disabled="!statusWebcam" class="btn btn-primary shadow nbdesigner_upload" ng-click="pauseWebcam()">{{(langs['PAUSE']) ? langs['PAUSE'] : "Pause"}}</button>                     
+                            <button ng-disabled="!statusWebcam" class="btn btn-primary shadow nbdesigner_upload" ng-click="unPauseWebcam()">{{(langs['UNPAUSE']) ? langs['UNPAUSE'] : "Un Pause"}}</button>                     
+                            <button class="btn btn-primary shadow nbdesigner_upload" ng-click="resetWebcam()">{{(langs['STOPWEBCAM']) ? langs['STOPWEBCAM'] : "Stop Webcam"}}</button> 
+                            <button ng-disabled="!statusWebcam" class="btn btn-primary shadow nbdesigner_upload" ng-click="takeSnapshot()">{{(langs['CAPTURE']) ? langs['CAPTURE'] : "Capture"}}</button>   
+                        </div>
                     </div>                          
                 </div>
             </div>

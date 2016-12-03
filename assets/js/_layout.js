@@ -328,22 +328,7 @@ $(document).ready(function(){
     $('#toggle-config-style').on('click', function(){
         $('#config-style').toggleClass('open');
     });
-    Webcam.set({
-            width: 320,
-            height: 240,
-            dest_width: 1280,
-            dest_height: 720,
-            image_format: 'jpeg',
-            jpeg_quality: 100,
-            force_flash: false
-    });                            
-    Webcam.attach( '#my_camera' );   
 });
-function take_snapshot() {
-    Webcam.snap( function(data_uri) {
-        document.getElementById('my_result').innerHTML = '<img src="'+data_uri+'"/>';
-    } );
-} 
 $(window).on('resize' , function(){
     var w = $(window).width();	
     if(w < 768) mobile = true;  

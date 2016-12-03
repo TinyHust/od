@@ -108,7 +108,9 @@ class Nbdesigner_Plugin {
             add_action('wp_ajax_nbdesigner_create_language', array($this, 'nbdesigner_create_language'));            
             add_action('wp_ajax_nbdesigner_make_primary_design', array($this, 'nbdesigner_make_primary_design')); 
             add_action('wp_ajax_nbdesigner_load_admin_design', array($this, 'nbdesigner_load_admin_design'));
-            add_action('wp_ajax_nopriv_nbdesigner_load_admin_design', array($this, 'nbdesigner_load_admin_design'));             
+            add_action('wp_ajax_nopriv_nbdesigner_load_admin_design', array($this, 'nbdesigner_load_admin_design'));  
+            add_action('wp_ajax_nbdesigner_save_webcam_image', array($this, 'nbdesigner_save_webcam_image'));
+            add_action('wp_ajax_nopriv_nbdesigner_save_webcam_image', array($this, 'nbdesigner_save_webcam_image'));             
             add_action('admin_enqueue_scripts', function($hook) {   
                 if (($hook == 'post.php') || ($hook == 'post-new.php') || ($hook == 'toplevel_page_nbdesigner') ||
                         ($hook == 'nbdesigner_page_nbdesigner_manager_product' ) || ($hook == 'toplevel_page_nbdesigner_shoper') || ($hook == 'nbdesigner_page_nbdesigner_frontend_translate') ||
@@ -1530,6 +1532,29 @@ class Nbdesigner_Plugin {
         }
         return array('link' => $links, 'mes' => $mes);
     }
+    public function nbdesigner_save_webcam_image(){
+        if (!wp_verify_nonce($_POST['nonce'], 'save-design')) {
+            die('Security error');
+        } 
+        $result = array();
+        $img = $_POST['image'];
+        $data = base64_decode($img);
+        $full_name = $this->plugin_path_data . 'temp/' . time() .'.png';
+        $success = file_put_contents($full_name, $data);
+        if($success){
+            $result['flag'] = 'success';
+            $up = wp_upload_dir();			
+            $base_path = $up['baseurl'];
+            $mid_path = 'nbdesigner/temp/';
+            $name = basename($full_name);
+            $url = $base_path.'/'.$mid_path.$name;            
+            $result['url'] = $url;
+        }else{
+            $result['flag'] = $full_name;
+        }
+        echo json_encode($result);
+        wp_die();        
+    }
     private function nbdesigner_create_thumbnail_design($path, $pid){
         $configs = unserialize(get_post_meta($pid, '_designer_setting', true));        
         $path_preview = $path  . '/preview';
@@ -2041,7 +2066,7 @@ class Nbdesigner_Plugin {
             $qr = new Nbdesigner_Qrcode();
             $qr->setText($content);
             $image = $qr->getImage(500);
-            $file_name = 'qrcode-'.strtotime("now") . '.png';
+            $file_name = strtotime("now") . '.png';
             $full_name = $this->plugin_path_data .'temp/'. $file_name;
             if($this->nbdesigner_save_data_to_image($full_name, $image)){
                 $result['flag'] = 1;
