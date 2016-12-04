@@ -24,7 +24,7 @@
         <script type="text/javascript">
             var product_id = '<?php echo $_GET['product_id']; ?>';
             var od_mainURL = window.parent.nbds_frontend.url_style;
-            var orderid = OD_task = OD_priority = '';
+            var orderid = OD_task = OD_priority = adid = '';
             <?php if (isset($_GET['orderid']) && ($_GET['orderid'] != '')): ?>
                 orderid = "<?php echo $_GET['orderid']; ?>";
             <?php endif; ?>
@@ -33,7 +33,10 @@
              <?php endif; ?>   
             <?php if(isset($_GET['priority'])): ?>
                 OD_priority = "<?php echo $_GET['priority']; ?>";
-             <?php endif; ?>                  
+             <?php endif; ?>  
+            <?php if(isset($_GET['adid'])): ?>
+                adid = "<?php echo $_GET['adid']; ?>";
+             <?php endif; ?>                   
         </script>
     </head>
     <body ng-controller="DesignerController">

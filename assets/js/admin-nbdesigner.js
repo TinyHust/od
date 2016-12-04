@@ -166,6 +166,41 @@ jQuery(document).ready(function ($) {
             $('#nbdesigner-toggle-show-sec-key .dashicons').removeClass('dashicons-visibility').addClass('dashicons-hidden');                    
         }
     });
+    $('#nbdesigner_update_data_migrate').on('click', function(e){
+        e.preventDefault();
+        var formdata = $('#nbdesigner-migrate-info').find('textarea, select, input').serialize();
+        formdata = formdata + '&action=nbdesigner_migrate_domain';
+        $('#nbdesigner_migrate_loading').removeClass('nbdesigner_loaded');
+        $.post(admin_nbds.url, formdata, function(data){
+            $('#nbdesigner_migrate_loading').addClass('nbdesigner_loaded');
+            data = JSON.parse(data);
+            if(data.flag == 1){
+                alert('Update success!');
+            }else{
+                alert('Oops! Try again!');
+            }                  
+        });
+    });    
+    $('#nbdesigner_resote_data_migrate').on('click', function(e){
+        e.preventDefault();
+        var con = confirm('Are you sure restore data');
+        if(con){
+            $('#nbdesigner_migrate_loading').removeClass('nbdesigner_loaded');
+            $.ajax({
+                url : admin_nbds.url,
+                method : 'POST',
+                data : {'action' : 'nbdesigner_restore_data_migrate_domain', 'nonce': admin_nbds.nonce}
+            }).done(function(data){
+                $('#nbdesigner_migrate_loading').addClass('nbdesigner_loaded');
+                data = JSON.parse(data);
+                if(data.flag == 1){
+                    alert('Restore success!');
+                }else{
+                    alert('Oops! Try again!');
+                }                   
+            });
+        }
+    });      
 });
 var NBDESIGNADMIN = {
     add_font_cat: function (e) {

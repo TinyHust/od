@@ -12,7 +12,7 @@ class Nbdesigner_DebugTool {
             self::$_path = $path;
         }else{
             self::$_path = NBDESIGNER_PLUGIN_DIR;
-        }        
+        }       
     }
     public static function log($data){
         if(NBDESIGNER_MODE_DEBUG === 'dev'){
@@ -66,7 +66,78 @@ class Nbdesigner_DebugTool {
     public static function theme_check_hook(){
         //TODO
     }
-    public static function migrate_domain(){
-        //TODO
+    public static function update_data_migrate_domain(){
+        if (!wp_verify_nonce($_POST['_nbdesigner_migrate_nonce'], 'nbdesigner-migrate-key') || !current_user_can('administrator')) {
+            die('Security error');
+        } 
+        $result = array();
+        if(isset($_POST['old_domain']) && $_POST['old_domain'] != '' && isset($_POST['new_domain']) && $_POST['new_domain'] != ''){
+            $old_domain = rtrim($_POST['old_domain'], '/');
+            $new_domain = rtrim($_POST['new_domain'], '/');
+            $upload_dir = wp_upload_dir();
+            $path = $upload_dir['basedir'] . '/nbdesigner/';            
+            $files = array("arts", "fonts");
+            $path_backup_folder = $path . 'backup';
+            if(!file_exists($path_backup_folder)) wp_mkdir_p ($path_backup_folder);
+            $_files = glob($path_backup_folder.'/*');
+            foreach($_files as $file){ 
+              if(is_file($file)) unlink($file); 
+            }   
+            $result['flag'] = 1;
+            $result['mes'] = "Success!";             
+            foreach ($files as $file){
+                $fullname = $path . $file . '.json';    
+                if (file_exists($fullname)) {
+                    $backup_file = $path_backup_folder . '/' . $file . '.json';
+                    if(copy($fullname,$backup_file)){
+                        $list = json_decode(file_get_contents($fullname));  
+                        foreach ($list as $l){
+                            $name_arr = explode('/uploads/', $l->file);
+                            $new_file_name = $upload_dir['basedir'] . '/' . $name_arr[1];
+                            $new_url = str_replace($old_domain, $new_domain, $l->url);
+                            $l->file = $new_file_name;
+                            $l->url = $new_url;
+                        }
+                        if(!file_put_contents($fullname, json_encode($list))){
+                            $result['flag'] = 0;
+                            $result['mes'] = "Erorr write data!";                             
+                        }
+                    }else{
+                        $result['flag'] = 0;
+                        $result['mes'] = "Erorr backup!";                        
+                    }
+                }
+            }           
+        }else{
+            $result['flag'] = 0;
+            $result['mes'] = "Invalid info!";
+        }
+        echo json_encode($result);
+        wp_die();
+    }
+    public static function restore_data_migrate_domain(){
+        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
+            die('Security error');
+        } 
+        $result = array();
+        $result['flag'] = 1;
+        $result['mes'] = "Success!";     
+        $upload_dir = wp_upload_dir();
+        $path = $upload_dir['basedir'] . '/nbdesigner/';          
+        $files = array("arts", "fonts");
+        foreach ($files as $file){
+            $fullname = $path . $file . '.json';    
+            $backup = $path .'backup/'. $file . '.json';    
+            if (file_exists($fullname) && file_exists($backup)) {
+                if(unlink($fullname)){
+                    copy($backup,$fullname);
+                }
+            }else{
+                $result['flag'] = 0;
+                $result['mes'] = "Files not exist!";                 
+            }
+        }
+        echo json_encode($result);
+        wp_die();        
     }
 }

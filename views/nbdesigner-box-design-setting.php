@@ -108,7 +108,7 @@ endforeach; ?>
             <a href="<?php echo $link_admindesign.'&p=primary'; ?>" target="_blank">
                 <?php if($priority):?>
                 <span class="dashicons dashicons-admin-network" style="text-decoration: none;"></span><?php echo _e('Primary Design', $this->textdomain); ?></a>&nbsp;
-                    <span class="dashicons dashicons-plus"></span><a href="<?php echo $link_admindesign.'&p=extra'; ?>" target="_blank"><?php echo _e('Add Design', $this->textdomain); ?></a>
+                    <span class="dashicons dashicons-plus"></span><a href="<?php echo $link_admindesign.'&p=extra&adid='.time(); ?>" target="_blank"><?php echo _e('Add Design', $this->textdomain); ?></a>
                 <?php else:?>
                     <span class="dashicons dashicons-art" style="text-decoration: none;"></span><?php echo _e('Start Design', $this->textdomain); ?></a>
                 <?php endif;?>

@@ -110,11 +110,14 @@ class Nbdesigner_Plugin {
             add_action('wp_ajax_nbdesigner_load_admin_design', array($this, 'nbdesigner_load_admin_design'));
             add_action('wp_ajax_nopriv_nbdesigner_load_admin_design', array($this, 'nbdesigner_load_admin_design'));  
             add_action('wp_ajax_nbdesigner_save_webcam_image', array($this, 'nbdesigner_save_webcam_image'));
-            add_action('wp_ajax_nopriv_nbdesigner_save_webcam_image', array($this, 'nbdesigner_save_webcam_image'));             
+            add_action('wp_ajax_nopriv_nbdesigner_save_webcam_image', array($this, 'nbdesigner_save_webcam_image')); 
+            add_action('wp_ajax_nbdesigner_migrate_domain', array('Nbdesigner_DebugTool', 'update_data_migrate_domain'));
+            add_action('wp_ajax_nbdesigner_restore_data_migrate_domain', array('Nbdesigner_DebugTool', 'restore_data_migrate_domain'));
             add_action('admin_enqueue_scripts', function($hook) {   
                 if (($hook == 'post.php') || ($hook == 'post-new.php') || ($hook == 'toplevel_page_nbdesigner') ||
                         ($hook == 'nbdesigner_page_nbdesigner_manager_product' ) || ($hook == 'toplevel_page_nbdesigner_shoper') || ($hook == 'nbdesigner_page_nbdesigner_frontend_translate') ||
-                        ($hook == 'nbdesigner_page_nbdesigner_manager_fonts') || ($hook == 'nbdesigner_page_nbdesigner_manager_arts') || ($hook == 'nbdesigner_page_nbdesigner_admin_template')) {
+                        ($hook == 'nbdesigner_page_nbdesigner_manager_fonts') || ($hook == 'nbdesigner_page_nbdesigner_manager_arts') || ($hook == 'nbdesigner_page_nbdesigner_admin_template')
+                         || ($hook == 'nbdesigner_page_nbdesigner_tools')) {
                     wp_register_style('admin_nbdesigner', NBDESIGNER_PLUGIN_URL . 'assets/css/admin-nbdesigner.css');
                     wp_enqueue_style('admin_nbdesigner');
                     wp_register_script('admin_nbdesigner', NBDESIGNER_PLUGIN_URL . 'assets/js/admin-nbdesigner.js', array('jquery', 'jquery-ui-resizable', 'jquery-ui-draggable', 'jquery-ui-autocomplete'));
@@ -350,7 +353,10 @@ class Nbdesigner_Plugin {
             );      
             add_submenu_page(
                     'nbdesigner', 'Admin Templates', 'Admin Templates', 'administrator', 'nbdesigner_admin_template', array($this, 'nbdesigner_admin_template')
-            );             
+            );  
+            add_submenu_page(
+                    'nbdesigner', 'NBDesigner Tools', 'Nbdesigner Tools', 'administrator', 'nbdesigner_tools', array($this, 'nbdesigner_tools')
+            );              
         }
         if (current_user_can('shop_manager')) {
             add_menu_page('NBdesigner', 'NBdesigner', 'shop_manager', 'nbdesigner_shoper', array($this, 'nbdesigner_manager_product'), NBDESIGNER_PLUGIN_URL . 'assets/images/logo.png', 26);
@@ -1416,6 +1422,7 @@ class Nbdesigner_Plugin {
                     $ad_folder = 'primary';
                 }else if($_POST['priority'] == 'extra'){
                     $ad_folder = time();
+                    if(isset($_POST['adid']) && $_POST['adid'] != '') $ad_folder = $_POST['adid'];
                     $ad_priority = 'extra';
                 }                
                 $data_after_save_image = $this->nbdesigner_save_design_to_image($data, $sid, $pid, array('priority' => $ad_priority, 'folder' => $ad_folder));
@@ -2232,8 +2239,16 @@ class Nbdesigner_Plugin {
         $list_image = array();      
         if(isset($_GET['product_id'])) $product_id = $_GET['product_id'];
         if(isset($_GET['p'])) $priority = $_GET['p'];
+        if(isset($_GET['adid'])) $adid = $_GET['adid'];
         if(!($uid > 0) || !isset($product_id) || !(current_user_can('administrator') || current_user_can('shop_manager'))) return $html = 'Oops! you can\'t accsess this page!';
-        $src_iframe = add_query_arg(array('action' => 'nbdesigner_editor_html', 'product_id' => $product_id, 'task' => 'admindesign', 'priority' => $priority), site_url());
+        $src_iframe = add_query_arg(
+                array(
+                    'action' => 'nbdesigner_editor_html', 
+                    'product_id' => $product_id, 
+                    'task' => 'admindesign', 
+                    'priority' => $priority, 
+                    'adid' => $adid), 
+                site_url());
         $path = $this->plugin_path_data . 'admindesign/' . $product_id . '/primary/thumbs';
         if(file_exists($path))  $list_image = $this->nbdesigner_list_thumb($path);
         $div_image = '';
@@ -2507,5 +2522,9 @@ class Nbdesigner_Plugin {
         }
         echo json_encode($result);
         wp_die();        
+    }
+    public function nbdesigner_tools(){
+        
+        include_once(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-tools.php');
     }
 }
