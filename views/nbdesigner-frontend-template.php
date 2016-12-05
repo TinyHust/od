@@ -36,7 +36,8 @@
              <?php endif; ?>  
             <?php if(isset($_GET['adid'])): ?>
                 adid = "<?php echo $_GET['adid']; ?>";
-             <?php endif; ?>                   
+             <?php endif; ?>    
+             console.log(OD_task);
         </script>
     </head>
     <body ng-controller="DesignerController" ng-style="{'background-image' : 'url(<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/'+backgroundId+'.png)'}">
