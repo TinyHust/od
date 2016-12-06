@@ -1125,7 +1125,9 @@ class Nbdesigner_Plugin {
                 $data['key'] = $license;
                 $data['salt'] = md5($license.$data['type']);
                 if($data['type'] == 'free') $data['number_domain'] = "5";
-                $this->nbdesigner_write_license(json_encode($data));                    
+                if(($data["code"] == 5) || ($data["code"] == 6)){
+                    $this->nbdesigner_write_license(json_encode($data));  
+                }                      
             }else{
                 $result['mes'] = __('Try again later!', $this->textdomain);
             }
@@ -1179,7 +1181,7 @@ class Nbdesigner_Plugin {
         wp_die();        
     }
     private function nbdesiger_request_license($license, $task){
-        $url_root = base64_encode(get_site_url());	
+        $url_root = base64_encode(get_bloginfo('url'));	
         if(ini_get('allow_url_fopen')){
             $result_from_json = file_get_contents($this->author_site.$task.$this->nbdesigner_sku.'/'.$license.'/'.$url_root);    
         }else{
