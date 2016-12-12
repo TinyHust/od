@@ -21,6 +21,7 @@
                     <div class="nbdesigner-right">
                         <a class="button nbdesigner-collapse" onclick="NBDESIGNADMIN.collapseBox(this)"><span class="dashicons dashicons-arrow-down"></span><?php _e('More setting', $this->textdomain); ?></a>
                         <a class="button nbdesigner-delete delete_orientation" data-index="<?php echo $k; ?>" data-variation="<?php echo $vid; ?>" onclick="NBDESIGNADMIN.deleteOrientation(this)">&times;</a>
+                        <input type="hidden" class="nbdesigner-variation-status" value="0" name="_nbdesigner_variation_status<?php echo $vid; ?>"/>
                     </div>
                 </div>
                 <div class="nbdesigner-box nbdesigner-box-collapse" data-variation="<?php echo $vid; ?>" style="display: none;">

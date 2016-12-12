@@ -2610,6 +2610,9 @@ class Nbdesigner_Plugin {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return $post_id;
         }  
+        if($_POST['_nbdesigner_variation_status'.$post_id] == "0" ){
+            return $post_id;
+        }
         $var = get_post($post_id);
         $enable = $_POST['_nbdesigner_enable'.$post_id]; 
         $setting = serialize($_POST['_designer_setting'.$post_id]);  

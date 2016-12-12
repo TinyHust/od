@@ -719,7 +719,8 @@ var NBDESIGNADMIN = {
                 _toggle_element.slideDown(function(){
                     self.html('<span class="dashicons dashicons-arrow-up"></span> Less setting');
                 });
-            })
+            });
+            jQuery(e).parents('.nbdesigner-setting-variation').find('.nbdesigner-variation-status').val("1");
         }else{
             toggle_element.slideToggle(function () {
                 if (toggle_element.is(':visible')) {
