@@ -373,3 +373,10 @@ h4.nbdesigner_order_product_name {
 .nbdesigner-admin-template-primary {
     margin-top: -150px !important;
 }
+.nbdesigner-variation-setting .nbdesigner-info-box {
+    min-width: inherit !important;
+}
+.nbdesigner-variation-setting  .nbdesigner-setting-box-label {
+    min-width: 100px;
+    width: inherit;
+}

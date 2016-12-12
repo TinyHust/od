@@ -200,7 +200,29 @@ jQuery(document).ready(function ($) {
                 }                   
             });
         }
-    });      
+    });  
+    $('#nbdesigner_check_theme').on('click', function(e){
+        e.preventDefault();
+        var formdata = jQuery('#nbdesign-theme-check').find('textarea, select, input').serialize();
+        formdata = formdata + '&action=nbdesigner_theme_check';
+        jQuery('#nbdesigner_check_theme_loading').removeClass('nbdesigner_loaded');
+        jQuery.post(admin_nbds.url, formdata, function(data){
+            jQuery('#nbdesigner_check_theme_loading').addClass('nbdesigner_loaded');
+            data = JSON.parse(data);
+            if(data.flag == 'ok'){
+                console.log(data);
+                jQuery('.theme_check_note').html(data.html);
+                //alert('Update success!');
+            }else{
+                alert('Oops! Try again!');
+            }                  
+        });         
+    });
+    $('#woocommerce-product-data').on('woocommerce_variations_loaded', function(event) {
+        NBDESIGNADMIN.loopConfigAreaDesign();
+        NBDESIGNADMIN.ajustImage(); 
+    });  
+    
 });
 var NBDESIGNADMIN = {
     add_font_cat: function (e) {
@@ -427,44 +449,50 @@ var NBDESIGNADMIN = {
         upload.open();
     },
     deleteOrientation: function (e) {
+        var variantion = jQuery(e).data('variation');
         if((jQuery('.nbdesigner-box-container').length) > 1){
             jQuery(e).parents('.nbdesigner-box-container').remove();
-            this.resetBoxes();            
+            this.resetBoxes(variantion);            
         }else{
             jQuery(e).parents('.nbdesigner-box-container').hide();
         };
     },
-    resetBoxes: function () {
-        jQuery.each(jQuery('#nbdesigner-boxes .nbdesigner-box-container'), function (key, val) {
-            jQuery(this).find('.orientation_name').attr('name', '_designer_setting[' + key + '][orientation_name]');
+    resetBoxes: function (command) {
+        if(command == 'com') command = '';
+        var index = '#nbdesigner-boxes' + command,
+        name = '_designer_setting' + command;
+        jQuery.each(jQuery(index + ' .nbdesigner-box-container'), function (key, val) {
+            jQuery(this).find('.orientation_name').attr('name', name + '[' + key + '][orientation_name]');
             jQuery(this).find('.delete_orientation').attr('data-index', key);
-            jQuery(this).find('.nbdesigner-area-design').attr('id', 'nbdesigner-area-design-' + key);
-            jQuery(this).find('.hidden_img_src').attr('name', '_designer_setting[' + key + '][img_src]');
-            jQuery(this).find('.hidden_img_src_top').attr('name', '_designer_setting[' + key + '][img_src_top]');
-            jQuery(this).find('.hidden_img_src_left').attr('name', '_designer_setting[' + key + '][img_src_left]');
-            jQuery(this).find('.hidden_img_src_width').attr('name', '_designer_setting[' + key + '][img_src_width]');
-            jQuery(this).find('.hidden_img_src_height').attr('name', '_designer_setting[' + key + '][img_src_height]');
+            //jQuery(this).find('.nbdesigner-area-design').attr('id', 'nbdesigner-area-design-' + key);
+            jQuery(this).find('.hidden_img_src').attr('name', name + '[' + key + '][img_src]');
+            jQuery(this).find('.hidden_img_src_top').attr('name', name + '[' + key + '][img_src_top]');
+            jQuery(this).find('.hidden_img_src_left').attr('name', name + '[' + key + '][img_src_left]');
+            jQuery(this).find('.hidden_img_src_width').attr('name', name + '[' + key + '][img_src_width]');
+            jQuery(this).find('.hidden_img_src_height').attr('name', name + '[' + key + '][img_src_height]');
             jQuery(this).find('.nbdesigner_move').attr('data-index', key);
             jQuery(this).find('.nbdesigner-add-image').attr('data-index', key);
-            jQuery(this).find('.real_width').attr('name', '_designer_setting[' + key + '][real_width]');
-            jQuery(this).find('.real_height').attr('name', '_designer_setting[' + key + '][real_height]');
-            jQuery(this).find('.area_design_top').attr('name', '_designer_setting[' + key + '][area_design_top]');
-            jQuery(this).find('.area_design_left').attr('name', '_designer_setting[' + key + '][area_design_left]');
-            jQuery(this).find('.area_design_width').attr('name', '_designer_setting[' + key + '][area_design_width]');
-            jQuery(this).find('.area_design_height').attr('name', '_designer_setting[' + key + '][area_design_height]');
+            jQuery(this).find('.real_width').attr('name', name + '[' + key + '][real_width]');
+            jQuery(this).find('.real_height').attr('name', name + '[' + key + '][real_height]');
+            jQuery(this).find('.area_design_top').attr('name', name + '[' + key + '][area_design_top]');
+            jQuery(this).find('.area_design_left').attr('name', name + '[' + key + '][area_design_left]');
+            jQuery(this).find('.area_design_width').attr('name', name + '[' + key + '][area_design_width]');
+            jQuery(this).find('.area_design_height').attr('name', name + '[' + key + '][area_design_height]');
         });
         this.loopConfigAreaDesign();
     },
     calcPositionImg: function (e) {
-        var p = e.parent(),
-        top = e.offset().top - jQuery(p).offset().top,
-        left = e.offset().left - jQuery(p).offset().left,
-        width = e.width(),
-        height = e.height();
-        e.parents('.nbdesigner-image-box').find('.hidden_img_src_top').val(top);
-        e.parents('.nbdesigner-image-box').find('.hidden_img_src_left').val(left);
-        e.parents('.nbdesigner-image-box').find('.hidden_img_src_width').val(width);
-        e.parents('.nbdesigner-image-box').find('.hidden_img_src_height').val(height);
+        setTimeout(function(){
+            var p = e.parent(),
+            top = e.offset().top - jQuery(p).offset().top,
+            left = e.offset().left - jQuery(p).offset().left,
+            width = e.width(),
+            height = e.height();
+            e.parents('.nbdesigner-image-box').find('.hidden_img_src_top').val(top);
+            e.parents('.nbdesigner-image-box').find('.hidden_img_src_left').val(left);
+            e.parents('.nbdesigner-image-box').find('.hidden_img_src_width').val(width);
+            e.parents('.nbdesigner-image-box').find('.hidden_img_src_height').val(height);
+        },0);       
     },
     loopConfigAreaDesign: function () {
         var parent = this;
@@ -493,27 +521,29 @@ var NBDESIGNADMIN = {
         });
     },
     calcMargin: function (w, h, _img) {
-        var h_d = _img.parent().height();
-        if ((w < h) && (h >= h_d)) {
-            _img.css('margin-top', '0');
-        };
-        if ((w <= h_d) && (h <= h_d)) {
-            var offset = (h_d - h) / 2;
-            _img.css('margin-top', offset + 'px');
-        };
-        if ((w >= h) && (w > h_d)) {
-            h = h * h_d / w;
-            var offset = (h_d - h) / 2;
-            _img.css('margin-top', offset + 'px');
-        };
+        setTimeout(function(){
+            var h_d = _img.parent().height();
+            if ((w < h) && (h >= h_d)) {
+                _img.css('margin-top', '0');
+            };
+            if ((w <= h_d) && (h <= h_d)) {
+                var offset = (h_d - h) / 2;
+                _img.css('margin-top', offset + 'px');
+            };
+            if ((w >= h) && (w > h_d)) {
+                h = h * h_d / w;
+                var offset = (h_d - h) / 2;
+                _img.css('margin-top', offset + 'px');
+            };
+        },0);      
     },
     nbdesigner_move: function (e, command) {
         var index = jQuery(e).data('index');
-        var id_area = 'nbdesigner-area-design-' + index,
-        area = jQuery('#' + id_area),
+        var id_area = 'nbdesigner-area-design',
+        area = jQuery(e).parents('.nbdesigner-box-collapse').find('.' + id_area),
         left = area.css('left'),
         top = area.css('top');
-        w = area.width(),
+        var w = area.width(),
         h = area.height(),
         ip_left = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_left'),
         ip_top = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_top'),
@@ -557,14 +587,14 @@ var NBDESIGNADMIN = {
         }
     },
     ajustImage: function () {
-        var self = this;
+        var self = this;   
         jQuery.each(jQuery('.designer_img_src'), function () {
             var _img = jQuery(this),
             w = jQuery(this).width(),
             h = jQuery(this).height();
             self.calcMargin(w, h, _img);
             self.calcPositionImg(_img);
-        });
+        });      
     },
     updateDimension: function (e, width, height, left, top) {
         var ip_left = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_left'),
@@ -626,7 +656,7 @@ var NBDESIGNADMIN = {
     updateSolutionImage: function(){
         var dpi = jQuery('#nbdesigner_dpi').val();
         if(dpi < 1) dpi = 1;
-        jQuery.each(jQuery('#nbdesigner-boxes .nbdesigner-box-container'), function (key, val) {
+        jQuery.each(jQuery('#nbdesigner-boxes .nbdesigner-box-container, .nbdesigner-variation-setting .nbdesigner-box-container'), function (key, val) {
             var width = jQuery(this).find('.real_width_hidden').html(),
             height = jQuery(this).find('.real_height_hidden').html();
             jQuery(this).find('.real_width_px').html(parseInt(width * dpi / 2.54));
@@ -665,27 +695,41 @@ var NBDESIGNADMIN = {
                 break;
         }
     },
-    addOrientation: function () {
-        var old_box = jQuery('#nbdesigner-boxes .nbdesigner-box-container').last();
+    addOrientation: function (command) {
+        var _command = command;
+        if(command == 'com') _command = '';
+        var id = '#nbdesigner-boxes' + _command;
+        var old_box = jQuery(id+' .nbdesigner-box-container').last();
         if(old_box.css('display') == 'none'){
             old_box.show();
         }else{
             var new_box = old_box.clone();
-            new_box.appendTo('#nbdesigner-boxes');
+            new_box.appendTo(id);
             new_box.find('.ui-resizable-handle').remove();
-            this.resetBoxes();            
+            this.resetBoxes(command);            
         };
     },
     collapseBox: function (e) {
         var clicked_element = jQuery(e);
         var toggle_element = jQuery(e).parents('.nbdesigner-box-container').find('.nbdesigner-box-collapse');
-        toggle_element.slideToggle(function () {
-            if (toggle_element.is(':visible')) {
-                clicked_element.html('<span class="dashicons dashicons-arrow-up"></span> Less setting');
-            } else {
-                clicked_element.html('<span class="dashicons dashicons-arrow-down"></span> More setting');
-            }
-        });
+        if(jQuery(e).parents('.nbdesigner-setting-variation').length && !toggle_element.is(':visible')){
+            jQuery.each(jQuery(e).parents('.nbdesigner-setting-variation').find('.nbdesigner-collapse'), function(){
+                var self = jQuery(this),
+                _toggle_element = jQuery(this).parents('.nbdesigner-box-container').find('.nbdesigner-box-collapse');
+                _toggle_element.slideDown(function(){
+                    self.html('<span class="dashicons dashicons-arrow-up"></span> Less setting');
+                });
+            })
+        }else{
+            toggle_element.slideToggle(function () {
+                if (toggle_element.is(':visible')) {
+                    clicked_element.html('<span class="dashicons dashicons-arrow-up"></span> Less setting');
+                } else {
+                    clicked_element.html('<span class="dashicons dashicons-arrow-down"></span> More setting');
+                }
+            });            
+        }        
+        this.ajustImage();
     },
     changeLang: function(){
         var code = jQuery("#nbdesigner-translate-code").val();
@@ -741,7 +785,8 @@ var NBDESIGNADMIN = {
     },
     createLang: function(){
         var formdata = jQuery('#nbdesigner-new-lang-con').find('textarea, select, input').serialize();
-        formdata = formdata + '&action=nbdesigner_create_language';
+        var nbdesigner_namelang = jQuery('#nbdesign-language-option option:selected').text();
+        formdata = formdata + '&nbdesigner_namelang='+nbdesigner_namelang+'&action=nbdesigner_create_language';
         jQuery('#nbdesigner_new_translate_loading').removeClass('nbdesigner_loaded');
         jQuery.post(admin_nbds.url, formdata, function(result){
             jQuery('#nbdesigner_new_translate_loading').addClass('nbdesigner_loaded');     
@@ -758,7 +803,7 @@ var NBDESIGNADMIN = {
                     submit : 'OK',
                     tooltip : 'Click to edit...'
                 });  
-                jQuery('#nbdesigner-translate-code').append('<option value="'+data.code+' selected">'+data.name+'</option>');
+                jQuery('#nbdesigner-translate-code').append('<option value="'+data.code+'" selected>'+data.name+'</option>');
                 jQuery("#nbdesigner-trans-code").attr('data-code', data.code);
                 tb_remove();
             };
@@ -854,6 +899,54 @@ var NBDESIGNADMIN = {
                 alert('Oops! Try again');
             };
         }); 
+    },
+    check_theme: function(e){
+        e.preventDefault();
+        var formdata = jQuery('#nbdesign-theme-check').find('textarea, select, input').serialize();
+        formdata = formdata + '&action=nbdesigner_theme_check';
+        jQuery('#nbdesigner_check_theme_loading').removeClass('nbdesigner_loaded');
+        jQuery.post(admin_nbds.url, formdata, function(data){
+            jQuery('#nbdesigner_check_theme_loading').addClass('nbdesigner_loaded');
+            data = JSON.parse(data);
+            if(data.flag == 'ok'){
+                console.log(data);
+                jQuery('.theme_check_note').html(data.html);
+                //alert('Update success!');
+            }else{
+                alert('Oops! Try again!');
+            }                  
+        });        
+    },
+    show_variation_config : function(e){
+        var self = this;
+        var parent = jQuery(e).parents('.nbdesigner-setting-variation');
+        if(jQuery(e).prop("checked")){
+            parent.find('.nbdesigner-right.add_more').show();
+            parent.find('.nbdesigner-variation-setting').show();
+            jQuery.each(parent.find('.nbdesigner-area-design'), function (key, val) {
+                var _this = this;
+                jQuery(this).resizable({
+                    handles: "ne, se, sw, nw",
+                    aspectRatio: false,
+                    maxWidth: 300,
+                    maxHeight: 300,
+                    resize: function (event, ui) {
+                        self.updateDimension(_this, ui.size.width, ui.size.height, ui.position.left, ui.position.top);
+                    },
+                    start: function (event, ui) {
+                        /*TODO*/
+                    }
+                }).draggable({containment: "parent",
+                    drag: function (event, ui) {
+                        self.updateDimension(_this, null, null, ui.position.left, ui.position.top);
+                    }
+                });                  
+            })
+          
+        }else{
+            parent.find('.nbdesigner-right.add_more').hide();
+            parent.find('.nbdesigner-variation-setting').hide();            
+        }
     }
 };
 function base64Encode(str) {

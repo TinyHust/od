@@ -7,7 +7,7 @@
         <input type="checkbox" value="1" name="_nbdesigner_enable" id="_nbdesigner_enable" <?php checked($enable); ?> class="short" />
     </div>
     <div class="nbdesigner-right add_more" style="display: none;">
-        <a class="button button-primary" onclick="NBDESIGNADMIN.addOrientation()"><?php echo __('Add More', $this->textdomain); ?></a>
+        <a class="button button-primary" onclick="NBDESIGNADMIN.addOrientation('com')"><?php echo __('Add More', $this->textdomain); ?></a>
     </div>
     <div class="nbdesigner-clearfix"></div>
     <div id="nbdesigner_dpi_con" class="<?php if (!get_post_meta($post_id, '_nbdesigner_enable', true)) echo 'nbdesigner-disable'; ?>">
@@ -25,10 +25,10 @@
                     </div>
                     <div class="nbdesigner-right">
                         <a class="button nbdesigner-collapse" onclick="NBDESIGNADMIN.collapseBox(this)"><span class="dashicons dashicons-arrow-up"></span><?php _e('Less setting', $this->textdomain); ?></a>
-                        <a class="button nbdesigner-delete delete_orientation" data-index="<?php echo $k; ?>" onclick="NBDESIGNADMIN.deleteOrientation(this)">&times;</a>
+                        <a class="button nbdesigner-delete delete_orientation" data-index="<?php echo $k; ?>" data-variation="com" onclick="NBDESIGNADMIN.deleteOrientation(this)">&times;</a>
                     </div>
                 </div>
-                <div class="nbdesigner-box nbdesigner-box-collapse">
+                <div class="nbdesigner-box nbdesigner-box-collapse" data-variation="com">
                     <div class="nbdesigner-image-box">
                         <div class="nbdesigner-image-inner">
                             <div class="nbdesigner-image-original">

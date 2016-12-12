@@ -16,17 +16,15 @@
             <div id="nbdesigner-new-lang-con" class="nbdesigner-align-center">
                 <table class="form-table">
                     <tr valign="top">
-                        <th scope="row" class="titledesc"><?php echo __("Language name", $this->textdomain); ?></th>
+                        <th scope="row" class="titledesc"><?php echo __("Choose language", $this->textdomain); ?></th>
                         <td class="forminp-text">
-                            <input type="text" name="nbdesigner_namelang" placeholder="English">
+                            <select id="nbdesign-language-option" name="nbdesigner_codelang">
+                            <?php foreach ($languages as $language): ?>
+                                <option value="<?php echo $language['language']; ?>"><?php echo $language['native_name']; ?></option>
+                            <?php endforeach; ?>
+                            </select>    
                         </td>
                     </tr>
-                    <tr valign="top">
-                        <th scope="row" class="titledesc"><?php echo __("Language code", $this->textdomain); ?></th>
-                        <td class="forminp-text">
-                            <input type="text" name="nbdesigner_codelang" placeholder="en" maxlength="3">
-                        </td>
-                    </tr> 
                     <?php wp_nonce_field($this->plugin_id.'-new-lang', $this->plugin_id . '_newlang_hidden'); ?>
                 </table>
                 <p>
@@ -35,7 +33,7 @@
                 </p>                
             </div>
         </div>        
-        <a name="<?php _e('Create new language', $this->textdomain); ?>" href="#TB_inline?width=300&height=230&inlineId=nbdesigner-new-lang" class="thickbox button btn-primary" onclick=""><?php echo __('Add New Language', $this->textdomain); ?></a>   
+        <a name="<?php _e('Create new language', $this->textdomain); ?>" href="#TB_inline?width=300&height=160&inlineId=nbdesigner-new-lang" class="thickbox button btn-primary" onclick=""><?php echo __('Add New Language', $this->textdomain); ?></a>   
         <img class="nbdesigner_loaded" id="nbdesigner_translate_loading" src="<?php echo NBDESIGNER_PLUGIN_URL . 'assets/images/loading.gif' ?>" />
     </div>
     <div>

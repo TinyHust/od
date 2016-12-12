@@ -91,3 +91,6 @@
 .nbdesign-button-loading {
     z-index: 4;
 }*/
+.nbdesign-button {
+    float: none;
+}

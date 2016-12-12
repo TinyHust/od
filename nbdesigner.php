@@ -34,4 +34,7 @@ register_deactivation_hook( __FILE__, array( 'Nbdesigner_Plugin', 'plugin_deacti
 $prefix = is_network_admin() ? 'network_admin_' : '';       
 add_filter( $prefix.'plugin_action_links_' . NBDESIGNER_PLUGIN_BASENAME, array('Nbdesigner_Plugin', 'nbdesigner_add_action_links') );
 add_filter( 'plugin_row_meta', array( 'Nbdesigner_Plugin', 'nbdesigner_plugin_row_meta' ), 10, 2 );
+if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+    require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+}
 $nb_designer = new Nbdesigner_Plugin();

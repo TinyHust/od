@@ -439,12 +439,34 @@
 
 			this.clipTo&&fabric.util.clipContext(this, ctx);
 
-			//The array is now sorted in order of highest first, so start from end.
+			//The array is now sorted in order of highest first, so start from end.                               
+                        if(NBDESIGNCONFIG['lang_rtl'] == 'rtl') {
+                            var half = this.letters.size() % 2;
+                            for(var i=0, len=this.letters.size(); i<=half; i++){
+                                var temp_left = this.letters.item(i)['left'],
+                                temp_top = this.letters.item(i)['top'],
+                                temp_scaleX = this.letters.item(i)['scaleX'],
+                                temp_scaleY = this.letters.item(i)['scaleY'],
+                                temp_angle = this.letters.item(i)['angle'],
+                                temp_fontSize = this.letters.item(i)['fontSize'];
+                                this.letters.item(i)['left'] = this.letters.item(len - i - 1)['left'];
+                                this.letters.item(i)['top'] = this.letters.item(len - i - 1)['top'];
+                                this.letters.item(i)['angle'] = this.letters.item(len - i - 1)['angle'];
+                                this.letters.item(i)['scaleX'] = this.letters.item(len - i - 1)['scaleX'];
+                                this.letters.item(i)['scaleY'] = this.letters.item(len - i - 1)['scaleY'];
+                                this.letters.item(i)['fontSize'] = this.letters.item(len - i - 1)['fontSize'];
+                                this.letters.item(len - i - 1)['left'] = temp_left;
+                                this.letters.item(len - i - 1)['top'] = temp_top;                                
+                                this.letters.item(len - i - 1)['scaleX'] = temp_scaleX;                                
+                                this.letters.item(len - i - 1)['scaleY'] = temp_scaleY;                                
+                                this.letters.item(len - i - 1)['angle'] = temp_angle;                                
+                                this.letters.item(len - i - 1)['fontSize'] = temp_fontSize;                                
+                            }      
+                        }                          
 			for(var i=0, len=this.letters.size(); i<len; i++){
 				var object=this.letters.item(i),
 						originalScaleFactor=object.borderScaleFactor,
-						originalHasRotatingPoint=object.hasRotatingPoint;
-
+						originalHasRotatingPoint=object.hasRotatingPoint;    
 				// do not render if object is not visible
 				if(!object.visible)
 					continue;

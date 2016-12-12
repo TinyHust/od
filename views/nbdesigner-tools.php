@@ -33,9 +33,12 @@
 </div>
 <hr />
 <div class="nbdesign-migrate">
-    <h2><?php echo __('Theme check hooks', $this->textdomain); ?></h2>
-    <div>
-        <button class="button-primary" id="nbdesigner_update_data_json"><?php echo __("Start check", $this->textdomain); ?></button>
+    <h2><?php echo __('Theme check', $this->textdomain); ?></h2>
+    <div id="nbdesign-theme-check">
+        <?php wp_nonce_field('nbdesigner-check-theme-key', '_nbdesigner_check_theme_nonce'); ?>
+        <button class="button-primary" id="nbdesigner_check_theme"><?php echo __("Start check", $this->textdomain); ?></button>
+        <img src="<?php echo NBDESIGNER_PLUGIN_URL.'assets/images/loading.gif' ?>" class="nbdesigner_loaded" id="nbdesigner_check_theme_loading" style="margin-left: 15px;"/>
+        <div class="theme_check_note"></div>
     </div>
     <div id="nbdesigner-result-check-theme"></div>
 </div>

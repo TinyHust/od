@@ -17,6 +17,9 @@
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/bundle.css'; ?>" rel="stylesheet" media="all"/>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/owl.carousel.css'; ?>" rel="stylesheet" media="all"/>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/style.min.css'; ?>" rel="stylesheet" media="all">
+        <?php if(is_rtl()): ?>
+        <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/nbdesigner-rtl.css'; ?>" rel="stylesheet" media="all">
+        <?php endif; ?>
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -25,6 +28,10 @@
             var product_id = '<?php echo $_GET['product_id']; ?>';
             var od_mainURL = window.parent.nbds_frontend.url_style;
             var orderid = OD_task = OD_priority = adid = '';
+            var NBDESIGNCONFIG = {};
+            NBDESIGNCONFIG['lang_code'] = "<?php echo get_bloginfo('language'); ?>";
+            NBDESIGNCONFIG['lang_rtl'] = "<?php if(is_rtl()){ echo 'rtl'; } else {  echo 'ltr';  } ?>";
+            NBDESIGNCONFIG['is_mobile'] = "<?php echo wp_is_mobile(); ?>";
             <?php if (isset($_GET['orderid']) && ($_GET['orderid'] != '')): ?>
                 orderid = "<?php echo $_GET['orderid']; ?>";
             <?php endif; ?>
@@ -36,8 +43,7 @@
              <?php endif; ?>  
             <?php if(isset($_GET['adid'])): ?>
                 adid = "<?php echo $_GET['adid']; ?>";
-             <?php endif; ?>    
-             console.log(OD_task);
+             <?php endif; ?>  
         </script>
     </head>
     <body ng-controller="DesignerController" ng-style="{'background-image' : 'url(<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/'+backgroundId+'.png)'}">

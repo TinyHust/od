@@ -64,7 +64,46 @@ class Nbdesigner_DebugTool {
         echo '</script>';        
     }
     public static function theme_check_hook(){
-        //TODO
+        if (!wp_verify_nonce($_POST['_nbdesigner_check_theme_nonce'], 'nbdesigner-check-theme-key') || !current_user_can('administrator')) {
+            die('Security error');
+        }       
+        $result = array();
+        $theme_path = get_template_directory();
+        $theme = wp_get_theme();
+        $result['html'] = '';
+        $list_filter = array(
+            'woocommerce_before_add_to_cart_button' => '/single-product/add-to-cart/grouped.php', 
+            'woocommerce_before_add_to_cart_button' => '/single-product/add-to-cart/external.php', 
+            'woocommerce_before_add_to_cart_button' => '/single-product/add-to-cart/simple.php', 
+            'woocommerce_before_add_to_cart_button' => '/single-product/add-to-cart/variable.php', 
+            'woocommerce_cart_item_name' => '/cart/cart.php', 
+            'woocommerce_order_item_name' => '/order/order-details-item.php', 
+            'woocommerce_order_item_quantity_html' => '/order/order-details-item.php');
+        $folder_woo = $theme_path . '/woocommerce';
+        if(!file_exists($folder_woo)){
+            $result['flag'] = 'ok';
+            $result['html'] .= '<p style="background: #e3f2dd; padding: 15px; display: inline-block; font-weight: bold;">Your theme ('.esc_html( $theme['Name']).') compatible with plugin.</p>';
+        }else{
+            $result['flag'] = 'ok';
+            $result['html'] .= '<h3>Your theme "'.esc_html( $theme['Name']).'"</h3>';
+            foreach ($list_filter as $key => $val){
+                $path = $folder_woo . $val;
+                if(file_exists($path)){
+                    $fp = fopen( $path, 'r' );
+                    $file_data = fread($fp, filesize($path));
+                    fclose( $fp );
+                    $pattern = '/'.$key.'/';
+                    if ( preg_match($pattern, $file_data, $match)){
+                        $result['html'] .= '<p style="background: #e3f2dd; padding: 15px;"><span style="font-weight: bold;">'.$key.'</span> was found</p>';
+                    }else{
+                        $result['html'] .= '<div style="background: #eecff0; padding: 15px;"><p><span style="font-weight: bold;">'.$key.'</span> is missing</p>';
+                        $result['html'] .= 'The '.$val.' in the woocommerce templates of your theme does not include the required action/filter: '.$key.'<p></p></div>';
+                    }
+                }
+            }
+        }
+        echo json_encode($result);
+        wp_die();   
     }
     public static function update_data_migrate_domain(){
         if (!wp_verify_nonce($_POST['_nbdesigner_migrate_nonce'], 'nbdesigner-migrate-key') || !current_user_can('administrator')) {
