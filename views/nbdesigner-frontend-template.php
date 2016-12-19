@@ -26,7 +26,7 @@
         <![endif]-->	
         <script type="text/javascript">
             var product_id = '<?php echo $_GET['product_id']; ?>';
-            var od_mainURL = window.parent.nbds_frontend.url_style;
+            var od_mainURL = '<?php echo NBDESIGNER_PLUGIN_URL . 'assets/'; ?>';
             var orderid = OD_task = OD_priority = adid = '';
             var NBDESIGNCONFIG = {};
             NBDESIGNCONFIG['lang_code'] = "<?php echo get_bloginfo('language'); ?>";

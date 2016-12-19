@@ -116,6 +116,8 @@ class Nbdesigner_Plugin {
             add_action('wp_ajax_nbdesigner_migrate_domain', array('Nbdesigner_DebugTool', 'update_data_migrate_domain'));
             add_action('wp_ajax_nbdesigner_restore_data_migrate_domain', array('Nbdesigner_DebugTool', 'restore_data_migrate_domain'));
             add_action('wp_ajax_nbdesigner_theme_check', array('Nbdesigner_DebugTool', 'theme_check_hook'));
+            add_action('wp_ajax_nbdesigner_copy_image_from_url', array($this, 'nbdesigner_copy_image_from_url'));
+            add_action('wp_ajax_nopriv_nbdesigner_copy_image_from_url', array($this, 'nbdesigner_copy_image_from_url'));
             add_action('admin_enqueue_scripts', function($hook) {   
                 if (($hook == 'post.php') || ($hook == 'post-new.php') || ($hook == 'toplevel_page_nbdesigner') ||
                         ($hook == 'nbdesigner_page_nbdesigner_manager_product' ) || ($hook == 'toplevel_page_nbdesigner_shoper') || ($hook == 'nbdesigner_page_nbdesigner_frontend_translate') ||
@@ -2619,5 +2621,24 @@ class Nbdesigner_Plugin {
         if(!$this->nbdesigner_allow_create_product($var->post_parent)) return;
         update_post_meta($post_id, '_nbdesigner_enable'.$post_id, $enable);
         update_post_meta($post_id, '_designer_setting'.$post_id, $setting);
-    }     
+    }    
+    public function nbdesigner_copy_image_from_url(){
+        if (!wp_verify_nonce($_POST['nonce'], 'save-design')) {
+            die('Security error');
+        }  
+        $url = $_POST['url'];
+        $ext = $this->nbdesigner_get_extension($url);
+        $allow_extension = array('jpg','jpeg','png','gif');
+        if(!in_array(strtolower($ext), $allow_extension)) $ext = 'png';
+        $new_name = strtotime("now").substr(md5(rand(1111,9999)),0,8).'.'.$ext;
+        $path = $this->plugin_path_data. 'temp/'.$new_name;
+        $res['src'] = WP_CONTENT_URL.'/uploads/nbdesigner/temp/'.$new_name;
+        if(@copy($url, $path)){
+            $res['flag'] = 1;
+        } else {
+            $res['flag'] = 0;
+        }  
+        echo json_encode($res);
+        wp_die();
+    }
 }
