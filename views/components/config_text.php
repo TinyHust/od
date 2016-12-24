@@ -134,7 +134,11 @@
         <div class="nb-col-40">
             <p class="label-config">{{(langs['CURVED_TEXT']) ? langs['CURVED_TEXT'] : "Curved text"}}</p>
             <div class="container-dg-slider"><div class="dg-slider" id="text-arc"></div></div>
-
+            <p ng-if="langMode == 'rtl'" class="label-config">{{(langs['RTL']) ? langs['RTL'] : "RTL"}}</p>
+            <div ng-if="langMode == 'rtl'">
+                <input id="rtl_lang" class="cmn-toggle cmn-toggle-round" type="checkbox"  ng-model="rtlLang">
+                <label for="rtl_lang"></label>                
+            </div>
         </div>		
         <div class="nb-col-30 has-popover-option">
             <p class="label-config">{{(langs['REVERSE']) ? langs['REVERSE'] : "Reverse"}}</p>

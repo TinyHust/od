@@ -50,7 +50,7 @@
                             <a class="button nbdesigner_move nbdesigner_move_down" data-index="<?php echo $k; ?>" onclick="NBDESIGNADMIN.nbdesigner_move(this, 'down')">&darr;</a>
                             <a class="button nbdesigner_move nbdesigner_move_center" data-index="<?php echo $k; ?>" onclick="NBDESIGNADMIN.nbdesigner_move(this, 'center')">&frac12;</a>
                             <a class="button nbdesigner_move nbdesigner_move_center" style="padding-left: 7px; padding-right: 7px;" data-index="<?php echo $k; ?>" onclick="NBDESIGNADMIN.nbdesigner_move(this, 'fit')"><i class="mce-ico mce-i-dfw" style="margin: 4px 0px 0px 0px !important; padding: 0 !important;"></i></a>
-                            <a class="button nbdesigner-button nbdesigner-add-image" style="margin-top: 10px;" onclick="NBDESIGNADMIN.loadImage(this)" data-index="<?php echo $k; ?>"><?php echo __('Change image', $this->textdomain); ?></a>
+                            <a class="button nbdesigner-button nbdesigner-add-image" style="margin-top: 10px;" onclick="NBDESIGNADMIN.loadImage(this)" data-index="<?php echo $k; ?>"><span class="dashicons dashicons-admin-media" style="margin-top: 3px; margin-right: 5px; color: #82878c;"></span><?php echo __('Change image', $this->textdomain); ?></a>
                         </div>
                     </div>
                     <div class="nbdesigner-info-box">

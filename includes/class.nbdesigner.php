@@ -46,18 +46,22 @@ class Nbdesigner_Plugin {
         add_action('wp_login', array($this, 'nbdesigner_change_folder_design'), 10, 2);
         add_action( 'user_register', array($this,'nbdesigner_registration_save'), 10, 1 ); 
         add_filter( 'cron_schedules', array($this, 'nbdesigner_set_schedule'));      
+        add_filter( 'query_vars', array($this, 'nbdesigner_add_query_vars_filter') );
         $this->nbdesigner_schehule();
         $this->nbdesigner_lincense_notices();
+        add_action('admin_head', array($this, 'nbdesigner_add_tinymce_editor'));
         add_action( 'nbdesigner_lincense_event', array($this, 'nbdesigner_lincense_event_action') ); 
         add_shortcode( 'nbdesigner_redesign', array($this, 'nbdesigner_redesign_func') );
         add_shortcode( 'nbdesigner_admindesign', array($this, 'nbdesigner_admindesign_func') );
+        add_shortcode( 'nbdesigner_gallery', array($this,'nbdesigner_gallery_func') );
         add_filter('the_content', array($this,'nbdesigner_add_shortcode_page_design'));
         add_action( 'template_redirect', array( $this, 'nbdesigner_editor_html' ) );
         if (in_array('woocommerce/woocommerce.php',get_option('active_plugins')) || is_plugin_active_for_network( 'woocommerce/woocommerce.php' )) {
             add_filter('woocommerce_cart_item_name', array($this, 'nbdesigner_render_cart'), 1, 3);
             add_action('woocommerce_add_to_cart', array($this, 'nbdesigner_add_custom_data_design'), 1, 2);
             add_action('woocommerce_add_order_item_meta', array($this, 'nbdesigner_add_order_design_data'), 1, 3);
-            add_action('woocommerce_order_status_changed', array($this, 'nbdesigner_change_foler_after_order'), 1, 1);
+            //add_action('woocommerce_order_status_changed', array($this, 'nbdesigner_change_foler_after_order'), 1, 1);
+            add_action('woocommerce_checkout_order_processed', array($this, 'nbdesigner_change_foler_after_order'), 1, 1);
             add_filter('woocommerce_locate_template', array($this, 'nbdesigner_locate_plugin_template'), 20, 3 );
             add_filter( 'woocommerce_order_item_name', array($this, 'nbdesigner_order_item_name'), 1, 2);
             add_filter( 'woocommerce_order_item_quantity_html', array($this, 'nbdesigner_order_item_quantity_html'), 1, 2);
@@ -124,7 +128,6 @@ class Nbdesigner_Plugin {
                         ($hook == 'nbdesigner_page_nbdesigner_manager_fonts') || ($hook == 'nbdesigner_page_nbdesigner_manager_arts') || ($hook == 'nbdesigner_page_nbdesigner_admin_template')
                          || ($hook == 'nbdesigner_page_nbdesigner_tools')) {
                     wp_register_style('admin_nbdesigner', NBDESIGNER_PLUGIN_URL . 'assets/css/admin-nbdesigner.css');
-                    wp_enqueue_style('admin_nbdesigner');
                     wp_register_script('admin_nbdesigner', NBDESIGNER_PLUGIN_URL . 'assets/js/admin-nbdesigner.js', array('jquery', 'jquery-ui-resizable', 'jquery-ui-draggable', 'jquery-ui-autocomplete'));
                     wp_localize_script('admin_nbdesigner', 'admin_nbds', array(
                         'url' => admin_url('admin-ajax.php'),
@@ -132,10 +135,10 @@ class Nbdesigner_Plugin {
                         'mes_success' => 'Success!',
                         'url_check' => $this->author_site,
                         'sku' => $this->nbdesigner_sku,       
-                        'url_gif' => NBDESIGNER_PLUGIN_URL . 'assets/images/loading.gif'));
-                    wp_enqueue_script('admin_nbdesigner');                    
-                    wp_enqueue_style('wp-pointer');
-                    wp_enqueue_script('wp-pointer');                            
+                        'url_gif' => NBDESIGNER_PLUGIN_URL . 'assets/images/loading.gif',
+                        'nbds_lang' => $this->nbdesigner_get_javascript_multilanguage() ));                  
+                    wp_enqueue_style(array('wp-pointer', 'wp-jquery-ui-dialog', 'admin_nbdesigner'));
+                    wp_enqueue_script(array('wp-pointer', 'wpdialogs', 'admin_nbdesigner'));                            
                 }
                 if($hook == 'admin_page_nbdesigner_detail_order'){
                     wp_register_style('admin_nbdesigner_detail_order_slider', NBDESIGNER_PLUGIN_URL . 'assets/css/owl.carousel.css');
@@ -211,7 +214,7 @@ class Nbdesigner_Plugin {
         $path_data = $upload_dir['basedir'] . '/nbdesigner/data/language';
         if (!file_exists($path_data)) {
             wp_mkdir_p($path_data);
-        }           
+        }          
         self::nbdesigner_add_redesign_page();
     }
     public function nbdesigner_set_schedule($schedules){   
@@ -319,6 +322,10 @@ class Nbdesigner_Plugin {
                 }
             }
         }
+    }
+    public function nbdesigner_add_query_vars_filter($vars){
+        $vars[] = "nbds-adid";
+        return $vars;   
     }
     public function nbdesigner_lincense_notices(){            
         $license = $this->nbdesigner_check_license();
@@ -459,7 +466,7 @@ class Nbdesigner_Plugin {
     public static function nbdesigner_plugin_row_meta( $links, $file ) {      
         if($file == NBDESIGNER_PLUGIN_BASENAME){           
             $row_meta = array(
-                'upgrade' => '<a href="http://cmsmart.net/support_ticket" target="_blank">Support</a>'
+                'upgrade' => '<a href="https://cmsmart.net/support_ticket" target="_blank">Support</a>'
             );
             return array_merge( $links, $row_meta );
         }
@@ -1320,6 +1327,7 @@ class Nbdesigner_Plugin {
         return $file_exten;
     }
     public function nbdesigner_button() {
+        $temp = get_query_var( 'nbds-adid' ) ? get_query_var( 'nbds-adid' ) : 0;
         $is_nbdesign = get_post_meta(get_the_ID(), '_nbdesigner_enable', true);
         $uid = get_current_user_id();
         $sid = session_id();
@@ -1347,8 +1355,8 @@ class Nbdesigner_Plugin {
             $button .= '</div><br />';
             //$src = NBDESIGNER_PLUGIN_URL . 'views/nbdesigner-frontend.php?product_id=' . get_the_ID();
             $src = add_query_arg(array('action' => 'nbdesigner_editor_html', 'product_id' => get_the_ID()), site_url());                    
-            if(is_numeric($order))
-                $src .= '&orderid='.$order;
+            if(is_numeric($order)) $src .= '&orderid='.$order;
+            if($temp) $src .= '&temp='.$temp;
             $button .= '<div style="position: fixed; top: 0; left: 0; z-index: 999999; opacity: 0; width: 100%; height: 100%;" id="container-online-designer"><iframe id="onlinedesigner-designer"  width="100%" height="100%" scrolling="no" frameborder="0" noresize="noresize" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" src="' . $src . '"></iframe><span id="closeFrameDesign"  class="nbdesigner_pp_close">&times;</span></div>';
             echo $button;
         }
@@ -1733,6 +1741,15 @@ class Nbdesigner_Plugin {
         }
     }
     public function nbdesigner_change_foler_after_order($order_id) {
+        global $woocommerce;
+        $items = $woocommerce->cart->get_cart();
+        foreach($items as $item => $values){
+            $data = WC()->session->get($item . '_nbdesigner');
+            if($data == 'has_design'){
+                WC()->session->__unset($item . '_nbdesigner'); 
+            }
+        }
+        $this->nbdesigner_end_session();
         $uid = get_current_user_id();
         $sid = session_id();
         $iid = ($uid > 0 ) ? $uid : $sid;
@@ -2272,7 +2289,11 @@ class Nbdesigner_Plugin {
         $list_image = array();      
         if(isset($_GET['product_id'])) $product_id = $_GET['product_id'];
         if(isset($_GET['p'])) $priority = $_GET['p'];
-        if(isset($_GET['adid'])) $adid = $_GET['adid'];
+        if(isset($_GET['adid'])) {
+            $adid = $_GET['adid'];
+        }else{
+            $adid = '';
+        }
         if(!($uid > 0) || !isset($product_id) || !(current_user_can('administrator') || current_user_can('shop_manager'))) return $html = 'Oops! you can\'t accsess this page!';
         $src_iframe = add_query_arg(
                 array(
@@ -2640,5 +2661,157 @@ class Nbdesigner_Plugin {
         }  
         echo json_encode($res);
         wp_die();
+    }
+    /**
+     * Locate template.
+     *
+     * Locate the called template.
+     * Search Order:
+     * 1. /themes/theme/web-to-print-online-designer/$template_name
+     * 2. /themes/theme/$template_name
+     * 3. /plugins/web-to-print-online-designer/templates/$template_name.
+     *
+     * @since 1.3.1
+     *
+     * @param 	string 	$template_name			Template to load.
+     * @param 	string 	$string $template_path	        Path to templates.
+     * @param 	string	$default_path			Default path to template files.
+     * @return 	string 					Path to the template file.
+     */    
+    public function nbdesigner_locate_template($template_name, $template_path = '', $default_path = '') {
+        // Set variable to search in web-to-print-online-designer folder of theme.
+        if (!$template_path) :
+            $template_path = 'web-to-print-online-designer/';
+        endif;
+        // Set default plugin templates path.
+        if (!$default_path) :
+            $default_path = NBDESIGNER_PLUGIN_DIR . 'templates/'; // Path to the template folder
+        endif;
+        // Search template file in theme folder.
+        $template = locate_template(array(
+            $template_path . $template_name,
+            $template_name
+        ));
+        // Get plugins template file.
+        if (!$template) :
+            $template = $default_path . $template_name;
+        endif;
+        return apply_filters('nbdesigner_locate_template', $template, $template_name, $template_path, $default_path);
+    }
+    /**
+     * Get template.
+     *
+     * Search for the template and include the file.
+     *
+     * @since 1.3.1
+     *
+     * @see wcpt_locate_template()
+     *
+     * @param string 	$template_name			Template to load.
+     * @param array 	$args				Args passed for the template file.
+     * @param string 	$string $template_path	        Path to templates.
+     * @param string	$default_path			Default path to template files.
+     */
+    public function nbdesigner_get_template($template_name, $args = array(), $tempate_path = '', $default_path = '') {
+        if (is_array($args) && isset($args)) :
+            extract($args);
+        endif;
+        $template_file = $this->nbdesigner_locate_template($template_name, $tempate_path, $default_path);
+        if (!file_exists($template_file)) :
+            _doing_it_wrong(__FUNCTION__, sprintf('<code>%s</code> does not exist.', $template_file), '1.3.1');
+            return;
+        endif;
+        include $template_file;
+    }
+    public function nbdesigner_gallery_func($atts, $content = null) {
+        $atts = shortcode_atts(array(
+            'row' => 5,
+            'per_row' => 3,
+            'pagination' => 'true',
+            'des' => 'Gallery design templates',
+            'templates' => $this->nbdesigner_get_all_templates()
+            ), $atts);
+        return $this->nbdesigner_get_template('gallery.php', $atts);
+    }
+    public function nbdesigner_get_all_templates(){
+        $listTemplates = array();
+        $args = array(
+            'post_type' => 'product',
+            'meta_key' => '_nbdesigner_admintemplate_primary',
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'posts_per_page'=>-1,
+            'meta_query' => array(
+                array(
+                    'key' => '_nbdesigner_admintemplate_primary',
+                    'value' => 1,
+                )
+            )
+        );   
+        $posts = get_posts($args); 
+        foreach ($posts as $p){
+            $pro = wc_get_product($p->ID);
+            $list_design = array();
+            $path = $this->plugin_path_data . 'admindesign/' . $p->ID;
+            $up = wp_upload_dir();
+            $base_path = $up['baseurl'];
+            if ($dir = @opendir($path)) {
+                while (($file = readdir($dir) ) !== false) {
+                    if (in_array($file, array('.', '..')))
+                        continue;
+                    if (is_dir($path . '/' . $file)) {
+                        $path_preview = $path . '/' . $file .'/preview';
+                        $listThumb = $this->nbdesigner_list_thumb($path_preview);
+                        $mid_path = 'nbdesigner/admindesign/' .$p->ID. '/' .$file. '/preview/'; 
+                        if(count($listThumb)){
+                            foreach ($listThumb as $img){
+                                $name = basename($img);
+                                $url = $base_path.'/'.$mid_path.$name;
+                                $list_design[$file][] = $url;
+                            }	                            
+                        }   
+                    }
+                }
+            }
+            @closedir($dir);   
+            if(is_array($list_design)){
+                foreach($list_design as $key => $design){
+                    $listTemplates[] = array('id' => $p->ID, 'design' => $design, 'adid' => $key);
+                }
+            }           
+        }        
+        return $listTemplates;
+    }
+    protected static function nbdesigner_get_javascript_multilanguage(){
+        $lang = array(
+            'error' => __('Oops! Try again later!', 'nbdesigner'),
+        );
+        return $lang;
+    }
+    public function nbdesigner_add_tinymce_editor(){
+        global $typenow;
+        // check user permissions
+        if (!current_user_can('edit_posts') && !current_user_can('edit_pages')) return;
+        $post_types = get_post_types();
+        if (!is_array($post_types)) $post_types = array('post', 'page');
+        // verify the post type
+        if (!in_array($typenow, $post_types)) return;
+        // check if WYSIWYG is enabled
+        if (get_user_option('rich_editing') == 'true') {
+            add_filter('mce_external_plugins', array($this, 'nbdesigner_add_tinymce_shortcode_editor_plugin'));
+            add_filter('mce_buttons', array($this, 'nbdesigner_add_tinymce_shortcode_editor_button'));
+        }
+        add_action('in_admin_footer', array($this, 'nbdesigner_add_tiny_mce_shortcode_dialog'));
+    }   
+    public function nbdesigner_add_tinymce_shortcode_editor_plugin($plugin_array){
+        $plugin_array['nbdesigner_button'] = NBDESIGNER_PLUGIN_URL . 'assets/js/nbdesigner-tinymce-shortcode.js';		
+        return $plugin_array;        
+    }
+    public function nbdesigner_add_tinymce_shortcode_editor_button($buttons){   
+        array_push($buttons, "nbdesigner_button");		
+        return $buttons;         
+    }    
+    public function nbdesigner_add_tiny_mce_shortcode_dialog(){
+        include (NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-shortcode-dialog.php');
     }
 }

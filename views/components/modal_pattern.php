@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="padding-bottom: 15px;">
-                <b>Pattern{{(langs['PATTERN']) ? langs['PATTERN'] : "Pattern"}}</b>
+                <b>{{(langs['PATTERN']) ? langs['PATTERN'] : "Pattern"}}</b>
                 <button style="margin-top: 0;" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>						
             </div>
             <div class="modal-body" style="padding: 15px;">

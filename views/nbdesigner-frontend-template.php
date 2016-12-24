@@ -27,7 +27,7 @@
         <script type="text/javascript">
             var product_id = '<?php echo $_GET['product_id']; ?>';
             var od_mainURL = '<?php echo NBDESIGNER_PLUGIN_URL . 'assets/'; ?>';
-            var orderid = OD_task = OD_priority = adid = '';
+            var orderid = OD_task = OD_priority = adid = temp = '';
             var NBDESIGNCONFIG = {};
             NBDESIGNCONFIG['lang_code'] = "<?php echo get_bloginfo('language'); ?>";
             NBDESIGNCONFIG['lang_rtl'] = "<?php if(is_rtl()){ echo 'rtl'; } else {  echo 'ltr';  } ?>";
@@ -44,6 +44,9 @@
             <?php if(isset($_GET['adid'])): ?>
                 adid = "<?php echo $_GET['adid']; ?>";
              <?php endif; ?>  
+            <?php if(isset($_GET['temp'])): ?>
+                temp = "<?php echo $_GET['temp']; ?>";
+             <?php endif; ?>                   
         </script>
     </head>
     <body ng-controller="DesignerController" ng-style="{'background-image' : 'url(<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/'+backgroundId+'.png)'}">
