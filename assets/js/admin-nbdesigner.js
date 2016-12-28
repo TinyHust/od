@@ -222,7 +222,6 @@ jQuery(document).ready(function ($) {
         NBDESIGNADMIN.loopConfigAreaDesign();
         NBDESIGNADMIN.ajustImage(); 
     });  
-    
 });
 var NBDESIGNADMIN = {
     add_font_cat: function (e) {

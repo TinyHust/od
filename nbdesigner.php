@@ -6,7 +6,7 @@
 Plugin Name: Nbdesigner
 Plugin URI: https://cmsmart.net/wordpress-plugins/woocommerce-online-product-designer-plugin
 Description: Allow customer design product before purchase.
-Version: 1.3.0
+Version: 1.4.0
 Author: Netbaseteam
 Author URI: http://netbaseteam.com/
 License: GPLv2 or later
@@ -19,7 +19,7 @@ if ( !function_exists( 'add_action' ) ) {
 	exit;
 }
 
-define('NBDESIGNER_VERSION', '1.0.0');
+define('NBDESIGNER_VERSION', '1.4.0');
 define('NBDESIGNER_MINIMUM_WP_VERSION', '4.1.1');
 define('NBDESIGNER_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('NBDESIGNER_PLUGIN_DIR', plugin_dir_path(__FILE__));
@@ -38,3 +38,4 @@ if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
     require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
 }
 $nb_designer = new Nbdesigner_Plugin();
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.widget.php');

@@ -24,8 +24,8 @@ jQuery('body').on('change', '#nbdesigner-pagination', function(){
     jQuery('#nbdesigner-number-row').slideToggle();
 });
 jQuery('body').on('click', '#nbdesigner-shortcode-create', function(){
-    var row = jQuery('#nbdesigner-shortcode-number').val(),
-    per_row = jQuery('#nbdesigner-shortcode-number-row').val(),
+    var per_row = jQuery('#nbdesigner-shortcode-number').val(),
+    row = jQuery('#nbdesigner-shortcode-number-row').val(),
     pagination = jQuery('#nbdesigner-pagination').prop('checked');
     var content = '[nbdesigner_gallery row="'+row+'" pagination="'+pagination+'" per_row="'+per_row+'" ][/nbdesigner_gallery]';
     tinyMCE.activeEditor.selection.setContent( content );    

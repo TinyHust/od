@@ -17,6 +17,7 @@
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/bundle.css'; ?>" rel="stylesheet" media="all"/>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/owl.carousel.css'; ?>" rel="stylesheet" media="all"/>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/style.min.css'; ?>" rel="stylesheet" media="all">
+        <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/custom.css'; ?>" rel="stylesheet" media="all">
         <?php if(is_rtl()): ?>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/nbdesigner-rtl.css'; ?>" rel="stylesheet" media="all">
         <?php endif; ?>
@@ -27,7 +28,7 @@
         <script type="text/javascript">
             var product_id = '<?php echo $_GET['product_id']; ?>';
             var od_mainURL = '<?php echo NBDESIGNER_PLUGIN_URL . 'assets/'; ?>';
-            var orderid = OD_task = OD_priority = adid = temp = '';
+            var orderid = OD_task = OD_priority = adid = OD_temp = OD_ref = '';
             var NBDESIGNCONFIG = {};
             NBDESIGNCONFIG['lang_code'] = "<?php echo get_bloginfo('language'); ?>";
             NBDESIGNCONFIG['lang_rtl'] = "<?php if(is_rtl()){ echo 'rtl'; } else {  echo 'ltr';  } ?>";
@@ -45,8 +46,11 @@
                 adid = "<?php echo $_GET['adid']; ?>";
              <?php endif; ?>  
             <?php if(isset($_GET['temp'])): ?>
-                temp = "<?php echo $_GET['temp']; ?>";
-             <?php endif; ?>                   
+                OD_temp = "<?php echo $_GET['temp']; ?>";
+            <?php endif; ?>          
+            <?php if(isset($_GET['ref'])): ?>
+                OD_ref = "<?php echo $_GET['ref']; ?>";
+            <?php endif; ?>                    
         </script>
     </head>
     <body ng-controller="DesignerController" ng-style="{'background-image' : 'url(<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/'+backgroundId+'.png)'}">

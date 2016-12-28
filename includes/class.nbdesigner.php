@@ -120,8 +120,11 @@ class Nbdesigner_Plugin {
             add_action('wp_ajax_nbdesigner_migrate_domain', array('Nbdesigner_DebugTool', 'update_data_migrate_domain'));
             add_action('wp_ajax_nbdesigner_restore_data_migrate_domain', array('Nbdesigner_DebugTool', 'restore_data_migrate_domain'));
             add_action('wp_ajax_nbdesigner_theme_check', array('Nbdesigner_DebugTool', 'theme_check_hook'));
+            add_action('wp_ajax_nbdesigner_custom_css', array('Nbdesigner_DebugTool', 'save_custom_css'));
             add_action('wp_ajax_nbdesigner_copy_image_from_url', array($this, 'nbdesigner_copy_image_from_url'));
             add_action('wp_ajax_nopriv_nbdesigner_copy_image_from_url', array($this, 'nbdesigner_copy_image_from_url'));
+            add_action('wp_ajax_nbdesigner_get_suggest_design', array($this, 'nbdesigner_get_suggest_design'));
+            add_action('wp_ajax_nopriv_nbdesigner_get_suggest_design', array($this, 'nbdesigner_get_suggest_design'));            
             add_action('admin_enqueue_scripts', function($hook) {   
                 if (($hook == 'post.php') || ($hook == 'post-new.php') || ($hook == 'toplevel_page_nbdesigner') ||
                         ($hook == 'nbdesigner_page_nbdesigner_manager_product' ) || ($hook == 'toplevel_page_nbdesigner_shoper') || ($hook == 'nbdesigner_page_nbdesigner_frontend_translate') ||
@@ -151,6 +154,11 @@ class Nbdesigner_Plugin {
                 if($hook == 'nbdesigner_page_nbdesigner_frontend_translate'){
                     wp_register_script('admin_nbdesigner_jeditable', NBDESIGNER_PLUGIN_URL . 'assets/js/jquery.jeditable.js', array('jquery'));
                     wp_enqueue_script('admin_nbdesigner_jeditable');
+                }
+                if($hook == 'nbdesigner_page_nbdesigner_tools'){
+                    wp_enqueue_style('admin_nbdesigner_codemirror', NBDESIGNER_PLUGIN_URL . 'assets/codemirror/codemirror.css');
+                    wp_enqueue_script( 'nbdesigner_codemirror_js', NBDESIGNER_PLUGIN_URL . 'assets/codemirror/codemirror.js' , array());
+                    wp_enqueue_script( 'nbdesigner_codemirror_css_js', NBDESIGNER_PLUGIN_URL . 'assets/codemirror/css.js' , array());
                 }
             });
         } else {     	            
@@ -214,6 +222,10 @@ class Nbdesigner_Plugin {
         $path_data = $upload_dir['basedir'] . '/nbdesigner/data/language';
         if (!file_exists($path_data)) {
             wp_mkdir_p($path_data);
+        } 
+        $path_suggest = $upload_dir['basedir'] . '/nbdesigner/suggest_designs';
+        if (!file_exists($path_suggest)) {
+            wp_mkdir_p($path_suggest);
         }          
         self::nbdesigner_add_redesign_page();
     }
@@ -325,6 +337,7 @@ class Nbdesigner_Plugin {
     }
     public function nbdesigner_add_query_vars_filter($vars){
         $vars[] = "nbds-adid";
+        $vars[] = "nbds-ref";
         return $vars;   
     }
     public function nbdesigner_lincense_notices(){            
@@ -497,13 +510,13 @@ class Nbdesigner_Plugin {
             $pro = array_slice($_pro, ($page-1)*$limit, $limit);
         }else{
             $pro = $_pro;
-            if($number_pro > $limit) $pro = array_slice($_pro, 0, $limit);	
+            if($number_pro > $limit) $pro = array_slice($_pro, ($page-1)*$limit, $limit);	
         }
         $url = admin_url('admin.php?page=nbdesigner_manager_product');
         require_once NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.pagination.php';
         $paging = new Nbdesigner_Pagination();
         $config = array(
-            'current_page'  => isset($page) ? $page : 1, // Trang hiện tại
+            'current_page'  => isset($page) ? $page : 1, 
             'total_record'  => $number_pro,
             'limit'         => $limit,
             'link_full'     => $url.'&p={p}',
@@ -950,7 +963,7 @@ class Nbdesigner_Plugin {
         require_once NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.pagination.php';
         $paging = new Nbdesigner_Pagination();
         $config = array(
-            'current_page'  => isset($page) ? $page : 1, // Trang hiện tại
+            'current_page'  => isset($page) ? $page : 1, 
             'total_record'  => $total,
             'limit'         => $limit,
             'link_full'     => $url.'&p={p}',
@@ -1328,6 +1341,7 @@ class Nbdesigner_Plugin {
     }
     public function nbdesigner_button() {
         $temp = get_query_var( 'nbds-adid' ) ? get_query_var( 'nbds-adid' ) : 0;
+        $ref = get_query_var( 'nbds-ref' ) ? get_query_var( 'nbds-ref' ) : 0;
         $is_nbdesign = get_post_meta(get_the_ID(), '_nbdesigner_enable', true);
         $uid = get_current_user_id();
         $sid = session_id();
@@ -1357,6 +1371,7 @@ class Nbdesigner_Plugin {
             $src = add_query_arg(array('action' => 'nbdesigner_editor_html', 'product_id' => get_the_ID()), site_url());                    
             if(is_numeric($order)) $src .= '&orderid='.$order;
             if($temp) $src .= '&temp='.$temp;
+            if($ref) $src .= '&ref='.$ref;
             $button .= '<div style="position: fixed; top: 0; left: 0; z-index: 999999; opacity: 0; width: 100%; height: 100%;" id="container-online-designer"><iframe id="onlinedesigner-designer"  width="100%" height="100%" scrolling="no" frameborder="0" noresize="noresize" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" src="' . $src . '"></iframe><span id="closeFrameDesign"  class="nbdesigner_pp_close">&times;</span></div>';
             echo $button;
         }
@@ -1379,14 +1394,47 @@ class Nbdesigner_Plugin {
             $data['dpi'] = get_post_meta($id, '_nbdesigner_dpi', true);
             $option = unserialize(get_post_meta($id, '_nbdesigner_option', true));           
             if($data['dpi'] == "") $data['dpi'] = 96;
-            if(isset($_POST['oid']) && ($_POST['oid'] != '')){
-                $uid = get_current_user_id();
+            $uid = get_current_user_id();
+            if(isset($_POST['oid']) && ($_POST['oid'] != '')){                
                 $oid = $_POST['oid'];
                 if($uid > 0){
                     $path = $this->plugin_path_data. 'designs/' .$uid. '/' .$oid. '/' .$id. '/design.json';
+                    $path_config = $this->plugin_path_data. 'designs/' .$uid. '/' .$oid. '/' .$id. '/config.json';
+                    $path_font = $this->plugin_path_data. 'designs/' .$uid. '/' .$oid. '/' .$id. '/used_font.json';
                     $data_design = $this->nbdesigner_read_json_setting($path);
-                    $data['design'] = $data_design;                   
+                    $data['design'] = $data_design;         
+                    if(file_exists($path_config)){					
+                        $data['config'] = $this->nbdesigner_read_json_setting($path_config);					
+                    } else {
+                        $data['config'] = '';
+                    }     
+                    if(file_exists($path_font)){					
+                        $data['fonts'] = $this->nbdesigner_read_json_setting($path_font);	
+                        $data['font_url'] = WP_CONTENT_URL.'/uploads/nbdesigner/fonts/';
+                    } else{
+                        $data['fonts'] = '';
+                    }                       
                 }
+            }else if(isset($_POST['ref']) && ($_POST['ref'] != '')){
+                $ref = absint($_POST['ref']);
+                $iid = session_id();
+                if ($uid > 0) $iid = $uid;
+                $path = $this->plugin_path_data. 'designs/' .$iid. '/nb_order/' .$ref. '/design.json';
+                $path_config = $this->plugin_path_data. 'designs/' .$iid. '/nb_order/' .$ref. '/config.json';
+                $path_font = $this->plugin_path_data. 'designs/' .$iid. '/nb_order/' .$ref. '/used_font.json';
+                $data['design'] = $this->nbdesigner_read_json_setting($path);
+                $data['ref'] = unserialize(get_post_meta($ref, '_designer_setting', true));
+                if(file_exists($path_config)){					
+                    $data['config'] = $this->nbdesigner_read_json_setting($path_config);					
+                }else {
+                    $data['config'] = '';
+                }     
+                if(file_exists($path_font)){					
+                    $data['fonts'] = $this->nbdesigner_read_json_setting($path_font);	
+                    $data['font_url'] = WP_CONTENT_URL.'/uploads/nbdesigner/fonts/';
+                } else{
+                    $data['fonts'] = '';
+                }                   
             }else if(isset($option['admindesign']) && $option['admindesign']){
                 if(isset($_POST['did']) && $_POST['did'] != ''){
                     $folder = $_POST['did'];
@@ -1436,6 +1484,7 @@ class Nbdesigner_Plugin {
         $oid = $_POST['orderid'];	  
         $task = $_POST['task'];	 
         $config = str_replace('\"', '"', $_POST['config']);
+        $fonts = str_replace('\"', '"', $_POST['fonts']);
         if(isset($_POST['image'])){
             $data = $_POST['image']['img'];
             $json = str_replace('\"', '"', $_POST['image']['json']);	
@@ -1469,17 +1518,16 @@ class Nbdesigner_Plugin {
                 $data_after_save_image = $this->nbdesigner_save_design_to_image($data, $sid, $pid, array('priority' => $ad_priority, 'folder' => $ad_folder));
                 $json_file = $this->plugin_path_data . 'admindesign/' . $pid . '/' . $ad_folder . '/design.json';    
                 $json_used_font = $this->plugin_path_data . 'admindesign/' . $pid . '/' . $ad_folder .'/used_font.json'; 
-                $json_config = $this->plugin_path_data . 'admindesign/' . $pid . '/' . $ad_folder . '/config.json'; 
-                $fonts = str_replace('\"', '"', $_POST['fonts']);
-                if (!count($data_after_save_image['mes'])) {
-                    file_put_contents($json_used_font, $fonts);
+                $json_config = $this->plugin_path_data . 'admindesign/' . $pid . '/' . $ad_folder . '/config.json';                 
+                if (!count($data_after_save_image['mes'])) {                    
                     $ad_path = $this->plugin_path_data . 'admindesign/' . $pid . '/' . $ad_folder;
-                    $this->nbdesigner_create_thumbnail_design($ad_path, $pid);     
+                    $this->nbdesigner_create_thumbnail_design($ad_path, $ad_path.'/preview', $pid, 300, 300);     
                     if($ad_priority == 'primary') update_post_meta($pid, '_nbdesigner_admintemplate_primary', 1);
                 }             
             }else{
                 $json_file = $this->plugin_path_data . 'designs/' . $uid . '/' . $order . '/' . $pid . '/design.json';
                 $json_config = $this->plugin_path_data . 'designs/' . $uid . '/' . $order . '/' . $pid . '/config.json';
+                $json_used_font = $this->plugin_path_data . 'designs/' . $uid . '/' . $order . '/' . $pid . '/used_font.json';
                 if($accept_save) $data_after_save_image = $this->nbdesigner_save_design_to_image($data, $uid, $pid, '');
             }    
         } else {         
@@ -1487,10 +1535,12 @@ class Nbdesigner_Plugin {
             if($accept_save) $data_after_save_image = $this->nbdesigner_save_design_to_image($data, $sid, $pid, '');
             $json_file = $this->plugin_path_data . 'designs/' . $sid . '/' . $order . '/' . $pid . '/design.json';
             $json_config = $this->plugin_path_data . 'designs/' . $sid . '/' . $order . '/' . $pid . '/config.json';
+            $json_used_font = $this->plugin_path_data . 'designs/' . $sid . '/' . $order . '/' . $pid . '/used_font.json';
         } 
         if($accept_save){
             file_put_contents($json_file, $json);
             file_put_contents($json_config, $config);
+            file_put_contents($json_used_font, $fonts);
             if (!count($data_after_save_image['mes'])) {
                 $result['image'] = $data_after_save_image['link'];
                 $result['flag'] = 'success';
@@ -1603,17 +1653,19 @@ class Nbdesigner_Plugin {
         echo json_encode($result);
         wp_die();        
     }
-    private function nbdesigner_create_thumbnail_design($path, $pid){
+    private function nbdesigner_create_thumbnail_design($from_path, $to_path, $pid, $_width = 300, $_height = 300){
         $configs = unserialize(get_post_meta($pid, '_designer_setting', true));        
-        $path_preview = $path  . '/preview';
-        $list_images = $this->nbdesigner_list_thumb($path, $level = 1);
+        $path_preview = $to_path;
+        $width = $_width;
+        $height = $_height;
+        $list_images = $this->nbdesigner_list_thumb($from_path, $level = 1);
         if(!file_exists($path_preview)){
             wp_mkdir_p($path_preview);
         }
         foreach ($configs as $key => $val){
-            $p_img = $path . '/frame_' . $key . '.png';
+            $p_img = $from_path . '/frame_' . $key . '.png';
             if(file_exists($p_img)){
-                $width = $height = 300;
+                //$width = $height = 300;
                 $image_design = $this->nbdesigner_resize_imagepng($p_img, $val["area_design_width"], $val["area_design_height"]);
                 $image_product_ext = pathinfo($val["img_src"]);
                 if($image_product_ext['extension'] == "png"){
@@ -2603,6 +2655,7 @@ class Nbdesigner_Plugin {
         wp_die();        
     }
     public function nbdesigner_tools(){
+        $custom_css = Nbdesigner_DebugTool::get_custom_css();
         include_once(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-tools.php');
     }
     public function nbdesigner_variation_settings_fields($loop, $variation_data, $variation){
@@ -2662,76 +2715,17 @@ class Nbdesigner_Plugin {
         echo json_encode($res);
         wp_die();
     }
-    /**
-     * Locate template.
-     *
-     * Locate the called template.
-     * Search Order:
-     * 1. /themes/theme/web-to-print-online-designer/$template_name
-     * 2. /themes/theme/$template_name
-     * 3. /plugins/web-to-print-online-designer/templates/$template_name.
-     *
-     * @since 1.3.1
-     *
-     * @param 	string 	$template_name			Template to load.
-     * @param 	string 	$string $template_path	        Path to templates.
-     * @param 	string	$default_path			Default path to template files.
-     * @return 	string 					Path to the template file.
-     */    
-    public function nbdesigner_locate_template($template_name, $template_path = '', $default_path = '') {
-        // Set variable to search in web-to-print-online-designer folder of theme.
-        if (!$template_path) :
-            $template_path = 'web-to-print-online-designer/';
-        endif;
-        // Set default plugin templates path.
-        if (!$default_path) :
-            $default_path = NBDESIGNER_PLUGIN_DIR . 'templates/'; // Path to the template folder
-        endif;
-        // Search template file in theme folder.
-        $template = locate_template(array(
-            $template_path . $template_name,
-            $template_name
-        ));
-        // Get plugins template file.
-        if (!$template) :
-            $template = $default_path . $template_name;
-        endif;
-        return apply_filters('nbdesigner_locate_template', $template, $template_name, $template_path, $default_path);
-    }
-    /**
-     * Get template.
-     *
-     * Search for the template and include the file.
-     *
-     * @since 1.3.1
-     *
-     * @see wcpt_locate_template()
-     *
-     * @param string 	$template_name			Template to load.
-     * @param array 	$args				Args passed for the template file.
-     * @param string 	$string $template_path	        Path to templates.
-     * @param string	$default_path			Default path to template files.
-     */
-    public function nbdesigner_get_template($template_name, $args = array(), $tempate_path = '', $default_path = '') {
-        if (is_array($args) && isset($args)) :
-            extract($args);
-        endif;
-        $template_file = $this->nbdesigner_locate_template($template_name, $tempate_path, $default_path);
-        if (!file_exists($template_file)) :
-            _doing_it_wrong(__FUNCTION__, sprintf('<code>%s</code> does not exist.', $template_file), '1.3.1');
-            return;
-        endif;
-        include $template_file;
-    }
     public function nbdesigner_gallery_func($atts, $content = null) {
+        $page = get_query_var( 'paged', 1 );
         $atts = shortcode_atts(array(
             'row' => 5,
             'per_row' => 3,
             'pagination' => 'true',
             'des' => 'Gallery design templates',
+            'page' => $page,
             'templates' => $this->nbdesigner_get_all_templates()
             ), $atts);
-        return $this->nbdesigner_get_template('gallery.php', $atts);
+        return nbdesigner_get_template('gallery.php', $atts);
     }
     public function nbdesigner_get_all_templates(){
         $listTemplates = array();
@@ -2814,4 +2808,106 @@ class Nbdesigner_Plugin {
     public function nbdesigner_add_tiny_mce_shortcode_dialog(){
         include (NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-shortcode-dialog.php');
     }
+    public function nbdesigner_get_suggest_design(){
+        if (!wp_verify_nonce($_POST['nonce'], 'save-design')) {
+            die('Security error');
+        }          
+        $result = array();
+        $result['mes'] = 'success';
+        $result['flag'] = 1;           
+        if(isset($_POST['ref']) && isset($_POST['products']) && isset($_POST['sid'])){    
+            $ref_pid = $_POST['ref'];
+            $products = $_POST['products'];
+            $sid = esc_html($_POST['sid']);
+            $uid = get_current_user_id();
+            $iid = $sid;
+            if ($uid > 0) $iid = $uid;
+            $up = wp_upload_dir();
+            $base_path = $up['baseurl'];             
+            $from_path = $this->plugin_path_data . 'designs/' . $iid . '/nb_order/' . $ref_pid;
+            if(is_array($products)){
+                foreach ($products as $pro){
+                    $folder = substr(md5(rand(0, 999999)), 0, 10);
+                    $path_suggest = $this->plugin_path_data . 'suggest_designs/' . $folder;
+                    $this->nbdesigner_create_thumbnail_design($from_path, $path_suggest, $pro, 300, 300);
+                    $list = $this->nbdesigner_list_thumb($path_suggest, $level = 1);
+                    $mid_path = 'nbdesigner/suggest_designs/'.$folder.'/';
+                    foreach ($list as $img){
+                        $name = basename($img);
+                        $url = $base_path.'/'.$mid_path.$name;
+                        $result['images'][$pro][] = $url;
+                    }	                    
+                }
+            }else{
+                $result['mes'] = __('Missing product!', $this->textdomain);
+                $result['flag'] = 0;                    
+            }
+        }else{
+            $result['mes'] = __('Missing information!', $this->textdomain);
+            $result['flag'] = 0;            
+        }        
+        echo json_encode($result);
+        wp_die();
+    }
+}   
+/**
+ * Locate template.
+ *
+ * Locate the called template.
+ * Search Order:
+ * 1. /themes/theme/web-to-print-online-designer/$template_name
+ * 2. /themes/theme/$template_name
+ * 3. /plugins/web-to-print-online-designer/templates/$template_name.
+ *
+ * @since 1.3.1
+ *
+ * @param 	string 	$template_name			Template to load.
+ * @param 	string 	$string $template_path	        Path to templates.
+ * @param 	string	$default_path			Default path to template files.
+ * @return 	string 					Path to the template file.
+ */    
+function nbdesigner_locate_template($template_name, $template_path = '', $default_path = '') {
+    // Set variable to search in web-to-print-online-designer folder of theme.
+    if (!$template_path) :
+        $template_path = 'web-to-print-online-designer/';
+    endif;
+    // Set default plugin templates path.
+    if (!$default_path) :
+        $default_path = NBDESIGNER_PLUGIN_DIR . 'templates/'; // Path to the template folder
+    endif;
+    // Search template file in theme folder.
+    $template = locate_template(array(
+        $template_path . $template_name,
+        $template_name
+    ));
+    // Get plugins template file.
+    if (!$template) :
+        $template = $default_path . $template_name;
+    endif;
+    return apply_filters('nbdesigner_locate_template', $template, $template_name, $template_path, $default_path);
+}
+/**
+ * Get template.
+ *
+ * Search for the template and include the file.
+ *
+ * @since 1.3.1
+ *
+ * @see wcpt_locate_template()
+ *
+ * @param string 	$template_name			Template to load.
+ * @param array 	$args				Args passed for the template file.
+ * @param string 	$string $template_path	        Path to templates.
+ * @param string	$default_path			Default path to template files.
+ */
+function nbdesigner_get_template($template_name, $args = array(), $tempate_path = '', $default_path = '') {
+    if (is_array($args) && isset($args)) :
+        extract($args);
+    endif;
+    $template_file = nbdesigner_locate_template($template_name, $tempate_path, $default_path);
+    if (!file_exists($template_file)) :
+        _doing_it_wrong(__FUNCTION__, sprintf('<code>%s</code> does not exist.', $template_file), '1.3.1');
+        return;
+    endif;
+    include $template_file;
 }

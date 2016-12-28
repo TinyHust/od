@@ -179,4 +179,32 @@ class Nbdesigner_DebugTool {
         echo json_encode($result);
         wp_die();        
     }
+    public static function save_custom_css(){
+        if (!wp_verify_nonce($_POST['_nbdesigner_custom_css'], 'nbdesigner-custom-css') || !current_user_can('administrator')) {
+            die('Security error');
+        } 
+        $result = array();
+        $result['flag'] = 0;
+        $custom_css = '';
+        $path = NBDESIGNER_PLUGIN_DIR . 'assets/css/custom.css';
+        if(isset($_POST['content'])){
+            $custom_css = $_POST['content'];
+            $fp = fopen($path, "w");
+            fwrite($fp, $custom_css);
+            fclose($fp);
+            $result['flag'] = 1;
+        }
+        echo json_encode($result);
+        wp_die();           
+    }
+    public static function get_custom_css(){
+        $custom_css = '';
+        $path = NBDESIGNER_PLUGIN_DIR . 'assets/css/custom.css';
+        if(file_exists($path)){
+            $fp = fopen( $path, 'r' );
+            $custom_css = fread($fp, filesize($path));
+            fclose( $fp );            
+        }
+        return $custom_css;
+    }   
 }
