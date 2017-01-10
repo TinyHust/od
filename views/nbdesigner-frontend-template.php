@@ -28,7 +28,8 @@
         <script type="text/javascript">
             var product_id = '<?php echo $_GET['product_id']; ?>';
             var od_mainURL = '<?php echo NBDESIGNER_PLUGIN_URL . 'assets/'; ?>';
-            var orderid = OD_task = OD_priority = adid = OD_temp = OD_ref = '';
+            var orderid = OD_task = OD_priority = adid = OD_temp = OD_ref = OD_folder = OD_oiid = '';
+            var OD_save_status = 0;
             var NBDESIGNCONFIG = {};
             NBDESIGNCONFIG['lang_code'] = "<?php echo get_bloginfo('language'); ?>";
             NBDESIGNCONFIG['lang_rtl'] = "<?php if(is_rtl()){ echo 'rtl'; } else {  echo 'ltr';  } ?>";
@@ -43,14 +44,20 @@
                 OD_priority = "<?php echo $_GET['priority']; ?>";
              <?php endif; ?>  
             <?php if(isset($_GET['adid'])): ?>
-                adid = "<?php echo $_GET['adid']; ?>";
+                adid = "<?php echo time(); ?>";
              <?php endif; ?>  
             <?php if(isset($_GET['temp'])): ?>
                 OD_temp = "<?php echo $_GET['temp']; ?>";
             <?php endif; ?>          
             <?php if(isset($_GET['ref'])): ?>
                 OD_ref = "<?php echo $_GET['ref']; ?>";
-            <?php endif; ?>                    
+            <?php endif; ?>    
+            <?php if(isset($_GET['folder'])): ?>
+                OD_folder = "<?php echo $_GET['folder']; ?>";
+            <?php endif; ?>    
+            <?php if(isset($_GET['oiid'])): ?>
+                OD_oiid = "<?php echo $_GET['oiid']; ?>";
+            <?php endif; ?>                 
         </script>
     </head>
     <body ng-controller="DesignerController" ng-style="{'background-image' : 'url(<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/'+backgroundId+'.png)'}">

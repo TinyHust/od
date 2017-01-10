@@ -6,7 +6,7 @@
 Plugin Name: Nbdesigner
 Plugin URI: https://cmsmart.net/wordpress-plugins/woocommerce-online-product-designer-plugin
 Description: Allow customer design product before purchase.
-Version: 1.4.0
+Version: 1.5.0
 Author: Netbaseteam
 Author URI: http://netbaseteam.com/
 License: GPLv2 or later
@@ -19,12 +19,76 @@ if ( !function_exists( 'add_action' ) ) {
 	exit;
 }
 
-define('NBDESIGNER_VERSION', '1.4.0');
-define('NBDESIGNER_MINIMUM_WP_VERSION', '4.1.1');
-define('NBDESIGNER_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('NBDESIGNER_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('NBDESIGNER_PLUGIN_BASENAME', plugin_basename(__FILE__));
-define('NBDESIGNER_MODE_DEBUG', 'dev');
+$upload_dir = wp_upload_dir();
+$basedir = $upload_dir['basedir'];
+$baseurl = $upload_dir['baseurl'];
+
+if (!defined('NBDESIGNER_VERSION')) {
+    define('NBDESIGNER_VERSION', '1.5.0');
+}
+if (!defined('NBDESIGNER_MINIMUM_WP_VERSION')) {
+    define('NBDESIGNER_MINIMUM_WP_VERSION', '4.1.1');
+}
+if (!defined('NBDESIGNER_PLUGIN_URL')) {
+    define('NBDESIGNER_PLUGIN_URL', plugin_dir_url(__FILE__));
+}
+if (!defined('NBDESIGNER_PLUGIN_DIR')) {
+    define('NBDESIGNER_PLUGIN_DIR', plugin_dir_path(__FILE__));
+}
+if (!defined('NBDESIGNER_PLUGIN_BASENAME')) {
+    define('NBDESIGNER_PLUGIN_BASENAME', plugin_basename(__FILE__));
+}
+if (!defined('NBDESIGNER_MODE_DEBUG')) {
+    define('NBDESIGNER_MODE_DEBUG', 'dev');
+}
+if (!defined('NBDESIGNER_DATA_DIR')) {   
+    define('NBDESIGNER_DATA_DIR', $basedir . '/nbdesigner');
+}
+if (!defined('NBDESIGNER_DATA_URL')) {   
+    define('NBDESIGNER_DATA_URL', $baseurl . '/nbdesigner');
+}
+if (!defined('NBDESIGNER_FONT_DIR')) {   
+    define('NBDESIGNER_FONT_DIR', NBDESIGNER_DATA_DIR . '/fonts');
+}
+if (!defined('NBDESIGNER_FONT_URL')) {   
+    define('NBDESIGNER_FONT_URL', NBDESIGNER_DATA_URL . '/fonts');
+}
+if (!defined('NBDESIGNER_DOWNLOAD_DIR')) {   
+    define('NBDESIGNER_DOWNLOAD_DIR', NBDESIGNER_DATA_DIR . '/download');
+}
+if (!defined('NBDESIGNER_DOWNLOAD_URL')) {   
+    define('NBDESIGNER_DOWNLOAD_URL', NBDESIGNER_DATA_URL . '/download');
+}
+if (!defined('NBDESIGNER_TEMP_DIR')) {   
+    define('NBDESIGNER_TEMP_DIR', NBDESIGNER_DATA_DIR . '/temp');
+}
+if (!defined('NBDESIGNER_TEMP_URL')) {   
+    define('NBDESIGNER_TEMP_URL', NBDESIGNER_DATA_URL . '/temp');
+}
+if (!defined('NBDESIGNER_ADMINDESIGN_DIR')) {   
+    define('NBDESIGNER_ADMINDESIGN_DIR', NBDESIGNER_DATA_DIR . '/admindesign');
+}
+if (!defined('NBDESIGNER_ADMINDESIGN_URL')) {   
+    define('NBDESIGNER_ADMINDESIGN_URL', NBDESIGNER_DATA_URL . '/admindesign');
+}
+if (!defined('NBDESIGNER_SUGGEST_DESIGN_DIR')) {   
+    define('NBDESIGNER_SUGGEST_DESIGN_DIR', NBDESIGNER_DATA_DIR . '/suggest_designs');
+}
+if (!defined('NBDESIGNER_SUGGEST_DESIGN_URL')) {   
+    define('NBDESIGNER_SUGGEST_DESIGN_URL', NBDESIGNER_DATA_URL . '/suggest_designs');
+}
+if (!defined('NBDESIGNER_DATA_CONFIG_DIR')) {   
+    define('NBDESIGNER_DATA_CONFIG_DIR', NBDESIGNER_DATA_DIR . '/data');
+}
+if (!defined('NBDESIGNER_DATA_CONFIG_URL')) {   
+    define('NBDESIGNER_DATA_CONFIG_URL', NBDESIGNER_DATA_URL . '/data');
+}
+if (!defined('NBDESIGNER_JS_URL')) {   
+    define('NBDESIGNER_JS_URL', NBDESIGNER_PLUGIN_URL . 'assets/js/');
+}
+if (!defined('NBDESIGNER_CSS_URL')) {   
+    define('NBDESIGNER_CSS_URL', NBDESIGNER_PLUGIN_URL . 'assets/css/');
+}
 
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.debug.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.php');

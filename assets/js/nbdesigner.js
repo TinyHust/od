@@ -70,7 +70,6 @@ var NBDESIGNERPRODUCT = {
             products.push(jQuery(this).attr('data-id'));
             jQuery(this).parent('.nbdesigner-related-product-item').find('.nbdesigner-overlay').addClass('open');
         });
-        console.log(products);
         jQuery.ajax({
             url: nbds_frontend.url,
             method: "POST",
@@ -133,3 +132,15 @@ function addParameter(url, parameterName, parameterValue, atStart/*Add param bef
     }
     return urlParts[0] + newQueryString + urlhash;
 };
+(function ( $, window, document, undefined ) {
+ 
+    $variation_form = $( '.variations_form');
+ 
+    $variation_form.on( 'show_variation', function( event, variation ){
+        console.log(123);
+    })
+    .on( 'reset_image', function () {
+        console.log(456);
+    });
+ 
+})( jQuery, window, document );

@@ -16,15 +16,14 @@ class Nbdesigner_Plugin {
     public function __construct() {
         $this->textdomain = 'nbdesigner';
         $this->plugin_id = 'nbdesigner';
-        $upload_dir = wp_upload_dir();
-        $path = $upload_dir['basedir'] . '/nbdesigner/';
-        $this->plugin_path_data = $path;
+        $this->plugin_path_data = NBDESIGNER_DATA_DIR . '/';
         $this->author_site = 'https://cmsmart.net/';
         $this->nbdesigner_sku = 'WPP1074';
         $this->activedomain = 'activedomain/netbase/';
         $this->removedomain = 'removedomain/netbase/';
         $this->default_option = array(
             'btname' => 'Design It',
+            'btn_position' => 1,
             'upload_max' => '5',
             'facebook_api_key' => '',
             'facebook_secret_key' => '',
@@ -40,161 +39,192 @@ class Nbdesigner_Plugin {
             'thumbnail_height' => '76',
             'iframe_securitykey' => 'QWERTYUIOPASDFGHJKL'
         );
+        $this->nbdesigner_hook();
+        $this->nbdesigner_schehule();
+        $this->nbdesigner_lincense_notices();        
+        add_action( 'nbdesigner_lincense_event', array($this, 'nbdesigner_lincense_event_action') ); 
+        if (in_array('woocommerce/woocommerce.php',get_option('active_plugins')) || is_plugin_active_for_network( 'woocommerce/woocommerce.php' )) {
+            $this->nbdesigner_woocommerce_hook();
+        }
+        if (is_admin()) {
+            $this->nbdesigner_admin_hook();           
+            $this->nbdesigner_ajax();           
+            $this->nbdesigner_admin_enqueue_scripts();           
+        } else {    
+            $this->nbdesigner_frontend_hook();    
+            $this->nbdesigner_frontend_enqueue_scripts();
+        }      
+    }
+    public function nbdesigner_ajax(){
+        // Nbdesigner_EVENT => nopriv
+        $ajax_events = array(
+            'nbdesigner_add_font_cat' => false,
+            'nbdesigner_add_art_cat' => false,
+            'nbdesigner_add_google_font' => false,
+            'nbdesigner_delete_font_cat' => false,
+            'nbdesigner_delete_art_cat' => false,
+            'nbdesigner_delete_font' => false,
+            'nbdesigner_delete_art' => false,
+            'nbdesigner_get_product_info' => true,
+            'nbdesigner_save_customer_design' => true,
+            'nbdesigner_get_qrcode' => true,
+            'nbdesigner_get_facebook_photo' => true,
+            'nbdesigner_get_art' => true,
+            'nbdesigner_design_approve' => false,
+            'nbdesigner_design_order_email' => false,
+            'nbdesigner_customer_upload' => true,
+            'nbdesigner_get_font' => true,
+            'nbdesigner_get_pattern' => true,
+            'nbdesigner_get_info_license' => false,
+            'nbdesigner_remove_license' => false,
+            'nbdesigner_get_license_key' => false,
+            'nbdesigner_get_security_key' => false,
+            'nbdesigner_get_language' => true,
+            'nbdesigner_save_language' => false,
+            'nbdesigner_create_language' => false,
+            'nbdesigner_make_primary_design' => false,
+            'nbdesigner_load_admin_design' => true,
+            'nbdesigner_save_webcam_image' => true,
+            'nbdesigner_migrate_domain' => false,
+            'nbdesigner_restore_data_migrate_domain' => false,
+            'nbdesigner_theme_check' => false,
+            'nbdesigner_custom_css' => false,
+            'nbdesigner_copy_image_from_url' => true,
+            'nbdesigner_get_suggest_design' => true
+        );
+	foreach ($ajax_events as $ajax_event => $nopriv) {
+            add_action('wp_ajax_' . $ajax_event, array($this, $ajax_event));
+            if ($nopriv) {
+                // NBDesigner AJAX can be used for frontend ajax requests
+                add_action('wp_ajax_nopriv_' . $ajax_event, array($this, $ajax_event));
+            }
+        }
+    }
+    public function nbdesigner_hook(){
         add_action('plugins_loaded', array($this, 'translation_load_textdomain'));
         add_action('init', array($this, 'nbdesigner_start_session'), 1);
         add_action('wp_logout', array($this, 'nbdesigner_end_session'));
         add_action('wp_login', array($this, 'nbdesigner_change_folder_design'), 10, 2);
         add_action( 'user_register', array($this,'nbdesigner_registration_save'), 10, 1 ); 
         add_filter( 'cron_schedules', array($this, 'nbdesigner_set_schedule'));      
-        add_filter( 'query_vars', array($this, 'nbdesigner_add_query_vars_filter') );
-        $this->nbdesigner_schehule();
-        $this->nbdesigner_lincense_notices();
-        add_action('admin_head', array($this, 'nbdesigner_add_tinymce_editor'));
-        add_action( 'nbdesigner_lincense_event', array($this, 'nbdesigner_lincense_event_action') ); 
+        add_filter( 'query_vars', array($this, 'nbdesigner_add_query_vars_filter') );    
         add_shortcode( 'nbdesigner_redesign', array($this, 'nbdesigner_redesign_func') );
         add_shortcode( 'nbdesigner_admindesign', array($this, 'nbdesigner_admindesign_func') );
         add_shortcode( 'nbdesigner_gallery', array($this,'nbdesigner_gallery_func') );
         add_filter('the_content', array($this,'nbdesigner_add_shortcode_page_design'));
-        add_action( 'template_redirect', array( $this, 'nbdesigner_editor_html' ) );
-        if (in_array('woocommerce/woocommerce.php',get_option('active_plugins')) || is_plugin_active_for_network( 'woocommerce/woocommerce.php' )) {
-            add_filter('woocommerce_cart_item_name', array($this, 'nbdesigner_render_cart'), 1, 3);
-            add_action('woocommerce_add_to_cart', array($this, 'nbdesigner_add_custom_data_design'), 1, 2);
-            add_action('woocommerce_add_order_item_meta', array($this, 'nbdesigner_add_order_design_data'), 1, 3);
-            //add_action('woocommerce_order_status_changed', array($this, 'nbdesigner_change_foler_after_order'), 1, 1);
-            add_action('woocommerce_checkout_order_processed', array($this, 'nbdesigner_change_foler_after_order'), 1, 1);
-            add_filter('woocommerce_locate_template', array($this, 'nbdesigner_locate_plugin_template'), 20, 3 );
-            add_filter( 'woocommerce_order_item_name', array($this, 'nbdesigner_order_item_name'), 1, 2);
-            add_filter( 'woocommerce_order_item_quantity_html', array($this, 'nbdesigner_order_item_quantity_html'), 1, 2);
-            add_filter( 'woocommerce_hidden_order_itemmeta', array($this, 'nbdesigner_hidden_custom_order_item_metada'));
-            add_action( 'nbdesigner_admin_notifications_event', array($this, 'nbdesigner_admin_notifications_event_action') );
-            add_action( 'woocommerce_cart_item_removed', array($this, 'nbdesigner_remove_cart_item_design'), 10, 2 );
-            add_action( 'woocommerce_product_after_variable_attributes', array($this,'nbdesigner_variation_settings_fields'), 10, 3 );
-            add_action( 'woocommerce_save_product_variation', array($this,'nbdesigner_save_variation_settings_fields'), 10, 2 );
-        }
-        if (is_admin()) {
-            add_action('admin_menu', array($this, 'nbdesigner_menu'));
-            add_action('add_meta_boxes', array($this, 'add_design_box'), 30);
-            add_action('save_post', array($this, 'save_design'));
-            add_filter('upload_mimes', array(&$this, 'upload_mimes'));
-            add_filter('manage_product_posts_columns', array($this, 'nbdesigner_add_design_column'));
-            add_action('manage_product_posts_custom_column', array($this, 'nbdesigner_display_posts_design'), 1, 2);
-            add_filter('nbdesigner_notices', array($this, 'nbdesigner_notices'));
-            add_action('wp_ajax_nbdesigner_add_font_cat', array($this, 'nbdesigner_add_font_cats'));
-            add_action('wp_ajax_nbdesigner_add_art_cat', array($this, 'nbdesigner_add_art_cats'));
-            add_action('wp_ajax_nbdesigner_add_google_font', array($this, 'nbdesigner_add_google_font'));
-            add_action('wp_ajax_nbdesigner_delete_font_cat', array($this, 'nbdesigner_delete_font_cat'));
-            add_action('wp_ajax_nbdesigner_delete_art_cat', array($this, 'nbdesigner_delete_art_cat'));
-            add_action('wp_ajax_nbdesigner_delete_font', array($this, 'nbdesigner_delete_font'));
-            add_action('wp_ajax_nbdesigner_delete_art', array($this, 'nbdesigner_delete_art'));
-            add_action('wp_ajax_nbdesigner_get_product_info', array($this, 'nbdesigner_get_product_info'));
-            add_action('wp_ajax_nopriv_nbdesigner_get_product_info', array($this, 'nbdesigner_get_product_info'));
-            add_action('wp_ajax_nbdesigner_save_customer_design', array($this, 'nbdesigner_save_customer_design'));
-            add_action('wp_ajax_nopriv_nbdesigner_save_customer_design', array($this, 'nbdesigner_save_customer_design'));
-            add_action('wp_ajax_nbdesigner_get_qrcode', array($this, 'nbdesigner_get_qrcode'));
-            add_action('wp_ajax_nopriv_nbdesigner_get_qrcode', array($this, 'nbdesigner_get_qrcode'));
-            add_action('wp_ajax_nbdesigner_get_facebook_photo', array($this, 'nbdesigner_get_facebook_photo'));
-            add_action('wp_ajax_nopriv_nbdesigner_get_facebook_photo', array($this, 'nbdesigner_get_facebook_photo'));
-            add_action('wp_ajax_nbdesigner_get_art', array($this, 'nbdesigner_get_art'));
-            add_action('wp_ajax_nopriv_nbdesigner_get_art', array($this, 'nbdesigner_get_art'));
-            add_action('wp_ajax_nbdesigner_design_approve', array($this, 'nbdesigner_design_approve'));
-            add_action('wp_ajax_nbdesigner_design_order_email', array($this, 'nbdesigner_design_order_email'));
-            add_action('wp_ajax_nbdesigner_customer_upload', array($this, 'nbdesigner_customer_upload'));
-            add_action('wp_ajax_nopriv_nbdesigner_customer_upload', array($this, 'nbdesigner_customer_upload'));
-            add_action('wp_ajax_nbdesigner_get_font', array($this, 'nbdesigner_get_font'));
-            add_action('wp_ajax_nopriv_nbdesigner_get_font', array($this, 'nbdesigner_get_font'));
-            add_action('wp_ajax_nbdesigner_get_pattern', array($this, 'nbdesigner_get_pattern'));
-            add_action('wp_ajax_nopriv_nbdesigner_get_pattern', array($this, 'nbdesigner_get_pattern'));            
-            add_action('wp_ajax_nbdesigner_get_info_license', array($this, 'nbdesigner_get_info_license'));
-            add_action('wp_ajax_nbdesigner_remove_license', array($this, 'nbdesigner_remove_license'));
-            add_action('wp_ajax_nbdesigner_get_license_key', array($this, 'nbdesigner_get_license_key'));
-            add_action('wp_ajax_nbdesigner_get_security_key', array($this, 'nbdesigner_get_security_key'));
-            add_action('wp_ajax_nbdesigner_get_language', array($this, 'nbdesigner_get_language'));
-            add_action('wp_ajax_nopriv_nbdesigner_get_language', array($this, 'nbdesigner_get_language'));    
-            add_action('wp_ajax_nbdesigner_save_language', array($this, 'nbdesigner_save_language'));            
-            add_action('wp_ajax_nbdesigner_create_language', array($this, 'nbdesigner_create_language'));            
-            add_action('wp_ajax_nbdesigner_make_primary_design', array($this, 'nbdesigner_make_primary_design')); 
-            add_action('wp_ajax_nbdesigner_load_admin_design', array($this, 'nbdesigner_load_admin_design'));
-            add_action('wp_ajax_nopriv_nbdesigner_load_admin_design', array($this, 'nbdesigner_load_admin_design'));  
-            add_action('wp_ajax_nbdesigner_save_webcam_image', array($this, 'nbdesigner_save_webcam_image'));
-            add_action('wp_ajax_nopriv_nbdesigner_save_webcam_image', array($this, 'nbdesigner_save_webcam_image')); 
-            add_action('wp_ajax_nbdesigner_migrate_domain', array('Nbdesigner_DebugTool', 'update_data_migrate_domain'));
-            add_action('wp_ajax_nbdesigner_restore_data_migrate_domain', array('Nbdesigner_DebugTool', 'restore_data_migrate_domain'));
-            add_action('wp_ajax_nbdesigner_theme_check', array('Nbdesigner_DebugTool', 'theme_check_hook'));
-            add_action('wp_ajax_nbdesigner_custom_css', array('Nbdesigner_DebugTool', 'save_custom_css'));
-            add_action('wp_ajax_nbdesigner_copy_image_from_url', array($this, 'nbdesigner_copy_image_from_url'));
-            add_action('wp_ajax_nopriv_nbdesigner_copy_image_from_url', array($this, 'nbdesigner_copy_image_from_url'));
-            add_action('wp_ajax_nbdesigner_get_suggest_design', array($this, 'nbdesigner_get_suggest_design'));
-            add_action('wp_ajax_nopriv_nbdesigner_get_suggest_design', array($this, 'nbdesigner_get_suggest_design'));            
-            add_action('admin_enqueue_scripts', function($hook) {   
-                if (($hook == 'post.php') || ($hook == 'post-new.php') || ($hook == 'toplevel_page_nbdesigner') ||
-                        ($hook == 'nbdesigner_page_nbdesigner_manager_product' ) || ($hook == 'toplevel_page_nbdesigner_shoper') || ($hook == 'nbdesigner_page_nbdesigner_frontend_translate') ||
-                        ($hook == 'nbdesigner_page_nbdesigner_manager_fonts') || ($hook == 'nbdesigner_page_nbdesigner_manager_arts') || ($hook == 'nbdesigner_page_nbdesigner_admin_template')
-                         || ($hook == 'nbdesigner_page_nbdesigner_tools')) {
-                    wp_register_style('admin_nbdesigner', NBDESIGNER_PLUGIN_URL . 'assets/css/admin-nbdesigner.css');
-                    wp_register_script('admin_nbdesigner', NBDESIGNER_PLUGIN_URL . 'assets/js/admin-nbdesigner.js', array('jquery', 'jquery-ui-resizable', 'jquery-ui-draggable', 'jquery-ui-autocomplete'));
-                    wp_localize_script('admin_nbdesigner', 'admin_nbds', array(
-                        'url' => admin_url('admin-ajax.php'),
-                        'nonce' => wp_create_nonce('nbdesigner_add_cat'),
-                        'mes_success' => 'Success!',
-                        'url_check' => $this->author_site,
-                        'sku' => $this->nbdesigner_sku,       
-                        'url_gif' => NBDESIGNER_PLUGIN_URL . 'assets/images/loading.gif',
-                        'nbds_lang' => $this->nbdesigner_get_javascript_multilanguage() ));                  
-                    wp_enqueue_style(array('wp-pointer', 'wp-jquery-ui-dialog', 'admin_nbdesigner'));
-                    wp_enqueue_script(array('wp-pointer', 'wpdialogs', 'admin_nbdesigner'));                            
-                }
-                if($hook == 'admin_page_nbdesigner_detail_order'){
-                    wp_register_style('admin_nbdesigner_detail_order_slider', NBDESIGNER_PLUGIN_URL . 'assets/css/owl.carousel.css');
-                    wp_register_style('admin_nbdesigner_detail_order', NBDESIGNER_PLUGIN_URL . 'assets/css/detail_order.css');
-                    wp_enqueue_style('admin_nbdesigner_detail_order_slider');
-                    wp_enqueue_style('admin_nbdesigner_detail_order');
-                    wp_register_script('admin_nbdesigner_detail_order_slider', NBDESIGNER_PLUGIN_URL . 'assets/js/owl.carousel.min.js', array('jquery'));
-                    wp_enqueue_script('admin_nbdesigner_detail_order_slider');
-                }
-                if($hook == 'nbdesigner_page_nbdesigner_frontend_translate'){
-                    wp_register_script('admin_nbdesigner_jeditable', NBDESIGNER_PLUGIN_URL . 'assets/js/jquery.jeditable.js', array('jquery'));
-                    wp_enqueue_script('admin_nbdesigner_jeditable');
-                }
-                if($hook == 'nbdesigner_page_nbdesigner_tools'){
-                    wp_enqueue_style('admin_nbdesigner_codemirror', NBDESIGNER_PLUGIN_URL . 'assets/codemirror/codemirror.css');
-                    wp_enqueue_script( 'nbdesigner_codemirror_js', NBDESIGNER_PLUGIN_URL . 'assets/codemirror/codemirror.js' , array());
-                    wp_enqueue_script( 'nbdesigner_codemirror_css_js', NBDESIGNER_PLUGIN_URL . 'assets/codemirror/css.js' , array());
-                }
-            });
-        } else {     	            
-            add_action('woocommerce_before_add_to_cart_button', array($this, 'nbdesigner_button'), 30);
-            add_action('wp_enqueue_scripts', function() {
-                wp_register_style('nbdesigner', NBDESIGNER_PLUGIN_URL . 'assets/css/nbdesigner.css');
-                wp_enqueue_style('nbdesigner');
-                $opt_val = get_option('nbdesigner');
-                //$fb = $this->nbdesigner_getFacebook_API();
-                //$max_size = $this->default_option['upload_max'];
-                if(is_array($opt_val)){
-                    extract($opt_val);
-                    $max_size = $upload_max;
-                    $api_key = $facebook_api_key;
-                }else{
-                    $max_size = 5;
-                    $api_key = '';
-                }
-                wp_register_script('nbdesigner', NBDESIGNER_PLUGIN_URL . 'assets/js/nbdesigner.js', array('jquery'));
-                wp_localize_script('nbdesigner', 'nbds_frontend', array(
-                    'url' => admin_url('admin-ajax.php'),
-                    'sid' => session_id(),
-                    'upload_max' => $opt_val['upload_max'],
-                    'nonce' => wp_create_nonce('save-design'),
-                    'nonce_get' => wp_create_nonce('nbdesigner-get-data'),
-                    'nbfbAppId' => $api_key,
-                    'max_size' => $max_size,
-                    'font_url' => WP_CONTENT_URL.'/uploads/nbdesigner/fonts/',
-                    'url_style' => NBDESIGNER_PLUGIN_URL . 'assets/'));
-                wp_enqueue_script('nbdesigner');
-            });
-        }      
+        add_action( 'template_redirect', array( $this, 'nbdesigner_editor_html' ) );    
+        add_action('admin_head', array($this, 'nbdesigner_add_tinymce_editor'));
     }
-    
+    public function nbdesigner_admin_hook(){
+        add_action('admin_menu', array($this, 'nbdesigner_menu'));
+        add_action('add_meta_boxes', array($this, 'add_design_box'), 30);
+        add_action('save_post', array($this, 'save_design'));
+        add_filter('upload_mimes', array($this, 'upload_mimes'));
+        add_filter('manage_product_posts_columns', array($this, 'nbdesigner_add_design_column'));
+        add_action('manage_product_posts_custom_column', array($this, 'nbdesigner_display_posts_design'), 1, 2);
+        add_filter('nbdesigner_notices', array($this, 'nbdesigner_notices'));        
+    }
+    public function nbdesigner_frontend_hook(){
+       //TODO
+    }
+    public function nbdesigner_woocommerce_hook(){
+        add_filter('woocommerce_cart_item_name', array($this, 'nbdesigner_render_cart'), 1, 3);
+        add_action('woocommerce_add_to_cart', array($this, 'nbdesigner_add_custom_data_design'), 1, 2);
+        add_action('woocommerce_add_order_item_meta', array($this, 'nbdesigner_add_order_design_data'), 1, 3);
+        //add_action('woocommerce_order_status_changed', array($this, 'nbdesigner_change_foler_after_order'), 1, 1);
+        add_action('woocommerce_checkout_order_processed', array($this, 'nbdesigner_change_foler_after_order'), 1, 1);
+        add_filter('woocommerce_locate_template', array($this, 'nbdesigner_locate_plugin_template'), 20, 3 );
+        add_filter( 'woocommerce_order_item_name', array($this, 'nbdesigner_order_item_name'), 1, 2);
+        add_filter( 'woocommerce_order_item_quantity_html', array($this, 'nbdesigner_order_item_quantity_html'), 1, 2);
+        add_filter( 'woocommerce_hidden_order_itemmeta', array($this, 'nbdesigner_hidden_custom_order_item_metada'));
+        add_action( 'nbdesigner_admin_notifications_event', array($this, 'nbdesigner_admin_notifications_event_action') );
+        add_action( 'woocommerce_cart_item_removed', array($this, 'nbdesigner_remove_cart_item_design'), 10, 2 );
+        add_action( 'woocommerce_product_after_variable_attributes', array($this,'nbdesigner_variation_settings_fields'), 10, 3 );
+        add_action( 'woocommerce_save_product_variation', array($this,'nbdesigner_save_variation_settings_fields'), 10, 2 );
+        add_filter( 'woocommerce_add_cart_item_data', array($this, 'nbdesigner_force_individual_cart_items'), 10, 2 );      
+        $opt_val = get_option('nbdesigner');
+        if(is_array($opt_val)){
+            extract($opt_val);
+        }
+        if(!isset($btn_position)) $btn_position = 1;
+        if($btn_position == 1){
+            add_action('woocommerce_before_add_to_cart_button', array($this, 'nbdesigner_button'), 30);
+        }else if($btn_position == 2){
+            add_action('woocommerce_before_add_to_cart_form', array($this, 'nbdesigner_button'), 30);
+        }else{
+            add_action('woocommerce_after_add_to_cart_form', array($this, 'nbdesigner_button'), 30);
+        }         
+    }    
+    public function nbdesigner_admin_enqueue_scripts(){
+        add_action('admin_enqueue_scripts', function($hook) {   
+            if (($hook == 'post.php') || ($hook == 'post-new.php') || ($hook == 'toplevel_page_nbdesigner') ||
+                    ($hook == 'nbdesigner_page_nbdesigner_manager_product' ) || ($hook == 'toplevel_page_nbdesigner_shoper') || ($hook == 'nbdesigner_page_nbdesigner_frontend_translate') ||
+                    ($hook == 'nbdesigner_page_nbdesigner_manager_fonts') || ($hook == 'nbdesigner_page_nbdesigner_manager_arts') || ($hook == 'nbdesigner_page_nbdesigner_admin_template')
+                     || ($hook == 'nbdesigner_page_nbdesigner_tools')) {
+                wp_register_style('admin_nbdesigner', NBDESIGNER_CSS_URL . 'admin-nbdesigner.css');
+                wp_register_script('admin_nbdesigner', NBDESIGNER_JS_URL . 'admin-nbdesigner.js', array('jquery', 'jquery-ui-resizable', 'jquery-ui-draggable', 'jquery-ui-autocomplete'));
+                wp_localize_script('admin_nbdesigner', 'admin_nbds', array(
+                    'url' => admin_url('admin-ajax.php'),
+                    'nonce' => wp_create_nonce('nbdesigner_add_cat'),
+                    'mes_success' => 'Success!',
+                    'url_check' => $this->author_site,
+                    'sku' => $this->nbdesigner_sku,       
+                    'url_gif' => NBDESIGNER_PLUGIN_URL . 'assets/images/loading.gif',
+                    'nbds_lang' => $this->nbdesigner_get_javascript_multilanguage() ));                  
+                wp_enqueue_style(array('wp-pointer', 'wp-jquery-ui-dialog', 'admin_nbdesigner'));
+                wp_enqueue_script(array('wp-pointer', 'wpdialogs', 'admin_nbdesigner'));                            
+            }
+            if($hook == 'admin_page_nbdesigner_detail_order'){
+                wp_register_style('admin_nbdesigner_detail_order_slider', NBDESIGNER_CSS_URL . 'owl.carousel.css');
+                wp_register_style('admin_nbdesigner_detail_order', NBDESIGNER_CSS_URL . 'detail_order.css');
+                wp_enqueue_style(array('admin_nbdesigner_detail_order_slider', 'admin_nbdesigner_detail_order'));
+                wp_register_script('admin_nbdesigner_detail_order_slider', NBDESIGNER_JS_URL . 'owl.carousel.min.js', array('jquery'));
+                wp_enqueue_script('admin_nbdesigner_detail_order_slider');
+            }
+            if($hook == 'nbdesigner_page_nbdesigner_frontend_translate'){
+                wp_register_script('admin_nbdesigner_jeditable', NBDESIGNER_JS_URL . 'jquery.jeditable.js', array('jquery'));
+                wp_enqueue_script('admin_nbdesigner_jeditable');
+            }
+            if($hook == 'nbdesigner_page_nbdesigner_tools'){
+                wp_enqueue_style('admin_nbdesigner_codemirror', NBDESIGNER_PLUGIN_URL . 'assets/codemirror/codemirror.css');
+                wp_enqueue_script( 'nbdesigner_codemirror_js', NBDESIGNER_PLUGIN_URL . 'assets/codemirror/codemirror.js' , array());
+                wp_enqueue_script( 'nbdesigner_codemirror_css_js', NBDESIGNER_PLUGIN_URL . 'assets/codemirror/css.js' , array());
+            }
+            if($hook == 'nbdesigner_page_nbdesigner_admin_template'){
+                wp_enqueue_style('nbdesigner_sweetalert_css', NBDESIGNER_CSS_URL . 'sweetalert.css');
+                wp_enqueue_script( 'nbdesigner_sweetalert_js', NBDESIGNER_JS_URL . 'sweetalert.min.js' , array('jquery'));
+            }
+        });
+    }
+    public function nbdesigner_frontend_enqueue_scripts(){
+        add_action('wp_enqueue_scripts', function() {
+            wp_register_style('nbdesigner', NBDESIGNER_CSS_URL . 'nbdesigner.css');
+            wp_enqueue_style('nbdesigner');
+            $opt_val = get_option('nbdesigner');
+            if(is_array($opt_val)){
+                extract($opt_val);
+                $max_size = $upload_max;
+                $api_key = $facebook_api_key;
+            }else{
+                $max_size = 5;
+                $api_key = '';
+            }                
+            wp_register_script('nbdesigner', NBDESIGNER_JS_URL . 'nbdesigner.js', array('jquery'));
+            wp_localize_script('nbdesigner', 'nbds_frontend', array(
+                'url' => admin_url('admin-ajax.php'),
+                'sid' => session_id(),
+                'upload_max' => $opt_val['upload_max'],
+                'nonce' => wp_create_nonce('save-design'),
+                'nonce_get' => wp_create_nonce('nbdesigner-get-data'),
+                'nbfbAppId' => $api_key,
+                'max_size' => $max_size,
+                'font_url' => NBDESIGNER_FONT_URL .'/',
+                'url_style' => NBDESIGNER_PLUGIN_URL . 'assets/'));
+            wp_enqueue_script('nbdesigner');
+        });
+    }
     public static function plugin_activation() {
-        if (version_compare($GLOBALS['wp_version'], NBDESIGNER_VERSION, '<')) {
+        if (version_compare($GLOBALS['wp_version'], NBDESIGNER_MINIMUM_WP_VERSION, '<')) {
             $message = sprintf(__('<p>Plugin <strong>not compatible</strong> with WordPress %s. Requires WordPress %s to use this Plugin.</p>', 'nbdesigner'), $GLOBALS['wp_version'], NBDESIGNER_VERSION);
             die($message);
         }
@@ -202,32 +232,36 @@ class Nbdesigner_Plugin {
             $message = '<div class="error"><p>' . sprintf(__('WooCommerce is not active. Please activate WooCommerce before using %s.', 'nbdesigner'), '<b>Nbdesigner</b>') . '</p></div>';
             die($message);
         }
-        $upload_dir = wp_upload_dir();
-        $path = $upload_dir['basedir'] . '/nbdesigner/temp';
-        if (!file_exists($path)) {
-            wp_mkdir_p($path);
+        if (!file_exists(NBDESIGNER_TEMP_DIR)) {
+            wp_mkdir_p(NBDESIGNER_TEMP_DIR);
         } 
-        $path_download = $upload_dir['basedir'] . '/nbdesigner/download';
-        if (!file_exists($path_download)) {
-            wp_mkdir_p($path_download);
+        if (!file_exists(NBDESIGNER_DOWNLOAD_DIR)) {
+            wp_mkdir_p(NBDESIGNER_DOWNLOAD_DIR);
         }  
-        $path_admindesign = $upload_dir['basedir'] . '/nbdesigner/admindesign';
-        if (!file_exists($path_admindesign)) {
-            wp_mkdir_p($path_admindesign);
+        if (!file_exists(NBDESIGNER_ADMINDESIGN_DIR)) {
+            wp_mkdir_p(NBDESIGNER_ADMINDESIGN_DIR);
         }   
-        $path_font = $upload_dir['basedir'] . '/nbdesigner/fonts';
-        if (!file_exists($path_font)) {
-            wp_mkdir_p($path_font);
+        if (!file_exists(NBDESIGNER_FONT_DIR)) {
+            wp_mkdir_p(NBDESIGNER_FONT_DIR);
         }     
-        $path_data = $upload_dir['basedir'] . '/nbdesigner/data/language';
-        if (!file_exists($path_data)) {
-            wp_mkdir_p($path_data);
+        $path_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language';
+        if (!file_exists($path_lang)) {
+            wp_mkdir_p($path_lang);
         } 
-        $path_suggest = $upload_dir['basedir'] . '/nbdesigner/suggest_designs';
-        if (!file_exists($path_suggest)) {
-            wp_mkdir_p($path_suggest);
-        }          
+        if (!file_exists(NBDESIGNER_SUGGEST_DESIGN_DIR)) {
+            wp_mkdir_p(NBDESIGNER_SUGGEST_DESIGN_DIR);
+        }  
+        $check_version_150 = false;
+        $version = get_option("nbdesigner_version_plugin");
+        if (version_compare($version, "1.5.0", '<')) {    
+            $check_version_150 = true;
+        }         
         self::nbdesigner_add_redesign_page();
+        self::nbdesigner_create_table_templates();
+        $version = get_option("nbdesigner_version_plugin");
+        if ($check_version_150) {    
+            self::nbdesigner_update_data_150();
+        }               
     }
     public function nbdesigner_set_schedule($schedules){   
         if(!isset($schedules['hourly'])){
@@ -255,7 +289,7 @@ class Nbdesigner_Plugin {
     }
     public function nbdesigner_lincense_event_action(){
         $path = NBDESIGNER_PLUGIN_DIR . 'data/license.json';   
-        $path_data = $this->plugin_path_data . 'data/license.json';
+        $path_data = NBDESIGNER_DATA_CONFIG_DIR . '/license.json';
         if(file_exists($path) || file_exists($path_data)){
             $license = $this->nbdesigner_check_license();
             $now = strtotime("now");
@@ -366,30 +400,34 @@ class Nbdesigner_Plugin {
     public function nbdesigner_menu() {
         if (current_user_can('administrator')) {
             add_menu_page('Nbdesigner', 'NBDesigner', 'administrator', 'nbdesigner', array($this, 'nbdesigner_manager'), NBDESIGNER_PLUGIN_URL . 'assets/images/logo.png', 26);
-            add_submenu_page(
-                    'nbdesigner', 'NBDesigner Setting', 'NBDesigner Setting', 'administrator', 'nbdesigner', array($this, 'nbdesigner_manager')
+            $nbdesigner_manage = add_submenu_page(
+                    'nbdesigner', 'NBDesigner Setting', 'Setting', 'administrator', 'nbdesigner', array($this, 'nbdesigner_manager')
             );
+            add_action('load-'.$nbdesigner_manage, array($this, 'nbdesigner_add_help_option'));
             add_submenu_page(
-                    'nbdesigner', 'Manager Product', 'Manager Product', 'administrator', 'nbdesigner_manager_product', array($this, 'nbdesigner_manager_product')
+                    'nbdesigner', 'Manager Products', 'Products', 'administrator', 'nbdesigner_manager_product', array($this, 'nbdesigner_manager_product')
             );
             add_submenu_page(
                     '', 'Detail Design Order', 'Detail Design Order', 'administrator', 'nbdesigner_detail_order', array($this, 'nbdesigner_detail_order')
             );
             add_submenu_page(
-                    'nbdesigner', 'Manager Arts', 'Manager Cliparts', 'administrator', 'nbdesigner_manager_arts', array($this, 'nbdesigner_manager_arts')
+                    'nbdesigner', 'Manager Cliparts', 'Cliparts', 'administrator', 'nbdesigner_manager_arts', array($this, 'nbdesigner_manager_arts')
             );
             add_submenu_page(
-                    'nbdesigner', 'Manager Fonts', 'Manager Fonts', 'administrator', 'nbdesigner_manager_fonts', array($this, 'nbdesigner_manager_fonts')
+                    'nbdesigner', 'Manager Fonts', 'Fonts', 'administrator', 'nbdesigner_manager_fonts', array($this, 'nbdesigner_manager_fonts')
             );
             add_submenu_page(
                     'nbdesigner', 'Frontend Translate', 'Frontend Translate', 'administrator', 'nbdesigner_frontend_translate', array($this, 'nbdesigner_frontend_translate')
             );      
             add_submenu_page(
-                    'nbdesigner', 'Admin Templates', 'Admin Templates', 'administrator', 'nbdesigner_admin_template', array($this, 'nbdesigner_admin_template')
+                    'nbdesigner', 'Admin Templates', 'Templates', 'administrator', 'nbdesigner_admin_template', array($this, 'nbdesigner_admin_template')
             );  
             add_submenu_page(
-                    'nbdesigner', 'NBDesigner Tools', 'Nbdesigner Tools', 'administrator', 'nbdesigner_tools', array($this, 'nbdesigner_tools')
-            );              
+                    'nbdesigner', 'NBDesigner Tools', 'Tools', 'administrator', 'nbdesigner_tools', array($this, 'nbdesigner_tools')
+            );  
+            add_submenu_page(
+                    'nbdesigner', 'NBDesigner Analytics', 'Analytics', 'administrator', 'nbdesigner_analytics', array($this, 'nbdesigner_analytics')
+            );             
         }
         if (current_user_can('shop_manager')) {
             add_menu_page('NBdesigner', 'NBdesigner', 'shop_manager', 'nbdesigner_shoper', array($this, 'nbdesigner_manager_product'), NBDESIGNER_PLUGIN_URL . 'assets/images/logo.png', 26);
@@ -439,6 +477,29 @@ class Nbdesigner_Plugin {
         $site_title = get_bloginfo( 'name' );
         $site_url = base64_encode(network_site_url( '/' ));
         require(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-setting.php');
+    }
+    public function nbdesigner_add_help_option(){
+        $screen = get_current_screen();
+        $screen->add_help_tab( array(
+            'id'		=> 'backend',
+            'title'		=> __('Backend'),
+            'content'	=>
+                    '<h2>' . __('Backend setting') . '</h2>' .
+                    '<iframe width="560" height="315" src="https://www.youtube.com/embed/2ZK0jmW2RR0?rel=0" frameborder="0" allowfullscreen></iframe>'      
+        ));
+        $screen->add_help_tab( array(
+            'id'		=> 'front',
+            'title'		=> __('Frontend'),
+            'content'	=>
+                    '<h2>' . __('Front setting') . '</h2>' .
+                    '<iframe width="560" height="315" src="https://www.youtube.com/embed/VmbaOt8jjd8?rel=0" frameborder="0" allowfullscreen></iframe>'          
+        ));        
+        $screen->set_help_sidebar(
+                '<p><strong>' . __('For more information:') . '</strong></p>' .
+                '<p>' . __('<a href="https://cmsmart.net/support_ticket" target="_blank">Support ticket</a>') . '</p>' .
+                '<p>' . __('<a href="https://cmsmart.net/forum/" target="_blank">Forum</a>') . '</p>' .
+                '<p>' . __('<a href="https://codex.wordpress.org/Editing_Files" target="_blank">Documentation</a>') . '</p>' 
+        );
     }
     public function nbdesigner_get_license_key(){
         
@@ -525,7 +586,7 @@ class Nbdesigner_Plugin {
         $paging->init($config);            
         include_once(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-manager-product.php');
     }
-    public function nbdesigner_add_font_cats() {
+    public function nbdesigner_add_font_cat() {
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
             die('Security error');
         }
@@ -539,7 +600,7 @@ class Nbdesigner_Plugin {
         echo 'success';
         wp_die();
     }
-    public function nbdesigner_add_art_cats() {
+    public function nbdesigner_add_art_cat() {
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
             die('Security error');
         }
@@ -638,7 +699,7 @@ class Nbdesigner_Plugin {
                             $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Failed to copy.', $this->textdomain)));
                         }else{
                             $font['file'] = $this->plugin_path_data . 'fonts/' . $font['alias'] .'.'. $font['type'];
-                            $font['url'] = WP_CONTENT_URL.'/uploads/nbdesigner/fonts/' . $font['alias'] .'.'. $font['type'];
+                            $font['url'] = content_url().'/uploads/nbdesigner/fonts/' . $font['alias'] .'.'. $font['type'];
                         }
                         if ($update) {
                             $this->nbdesigner_update_list_fonts($font, $font_id);
@@ -682,6 +743,15 @@ class Nbdesigner_Plugin {
         $total = sizeof($list);
         include_once(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-manager-fonts.php');
     }
+    /**
+     * Analytics and statistics customer used product design
+     * @since 1.5
+     * 
+    */    
+    public function nbdesigner_analytics() {
+        //TODO something
+        include_once(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-analytics.php');
+    }    
     public function nbdesigner_update_list_fonts($font, $id = null) {
         if (isset($id)) {
             $this->nbdesigner_update_font($font, $id);
@@ -1002,9 +1072,14 @@ class Nbdesigner_Plugin {
                 if(isset($_data_designs) && is_array($_data_designs))    $data_designs = $_data_designs;
                 $products = $order->get_items();
                 foreach($products AS $order_item_id => $product){
-                    $has_design = wc_get_order_item_meta($order_item_id, '_nbdesigner_has_design');
+                    $has_design = wc_get_order_item_meta($order_item_id, '_nbdesigner_has_design');                  
                     if($has_design == 'has_design'){
-                        $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$product["product_id"];
+                        $folder_design = wc_get_order_item_meta($order_item_id, '_nbdesigner_folder_design');
+                        if($folder_design){
+                            $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$folder_design;
+                        }else{
+                            $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$product["product_id"];
+                        }                        
                         $list_images = $this->nbdesigner_list_thumb($path, 1);
                         if(count($list_images) > 0){
                             foreach($list_images as $key => $image){
@@ -1019,13 +1094,22 @@ class Nbdesigner_Plugin {
             }
             if(isset($_GET['product_id'])){
                 $product_id = $_GET['product_id'];
-                $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$product_id;    
+                $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$product_id;  
+                if(isset($_GET['order_item_id'])){
+                    $order_item_id = $_GET['order_item_id'];
+                    $folder_design = wc_get_order_item_meta($order_item_id, '_nbdesigner_folder_design');     
+                    $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$folder_design;  
+                }
                 $datas = unserialize(get_post_meta($product_id, '_designer_setting', true)); 
                 $list_design = array();
                 $list_images = $this->nbdesigner_list_thumb($path, 1);
                 $up = wp_upload_dir();
                 $base_path = $up['baseurl'];
-                $mid_path = 'nbdesigner/designs/' . $user_id . '/' . $order_id .'/' .$product_id.'/';  
+                if(isset($folder_design)){
+                    $mid_path = 'nbdesigner/designs/' . $user_id . '/' . $order_id .'/' .$folder_design.'/';  
+                }else{
+                    $mid_path = 'nbdesigner/designs/' . $user_id . '/' . $order_id .'/' .$product_id.'/';  
+                }
                 foreach ($list_images as $img){
                     $name = basename($img);
                     $url = $base_path.'/'.$mid_path.$name;
@@ -1182,15 +1266,19 @@ class Nbdesigner_Plugin {
         $result = array();
         $result['flag'] = 0;
         $path = NBDESIGNER_PLUGIN_DIR . 'data/license.json';
+        $path_data = $this->plugin_path_data . 'data/license.json';
+        if(file_exists($path_data)) {
+            $path = $path_data;
+        }
         $license = $this->nbdesigner_check_license();
         if(!file_exists($path)){
             $result['mes'] = __('You haven\'t any license!', $this->textdomain);
         }else{
             $license = $this->nbdesigner_check_license();
             $key = (isset($license['key'])) ? $license['key'] : '';
-            $_request = $this->nbdesiger_request_license($key, $this->removedomain);          
-            if(isset($_request)){
-                $request = (array)json_decode($_request);               
+            $_request = $this->nbdesiger_request_license($key, $this->removedomain);             
+            if(isset($_request)){              
+                $request = (array)json_decode($_request);                   
                 switch ($request["code"]) {
                     case -1:
                         $result['mes'] = __('Missing necessary information', $this->textdomain);
@@ -1205,6 +1293,8 @@ class Nbdesigner_Plugin {
                         if(!unlink($path)){
                             $result['mes'] = __('Error, try again later!', $this->textdomain);
                         }else{
+                            $_path = NBDESIGNER_PLUGIN_DIR . 'data/license.json';
+                            if(file_exists($_path)) unlink($_path);                        
                             $result['mes'] = __('Remove license key Successfully', $this->textdomain);
                             $result['flag'] = 1;
                         };                        
@@ -1236,11 +1326,11 @@ class Nbdesigner_Plugin {
         return $result_from_json;
     }
     private function nbdesigner_write_license($license){
-        $path = NBDESIGNER_PLUGIN_DIR . 'data/license.json';
-        if($file_handle = @fopen($path, 'w')){
-            fwrite( $file_handle, $license );
-            fclose( $file_handle );            
-        }
+//        $path = NBDESIGNER_PLUGIN_DIR . 'data/license.json';
+//        if($file_handle = @fopen($path, 'w')){
+//            fwrite( $file_handle, $license );
+//            fclose( $file_handle );            
+//        }
         $path_data = $this->plugin_path_data . 'data/license.json';
         file_put_contents($path_data, $license);
     }
@@ -1380,7 +1470,8 @@ class Nbdesigner_Plugin {
         if (!wp_verify_nonce($_POST['nonce'], 'save-design')) {
             die('Security error');
         }
-        $id = $_POST['id'];    
+        $id = $_POST['id'];  
+        $iid = session_id();
         if(isset($_POST['variation'])) $variation = $_POST['variation'];
         if (is_numeric($id)) {
             $data['product'] = unserialize(get_post_meta($id, '_designer_setting', true));
@@ -1397,24 +1488,29 @@ class Nbdesigner_Plugin {
             $uid = get_current_user_id();
             if(isset($_POST['oid']) && ($_POST['oid'] != '')){                
                 $oid = $_POST['oid'];
-                if($uid > 0){
-                    $path = $this->plugin_path_data. 'designs/' .$uid. '/' .$oid. '/' .$id. '/design.json';
-                    $path_config = $this->plugin_path_data. 'designs/' .$uid. '/' .$oid. '/' .$id. '/config.json';
-                    $path_font = $this->plugin_path_data. 'designs/' .$uid. '/' .$oid. '/' .$id. '/used_font.json';
-                    $data_design = $this->nbdesigner_read_json_setting($path);
-                    $data['design'] = $data_design;         
-                    if(file_exists($path_config)){					
-                        $data['config'] = $this->nbdesigner_read_json_setting($path_config);					
-                    } else {
-                        $data['config'] = '';
-                    }     
-                    if(file_exists($path_font)){					
-                        $data['fonts'] = $this->nbdesigner_read_json_setting($path_font);	
-                        $data['font_url'] = WP_CONTENT_URL.'/uploads/nbdesigner/fonts/';
-                    } else{
-                        $data['fonts'] = '';
-                    }                       
+                $folder_design = $id;
+                if(isset($_POST['folder']) && ($_POST['folder'] != '')){ 
+                    $folder_design = $_POST['folder'];
                 }
+                if($uid > 0){
+                    $iid = $uid;
+                }
+                $path = $this->plugin_path_data. 'designs/' .$iid. '/' .$oid. '/' .$folder_design. '/design.json';
+                $path_config = $this->plugin_path_data. 'designs/' .$iid. '/' .$oid. '/' .$folder_design. '/config.json';
+                $path_font = $this->plugin_path_data. 'designs/' .$iid. '/' .$oid. '/' .$folder_design. '/used_font.json';
+                $data_design = $this->nbdesigner_read_json_setting($path);
+                $data['design'] = $data_design;         
+                if(file_exists($path_config)){					
+                    $data['config'] = $this->nbdesigner_read_json_setting($path_config);					
+                } else {
+                    $data['config'] = '';
+                }     
+                if(file_exists($path_font)){					
+                    $data['fonts'] = $this->nbdesigner_read_json_setting($path_font);	
+                    $data['font_url'] = content_url().'/uploads/nbdesigner/fonts/';
+                } else{
+                    $data['fonts'] = '';
+                }                                       
             }else if(isset($_POST['ref']) && ($_POST['ref'] != '')){
                 $ref = absint($_POST['ref']);
                 $iid = session_id();
@@ -1431,7 +1527,7 @@ class Nbdesigner_Plugin {
                 }     
                 if(file_exists($path_font)){					
                     $data['fonts'] = $this->nbdesigner_read_json_setting($path_font);	
-                    $data['font_url'] = WP_CONTENT_URL.'/uploads/nbdesigner/fonts/';
+                    $data['font_url'] = content_url().'/uploads/nbdesigner/fonts/';
                 } else{
                     $data['fonts'] = '';
                 }                   
@@ -1461,7 +1557,7 @@ class Nbdesigner_Plugin {
                 if(file_exists($path_font)){
                     $data_fonts = $this->nbdesigner_read_json_setting($path_font);
                     $data['fonts'] = $data_fonts;   
-                    $data['font_url'] = WP_CONTENT_URL.'/uploads/nbdesigner/fonts/';
+                    $data['font_url'] = content_url().'/uploads/nbdesigner/fonts/';
                 } else{
                     $data['fonts'] = '';
                 }               
@@ -1483,8 +1579,11 @@ class Nbdesigner_Plugin {
         $pid = $_POST['product_id'];  
         $oid = $_POST['orderid'];	  
         $task = $_POST['task'];	 
+        $folder_design = $_POST['folder'];	 
+        $oiid = $_POST['oiid'];	 
         $config = str_replace('\"', '"', $_POST['config']);
         $fonts = str_replace('\"', '"', $_POST['fonts']);
+        $iid = $sid;
         if(isset($_POST['image'])){
             $data = $_POST['image']['img'];
             $json = str_replace('\"', '"', $_POST['image']['json']);	
@@ -1492,28 +1591,30 @@ class Nbdesigner_Plugin {
         } else{
             die('Incorect data!');
         }     
-        $uid = get_current_user_id();      
+        $uid = get_current_user_id();  
+        if($uid > 0) $iid = $uid;
         if (!is_numeric($pid) || !isset($data) || !is_array($data)) die('Incorect data!');
         $result['flag'] = 'Fails to save design.';
         $result['redesign'] = '';
         $order = 'nb_order';
         $accept_save =  true;
-        if(($oid != '') && ($uid > 0)){
+        if(($oid != '')){
             $order_design_approve = unserialize(get_post_meta($oid, '_nbdesigner_design_file', true));
-            $index = 'nbds_'.$pid;    
+            $index = 'nbds_'.$oiid;    
             if((!isset($order_design_approve[$index])) || (isset($order_design_approve[$index]) && ($order_design_approve[$index] == 'accept')))
                 $accept_save = false;
         }
         if ($uid > 0) {
-            $iid = $uid;
             if($task == 'admindesign'){
                 if($_POST['priority'] == 'primary'){
                     $ad_priority = 'primary';
                     $ad_folder = 'primary';
+                    $priority = 1;
                 }else if($_POST['priority'] == 'extra'){
                     $ad_folder = time();
                     if(isset($_POST['adid']) && $_POST['adid'] != '') $ad_folder = $_POST['adid'];
                     $ad_priority = 'extra';
+                    $priority = 0;
                 }                
                 $data_after_save_image = $this->nbdesigner_save_design_to_image($data, $sid, $pid, array('priority' => $ad_priority, 'folder' => $ad_folder));
                 $json_file = $this->plugin_path_data . 'admindesign/' . $pid . '/' . $ad_folder . '/design.json';    
@@ -1522,20 +1623,29 @@ class Nbdesigner_Plugin {
                 if (!count($data_after_save_image['mes'])) {                    
                     $ad_path = $this->plugin_path_data . 'admindesign/' . $pid . '/' . $ad_folder;
                     $this->nbdesigner_create_thumbnail_design($ad_path, $ad_path.'/preview', $pid, 300, 300);     
-                    if($ad_priority == 'primary') update_post_meta($pid, '_nbdesigner_admintemplate_primary', 1);
+                    if($ad_priority == 'primary'){
+                        update_post_meta($pid, '_nbdesigner_admintemplate_primary', 1);
+                    }
+                    if($_POST['save_status'] == "0"){
+                        $this->nbdesigner_insert_table_templates($pid, $ad_folder, $priority, 1, 0);
+                    }
                 }             
             }else{
-                $json_file = $this->plugin_path_data . 'designs/' . $uid . '/' . $order . '/' . $pid . '/design.json';
-                $json_config = $this->plugin_path_data . 'designs/' . $uid . '/' . $order . '/' . $pid . '/config.json';
-                $json_used_font = $this->plugin_path_data . 'designs/' . $uid . '/' . $order . '/' . $pid . '/used_font.json';
-                if($accept_save) $data_after_save_image = $this->nbdesigner_save_design_to_image($data, $uid, $pid, '');
+                $_folder = $pid;
+                if($folder_design != '') $_folder = $folder_design;
+                $json_file = $this->plugin_path_data . 'designs/' . $uid . '/' . $order . '/' . $_folder . '/design.json';
+                $json_config = $this->plugin_path_data . 'designs/' . $uid . '/' . $order . '/' . $_folder . '/config.json';
+                $json_used_font = $this->plugin_path_data . 'designs/' . $uid . '/' . $order . '/' . $_folder . '/used_font.json';
+                if($accept_save) $data_after_save_image = $this->nbdesigner_save_design_to_image($data, $uid, $_folder, '');
             }    
         } else {         
             $iid = $sid;
-            if($accept_save) $data_after_save_image = $this->nbdesigner_save_design_to_image($data, $sid, $pid, '');
-            $json_file = $this->plugin_path_data . 'designs/' . $sid . '/' . $order . '/' . $pid . '/design.json';
-            $json_config = $this->plugin_path_data . 'designs/' . $sid . '/' . $order . '/' . $pid . '/config.json';
-            $json_used_font = $this->plugin_path_data . 'designs/' . $sid . '/' . $order . '/' . $pid . '/used_font.json';
+            $_folder = $pid;
+            if($folder_design != '') $_folder = $folder_design;            
+            if($accept_save) $data_after_save_image = $this->nbdesigner_save_design_to_image($data, $sid, $_folder, '');
+            $json_file = $this->plugin_path_data . 'designs/' . $sid . '/' . $order . '/' . $_folder . '/design.json';
+            $json_config = $this->plugin_path_data . 'designs/' . $sid . '/' . $order . '/' . $_folder . '/config.json';
+            $json_used_font = $this->plugin_path_data . 'designs/' . $sid . '/' . $order . '/' . $_folder . '/used_font.json';
         } 
         if($accept_save){
             file_put_contents($json_file, $json);
@@ -1550,11 +1660,11 @@ class Nbdesigner_Plugin {
                 }
             }
         }
-        if(($oid != '') && ($uid > 0)){
+        if(($oid != '')){           
             if(isset($order_design_approve[$index]) && ($order_design_approve[$index] == 'decline')){          
-                $path_product = $this->plugin_path_data. 'designs/' .$uid. '/' .$oid. '/' .$pid;
-                $path_old = $this->plugin_path_data. 'designs/' .$uid. '/' .$oid. '/' .$pid. '_old';
-                $path_new = $this->plugin_path_data. 'designs/' .$uid. '/nb_order/' .$pid;
+                $path_product = $this->plugin_path_data. 'designs/' .$iid. '/' .$oid. '/' .$folder_design;
+                $path_old = $this->plugin_path_data. 'designs/' .$iid. '/' .$oid. '/' .$folder_design. '_old';
+                $path_new = $this->plugin_path_data. 'designs/' .$iid. '/nb_order/' .$folder_design;
                 if(file_exists($path_old)) $this->nbdesigner_delete_folder($path_old);
                 rename($path_product, $path_old);
                 if(wp_mkdir_p($path_product)){
@@ -1574,6 +1684,103 @@ class Nbdesigner_Plugin {
         if (!session_id()){
             @session_start();
         }
+    }
+    /**
+     * Create table manager template
+     * @since 1.5.0
+     */
+    public static function nbdesigner_create_table_templates(){
+        global $wpdb;
+        $collate = '';
+        if ( $wpdb->has_cap( 'collation' ) ) {
+            $collate = $wpdb->get_charset_collate();
+        } 
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        if (NBDESIGNER_VERSION != get_option("nbdesigner_version_plugin")) {
+            //PRIMARY KEY must have 2 spaces before for dbDelta to work
+            $tables =  "
+CREATE TABLE {$wpdb->prefix}nbdesigner_templates ( 
+ id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+ product_id BIGINT(20) UNSIGNED NOT NULL,
+ folder varchar(255) NOT NULL,
+ user_id BIGINT(20) NULL, 
+ create_date DATETIME NOT NULL default '0000-00-00 00:00:00',
+ publish TINYINT(1) NOT NULL default 1,
+ private TINYINT(1) NOT NULL default 0,
+ priority  TINYINT(1) NOT NULL default 0,
+ PRIMARY KEY  (id) 
+) $collate;
+            ";
+            @dbDelta($tables);
+        }
+        update_option('nbdesigner_version_plugin', NBDESIGNER_VERSION);
+        return true;
+    }
+    /**
+     * Insert table templates
+     * @since 1.5.0
+     * 
+     * @global type $wpdb
+     * @param int $product_id
+     * @param varchar $folder
+     * @param int $priority
+     * @param int $publish
+     * @param int $private
+     */
+    private function nbdesigner_insert_table_templates($product_id, $folder, $priority, $publish = 1, $private = 0){
+        global $wpdb;
+        $create_date = new DateTime();
+        $user_id = wp_get_current_user()->ID;
+        $table_name =  $wpdb->prefix . 'nbdesigner_templates';
+        $wpdb->insert($table_name, array(
+            'product_id' => $product_id,
+            'folder' => $folder,
+            'user_id' => $user_id,
+            'create_date' => $create_date->format('Y-m-d H:i:s'),
+            'publish' => $publish,
+            'private' => $private,
+            'priority' => $priority
+        ));
+        return true;
+    }
+    /**
+     * Update table templates
+     * @since 1.5.0
+     * 
+     * @global type $wpdb
+     * @param int $product_id product id
+     * @param char $folder folder name
+     * @param int $priority priority ex: primary, extra
+     * @param int $publish publish or unpublish
+     * @param int $private private or publish
+     * @return boolean
+     */
+    private function nbdesigner_update_table_templates($product_id, $folder, $priority = '', $publish = '', $private = ''){
+        global $wpdb;
+        $data = array();
+        if($priority !== '') $data['priority'] = $priority;
+        if($publish !== '') $data['publish'] = $publish;
+        if($private !== '') $data['private'] = $private;
+        $wpdb->update( $wpdb->prefix . 'nbdesigner_templates', $data, array( 'product_id' => $product_id, 'folder' => $folder ) );
+        return true;
+    }
+    private function nbdesigner_delete_record_templates($product_id, $folder){
+        global $wpdb;
+        $wpdb->delete( $wpdb->prefix . 'nbdesigner_templates', array( 'product_id' => $product_id, 'folder' => $folder ) );
+        return true;
+    }
+    private function nbdesigner_get_template_from_db($product_id, $status){
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'nbdesigner_templates';
+        if($status == 'unpublish'){
+            $sql = "SELECT * FROM $table_name WHERE product_id = '$product_id' AND publish = 0 ORDER BY create_date DESC";
+        }else if($status == 'publish'){
+            $sql = "SELECT * FROM $table_name WHERE product_id = '$product_id' AND publish = 1 ORDER BY create_date DESC";
+        }else {
+            $sql = "SELECT * FROM $table_name WHERE product_id = '$product_id' AND private = 1 ORDER BY create_date DESC";
+        }
+        $results = $wpdb->get_results($sql);
+        return $results;
     }
     public function nbdesigner_end_session() {
         if(isset($_SESSION['nbdesigner'])) unset($_SESSION['nbdesigner']);
@@ -1818,10 +2025,12 @@ class Nbdesigner_Plugin {
             if($has_design == 'has_design') {
                 $order_has_design = true;
                 wc_add_order_item_meta($order_item_id, '_nbdesign_order', $order_id);
+                wc_add_order_item_meta($order_item_id, '_nbdesign_order_item_id', $order_item_id);
             }
         }
         if($order_has_design){
             update_post_meta($order_id, '_nbdesigner_order_has_design', 'has_design');
+            update_post_meta($order_id, '_nbdesigner_version_design', NBDESIGNER_VERSION);
             update_post_meta($order_id, '_nbdesigner_order_userid', $iid);
             add_post_meta($order_id, '_nbdesigner_order_changed', 1);
         } 
@@ -1898,7 +2107,9 @@ class Nbdesigner_Plugin {
             }	            
             if ($data == 'has_design' && $_show_design == 1) {
                 $product_id = $cart_item['product_id'];
-                $data_design = $_SESSION['nbdesigner']['nbdesigner_' . $product_id];
+                //@since 1.5.0 data design store in session with key $cart_item_key instead product id
+                //$data_design = $_SESSION['nbdesigner']['nbdesigner_' . $product_id];
+                $data_design = $_SESSION['nbdesigner'][$cart_item_key];
                 $html = $title . '<br /><div>';
                 $list = json_decode($data_design);
                 foreach ($list as $img) {
@@ -1914,13 +2125,41 @@ class Nbdesigner_Plugin {
             echo $title;
         }
     }
+    /**
+     * Declare item cart has design
+     * @since 1.0.0
+     * 
+     * @param text $cart_item_key 
+     * @param int $product_id
+     */
     public function nbdesigner_add_custom_data_design($cart_item_key, $product_id) {        
         $sid = session_id();
         $uid = get_current_user_id();
         $iid = ($uid > 0) ? $uid : $sid;
-        if (isset($_SESSION['nbdesigner']) && isset($_SESSION['nbdesigner']['nbdesigner_' . $product_id])) {
+        if (isset($_SESSION['nbdesigner']) && isset($_SESSION['nbdesigner']['nbdesigner_' . $product_id])) {            
+            $this->nbdesigner_change_folder_after_add_to_cart($cart_item_key, $product_id);
             WC()->session->set($cart_item_key . '_nbdesigner', 'has_design');
         }
+    }
+    /**
+     * Copy folder design after add to cart.
+     * Store new path image design into session.
+     * Fix bug multi design for same product (or variantion)
+     * @since 1.5.0
+     * 
+     * @param text $cart_item_key
+     * @param int $product_id
+     * @return boolean
+     */
+    private function nbdesigner_change_folder_after_add_to_cart($cart_item_key, $product_id){ 
+        $uid = get_current_user_id();
+        $sid = session_id();
+        $iid = ($uid > 0) ? $uid : $sid;
+        $old_path = $this->plugin_path_data . 'designs/' . $iid . '/nb_order/'.$product_id;
+        $new_path = $this->plugin_path_data . 'designs/' . $iid . '/nb_order/'.$cart_item_key;
+        $this->nbdesigner_copy_dir($old_path, $new_path);
+        $path = $new_path . '/thumbs';
+        $_SESSION['nbdesigner'][$cart_item_key] = json_encode($this->nbdesigner_list_thumb($path));
     }
     public function nbdesigner_remove_cart_item_design($removed_cart_item_key, $instance){
         $line_item = $instance->removed_cart_contents[ $removed_cart_item_key ];
@@ -1933,6 +2172,7 @@ class Nbdesigner_Plugin {
     public function nbdesigner_add_order_design_data($item_id, $values, $cart_item_key) {
         if (WC()->session->__isset($cart_item_key . '_nbdesigner')) {
             wc_add_order_item_meta($item_id, "_nbdesigner_has_design", WC()->session->get($cart_item_key . '_nbdesigner'));
+            wc_add_order_item_meta($item_id, "_nbdesigner_folder_design", $cart_item_key);
         }
     }
     public function nbdesigner_design_approve(){
@@ -1948,6 +2188,8 @@ class Nbdesigner_Plugin {
                 foreach($_design_file as $val){    
                     $check = false;
                     foreach($design_data as $key => $status){
+                        //@since 1.5.0 store into order_item_id 
+                        //$_key = str_replace('nbds_', '', trim($key));
                         $_key = str_replace('nbds_', '', trim($key));
                         if($_key == $val){
                             $design_data[$key] = $_design_action;  
@@ -2035,6 +2277,7 @@ class Nbdesigner_Plugin {
     }
     public function nbdesigner_order_item_name($item_name, $item){       
         if(isset($item["item_meta"]["_nbdesign_order"])) $order_id =  $item["item_meta"]["_nbdesign_order"];
+        if(isset($item["item_meta"]["_nbdesign_order_item_id"])) $_nbdesign_order_item_id =  $item["item_meta"]["_nbdesign_order_item_id"];
         $_product = wc_get_product($item["product_id"]);   
         $opt_val = get_option('nbdesigner');
         $_show_design_order = 1;
@@ -2045,12 +2288,23 @@ class Nbdesigner_Plugin {
         if(isset($order_id[0]) && ($_show_design_order == 1)){ 
             $notice = '';
             $html = '';
+            $oiid = '';
             $design_data = unserialize(get_post_meta($order_id[0], '_nbdesigner_design_file', true));
             $index = 'nbds_'.$item["product_id"];
+            if(isset($_nbdesign_order_item_id[0])) $index = 'nbds_'.$_nbdesign_order_item_id[0];
+            $folder = false;
+            if(isset($item["item_meta"]["_nbdesigner_folder_design"])){
+                $folder = $item["item_meta"]["_nbdesigner_folder_design"];
+                $oiid = $_nbdesign_order_item_id[0];
+            }   
             global $wpdb;
             $check = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_name='nbdesigner-redesign-product-x1095'");     
             if($check != ''){
-                $link_redesign = get_page_link($check).'?product_id='.$item["product_id"].'&orderid='.$order_id[0];
+                if(is_array($folder)){
+                    $link_redesign = get_page_link($check).'?product_id='.$item["product_id"].'&orderid='.$order_id[0].'&folder='.$folder[0].'&oiid='.$oiid;
+                }else{
+                    $link_redesign = get_page_link($check).'?product_id='.$item["product_id"].'&orderid='.$order_id[0];
+                }                
             }else{
                 $link_redesign = '#';
             }
@@ -2065,7 +2319,11 @@ class Nbdesigner_Plugin {
                 $uid = get_current_user_id();
                 $sid = session_id();
                 $iid = ($uid > 0) ? $uid : $sid;
-                $path = $this->plugin_path_data. 'designs/'. $iid . '/' .$order_id[0]. '/' . $item["product_id"] . '/thumbs';	                
+                //@since 1.5.0 - fix bug multiple design same product
+                $path = $this->plugin_path_data. 'designs/'. $iid . '/' .$order_id[0]. '/' . $item["product_id"] . '/thumbs';	
+                if(is_array($folder)){
+                    $path = $this->plugin_path_data. 'designs/'. $iid . '/' .$order_id[0]. '/' . $folder[0] . '/thumbs';
+                }                
                 if(file_exists($path)){                    
                     $images = $this->nbdesigner_list_thumb($path);                                     
                     if(is_array($images)){
@@ -2108,7 +2366,10 @@ class Nbdesigner_Plugin {
     }
     public function nbdesigner_hidden_custom_order_item_metada($order_items){
         $order_items[] = '_nbdesigner_has_design';
+        $order_items[] = '_nbdesigner_folder_design';
+        $order_items[] = '_nbdesigner_version_design';
         $order_items[] = '_nbdesign_order';
+        $order_items[] = '_nbdesign_order_item_id';
         return $order_items;
     }
     public function nbdesigner_customer_upload(){       
@@ -2154,7 +2415,7 @@ class Nbdesigner_Plugin {
             }
         }
         if($result){
-            $res['src'] = WP_CONTENT_URL.'/uploads/nbdesigner/temp/'.$new_name;
+            $res['src'] = content_url().'/uploads/nbdesigner/temp/'.$new_name;
             $res['flag'] = 1;
         }else{
             $res['flag'] = 0;
@@ -2179,7 +2440,7 @@ class Nbdesigner_Plugin {
             $full_name = $this->plugin_path_data .'temp/'. $file_name;
             if($this->nbdesigner_save_data_to_image($full_name, $image)){
                 $result['flag'] = 1;
-                $result['src'] =  WP_CONTENT_URL.'/uploads/nbdesigner/temp/'.$file_name;
+                $result['src'] =  content_url().'/uploads/nbdesigner/temp/'.$file_name;
             };          
         }
         echo json_encode($result);
@@ -2290,9 +2551,9 @@ class Nbdesigner_Plugin {
     public function nbdesigner_add_shortcode_page_design($content){
         global $post;
         if($post->post_type === 'page' && $post->post_name === 'nbdesigner-redesign-product-x1095'){
-            if ( has_shortcode($content, 'nbdesigner_redesign') ){
+            if ( has_shortcode($content, 'nbdesigner_redesign') ){           
                     return $content;
-            }else{
+            }else{              
                 $content = '[nbdesigner_redesign]';
                 return $content;                
             }            
@@ -2307,16 +2568,27 @@ class Nbdesigner_Plugin {
         }        
         return $content;
     }
-    public function nbdesigner_redesign_func(){
+    public function nbdesigner_redesign_func(){       
         $html = '';
+        $folder = '';
+        $order_item_id = '';
         $uid = get_current_user_id();
         $list_image = array();
         $order = 'nb_order';        
         if(isset($_GET['product_id'])) $product_id = $_GET['product_id'];
         if(isset($_GET['orderid'])) $order_id = $_GET['orderid'];
-        if(!($uid > 0) || !isset($product_id) || !isset($order_id)) return $html;
+        if(isset($_GET['folder'])) $folder = $_GET['folder'];
+        if(isset($_GET['oiid'])) $order_item_id = $_GET['oiid'];
+        //if(!($uid > 0) || !isset($product_id) || !isset($order_id)) return $html;
+        if(!isset($product_id) || !isset($order_id)) return $html;
         //$src_iframe = NBDESIGNER_PLUGIN_URL . 'views/nbdesigner-frontend.php?task=redesign&product_id='.$product_id.'&orderid='.$order_id;
-        $src_iframe = add_query_arg(array('action' => 'nbdesigner_editor_html', 'product_id' => $product_id, 'orderid' => $order_id, 'task' => 'redesign'), site_url());
+        $src_iframe = add_query_arg(array(
+            'action' => 'nbdesigner_editor_html', 
+            'product_id' => $product_id, 
+            'orderid' => $order_id, 
+            'task' => 'redesign',
+            'folder' => $folder,
+            'oiid' => $order_item_id ), site_url());
         $path = $this->plugin_path_data . 'designs/' . $uid . '/' . $order_id . '/' . $product_id . '/thumbs';
         $list_image = $this->nbdesigner_list_thumb($path);
         if (count($list_image) > 0) {
@@ -2569,6 +2841,13 @@ class Nbdesigner_Plugin {
                     }
                 }
             }
+            if(isset($_POST['nbdesigner_filter'])){
+                $status = $_POST['nbdesigner_filter'];
+                $result = $this->nbdesigner_get_template_from_db($pid, $status);
+                ob_start();
+                var_dump($result);
+                error_log(ob_get_clean());
+            }
             @closedir($dir);            
         } else {
             $args = array(
@@ -2600,16 +2879,42 @@ class Nbdesigner_Plugin {
             die('Security error');
         }
         $result = array();
-        if(isset($_POST['id']) && isset($_POST['folder'])){
+        if(isset($_POST['id']) && isset($_POST['folder']) && isset($_POST['task'])){
             $pid = $_POST['id'];
             $folder = $_POST['folder'];
-            $path_primary = $this->plugin_path_data . 'admindesign/' . $pid . '/primary'; 
-            $path_primary_old = $this->plugin_path_data . 'admindesign/' . $pid . '/primary_old'; 
-            $path_primary_new = $this->plugin_path_data . 'admindesign/' . $pid . '/' .$folder; 
+            $task = $_POST['task'];
             $check = true;
-            if(!rename($path_primary, $path_primary_old)) $check = false; 
-            if(!rename($path_primary_new, $path_primary)) $check = false; 
-            if(!rename($path_primary_old, $path_primary_new)) $check = false; 
+            if($task == 'primary'){
+                $path_primary = $this->plugin_path_data . 'admindesign/' . $pid . '/primary'; 
+                $path_primary_old = $this->plugin_path_data . 'admindesign/' . $pid . '/primary_old'; 
+                $path_primary_new = $this->plugin_path_data . 'admindesign/' . $pid . '/' .$folder; 
+                if(!rename($path_primary, $path_primary_old)) $check = false; 
+                if(!rename($path_primary_new, $path_primary)) $check = false; 
+                if(!rename($path_primary_old, $path_primary_new)) $check = false;                 
+            }
+            if($task != 'primary' && $task != 'delete') {
+                $publish = 0;
+                $private = '';                
+                if($task == 'private') {
+                    $publish = 0;
+                    $private = 1;
+                }
+                if($task == 'publish') {
+                    $publish = 1;
+                    $private = 0;
+                }   
+                if(! $this->nbdesigner_update_table_templates($pid, $folder, '', $publish, $private )) $check = false; 
+                
+            }
+            if($task == 'delete'){
+                if($folder == 'primary'){
+                    $check = false;  
+                }else{
+                    $path = $this->plugin_path_data . 'admindesign/' . $pid . '/' .$folder;
+                    if(! $this->nbdesigner_delete_folder($path)) $check = false; 
+                    if(! $this->nbdesigner_delete_record_templates($pid, $folder)) $check = false;                     
+                }
+            }
             if( $check ) $result['mes'] = 'success'; else $result['mes'] = 'error';             
         }else{
             $result['mes'] = 'Invalid data';
@@ -2706,7 +3011,7 @@ class Nbdesigner_Plugin {
         if(!in_array(strtolower($ext), $allow_extension)) $ext = 'png';
         $new_name = strtotime("now").substr(md5(rand(1111,9999)),0,8).'.'.$ext;
         $path = $this->plugin_path_data. 'temp/'.$new_name;
-        $res['src'] = WP_CONTENT_URL.'/uploads/nbdesigner/temp/'.$new_name;
+        $res['src'] = content_url().'/uploads/nbdesigner/temp/'.$new_name;
         if(@copy($url, $path)){
             $res['flag'] = 1;
         } else {
@@ -2798,7 +3103,7 @@ class Nbdesigner_Plugin {
         add_action('in_admin_footer', array($this, 'nbdesigner_add_tiny_mce_shortcode_dialog'));
     }   
     public function nbdesigner_add_tinymce_shortcode_editor_plugin($plugin_array){
-        $plugin_array['nbdesigner_button'] = NBDESIGNER_PLUGIN_URL . 'assets/js/nbdesigner-tinymce-shortcode.js';		
+        $plugin_array['nbdesigner_button'] = NBDESIGNER_JS_URL . 'nbdesigner-tinymce-shortcode.js';		
         return $plugin_array;        
     }
     public function nbdesigner_add_tinymce_shortcode_editor_button($buttons){   
@@ -2849,6 +3154,93 @@ class Nbdesigner_Plugin {
         echo json_encode($result);
         wp_die();
     }
+    /**
+     * Allow multi design.
+     * Add Product To Cart Multiple Times But As Different items.
+     * since 1.5.0
+     * 
+     */
+    public function nbdesigner_force_individual_cart_items($cart_item_data, $product_id) {
+        if (isset($_SESSION['nbdesigner']['nbdesigner_' . $product_id])) {
+            $unique_cart_item_key = md5(microtime() . rand());
+            $cart_item_data['unique_key'] = $unique_cart_item_key;
+        }
+        return $cart_item_data;
+    }
+    /**
+     * Update data admin templates in older version (before 1.5.0)
+     * @since 1.5.0
+     * 
+     */
+    public static function nbdesigner_update_data_150(){
+        global $wpdb;
+        $origin_path = NBDESIGNER_ADMINDESIGN_DIR . '/';
+        $listTemplates = array();
+        $args = array(
+            'post_type' => 'product',
+            'meta_key' => '_nbdesigner_admintemplate_primary',
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'posts_per_page'=>-1,
+            'meta_query' => array(
+                array(
+                    'key' => '_nbdesigner_admintemplate_primary',
+                    'value' => 1,
+                )
+            )
+        );   
+        $posts = get_posts($args); 
+        foreach ($posts as $p){
+            $pro = wc_get_product($p->ID);
+            $list_folder = array();
+            $path = $origin_path . $p->ID;
+            if ($dir = @opendir($path)) {
+                while (($file = readdir($dir) ) !== false) {
+                    if (in_array($file, array('.', '..')))
+                        continue;
+                    if (is_dir($path . '/' . $file)) {
+                        $list_folder[] =  $file;
+                    }
+                }
+            }
+            @closedir($dir);   
+            if(is_array($list_folder)){
+                foreach($list_folder as $folder){
+                    $listTemplates[] = array('product_id' => $p->ID, 'folder' => $folder);
+                }
+            }           
+        }   
+        if(is_array($listTemplates)){
+            foreach($listTemplates as $temp){
+                $create_date = new DateTime();
+                $user_id = wp_get_current_user()->ID;
+                $table_name =  $wpdb->prefix . 'nbdesigner_templates';
+                $priority = 0;
+                if($temp['folder'] == 'primary') $priority = 1;
+                $wpdb->insert($table_name, array(
+                    'product_id' => $temp['product_id'],
+                    'folder' => $temp['folder'],
+                    'user_id' => $user_id,
+                    'create_date' => $create_date->format('Y-m-d H:i:s'),
+                    'publish' => 1,
+                    'private' => 0,
+                    'priority' => $priority
+                ));  
+            }                       
+        }
+    }
+    public function nbdesigner_migrate_domain(){
+        Nbdesigner_DebugTool::update_data_migrate_domain();
+    }
+    public function nbdesigner_restore_data_migrate_domain(){
+        Nbdesigner_DebugTool::restore_data_migrate_domain();
+    }
+    public function nbdesigner_theme_check(){
+        Nbdesigner_DebugTool::theme_check_hook();
+    }
+    public function nbdesigner_custom_css(){
+        Nbdesigner_DebugTool::save_custom_css();
+    }    
 }   
 /**
  * Locate template.

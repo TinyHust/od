@@ -179,9 +179,10 @@ img.nbdesigner_loaded {
 }
 .nbdesigner-editcat-name {
     display: none;
+    vertical-align: middle;
 }
 .nbdesigner-delete-item:hover {
-	color: red;
+    color: red;
 }
 .nbdesigner_uploaded_font {
     background: #0085ba;
@@ -366,7 +367,6 @@ h4.nbdesigner_order_product_name {
     width: 150px;
     height: auto;
     margin-left: 15px;
-    margin-top: 15px;
     border-radius: 3px;
     border: 1px solid #ddd;
 }
@@ -455,4 +455,20 @@ div[aria-describedby="nbdesiger-tiny-mce-dialog"] .ui-dialog-titlebar-close span
 }
 .nbdesign-shortcode-row input.short {
     width: 60px;
+}
+#nbdesigner_cancel_add_font_cat, #nbdesigner_cancel_add_art_cat {
+    margin-left: 15px;
+}
+.nbdesigner_action_delete_cf.active,
+.nbdesigner_action_delete_art_cat.active{
+    background: rgba(30, 140, 190, .3); 
+}
+.nbdesigner_action_delete_cf,
+.nbdesigner_action_delete_art_cat {
+    padding-left: 3px;
+}
+.nbdesigner-template-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 15px;
 }

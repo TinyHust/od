@@ -36,7 +36,12 @@
             var img_dg = '<img src="" id="nbdesigner_large_design"/>';
             jQuery('.owl-carousel').owlCarousel({
                 loop:true,
-                items:4  
+                items:4,
+                nav: true,
+                navText: [
+                    "<span class='dashicons dashicons-arrow-left-alt2'></span>",
+                    "<span class='dashicons dashicons-arrow-right-alt2'></span>"
+                ]
             });
             var first = jQuery('.owl-item.active').first().find('img.large'),
             src = first.attr('src'),
@@ -73,5 +78,5 @@
             });           
         });
        
-    </script>           
+    </script> 
 <?php endif; ?>

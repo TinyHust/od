@@ -13,6 +13,7 @@ img.nbdesigner_detail_order {
     position: relative;
     width: 600px;
     height: 600px;
+    margin-bottom: 15px;
 }
 .nbdesigner_preview img {
     max-width: 100%; 
@@ -40,4 +41,15 @@ h2 {
 }
 .nbdesigner-right {
     float: right;
+}
+.nbdesigner_detail_order_container .owl-controls .owl-prev,
+.nbdesigner_detail_order_container .owl-controls .owl-next {
+    position: absolute;
+    top: 50%;
+    margin-top: -10px;
+    background: rgba(30, 140, 190, .8);
+    color: #fff;            
+}
+.nbdesigner_detail_order_container .owl-controls .owl-next {
+    right: 0
 }

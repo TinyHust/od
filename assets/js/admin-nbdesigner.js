@@ -14,15 +14,21 @@ jQuery(document).ready(function ($) {
     $('#nbdesigner_add_font_cat').on('click', function () {
         var html = '<input class="form-required nbdesigner_font_name" type="text" id="nbdesigner_name_font_newcat"><br /><br />';
         html += '<input type="button" id="nbdesigner_save_font_cat" onclick="NBDESIGNADMIN.add_font_cat(this)" value="Add new" class="button-primary">';
+        html += '<input type="button" id="nbdesigner_cancel_add_font_cat" onclick="NBDESIGNADMIN.cancel_add_font_cat()" value="Cancel" class="button-primary">';
         html += '<img src="' + admin_nbds.url_gif + '" class="nbdesigner_loaded" id="nbdesigner_img_loading" style="margin-left: 15px;"/>';
         $('#nbdesigner_font_newcat').append(html);
+        var scroll = $('#nbdesigner_list_cats').parent('.inside');
+        scroll.animate({ scrollTop: scroll.prop("scrollHeight") }, 'slow'); 
         $(this).hide();
     });
     $('#nbdesigner_add_art_cat').on('click', function () {
         var html = '<input class="form-required nbdesigner_art_name" type="text" id="nbdesigner_name_art_newcat"><br /><br />';
         html += '<input type="button" id="nbdesigner_save_art_cat" onclick="NBDESIGNADMIN.add_art_cat(this)" value="Add new" class="button-primary">';
+        html += '<input type="button" id="nbdesigner_cancel_add_art_cat" onclick="NBDESIGNADMIN.cancel_add_art_cat()" value="Cancel" class="button-primary">';
         html += '<img src="' + admin_nbds.url_gif + '" class="nbdesigner_loaded" id="nbdesigner_img_loading" style="margin-left: 15px;"/>';
         $('#nbdesigner_art_newcat').append(html);
+        var scroll = $('#nbdesigner_list_art_cats').parent('.inside');
+        scroll.animate({ scrollTop: scroll.prop("scrollHeight") }, 'slow');         
         $('#nbdesigner_add_art_cat').hide();
     });
     $('#nbdesigner_order_design_check_all').click(function(){
@@ -244,8 +250,15 @@ var NBDESIGNADMIN = {
         }).done(function (data) {
             if (data == 'success') {
                 var html = '<li id="nbdesigner_cat_font_' + cat_id + '" class="nbdesigner_action_delete_cf"><label>';
-                html += '<input value="' + cat_id + '" type="checkbox" name="nbdesigner_font_cat[]" />';
-                html += '</label><span class="nbdesigner-right nbdesigner-delete-item" onclick="NBDESIGNADMIN.delete_cat_font(this)">&times;</span>'+cat_name+'</li>';
+                html += '<input value="' + cat_id + '" type="checkbox" name="nbdesigner_font_cat[]" /></label>';
+                //html += '<span class="nbdesigner-right nbdesigner-delete-item" onclick="NBDESIGNADMIN.delete_cat_font(this)">&times;</span>'+cat_name+'</li>';
+                html += '<span class="nbdesigner-right nbdesigner-delete-item dashicons dashicons-no-alt" onclick="NBDESIGNADMIN.delete_cat_font(this)"></span>';
+                html += '<span class="dashicons dashicons-edit nbdesigner-right nbdesigner-delete-item" onclick="NBDESIGNADMIN.edit_cat_font(this)"></span>';
+                html += '<a href="?page=nbdesigner_manager_fonts&cat_id='+cat_id+'" class="nbdesigner-cat-link">'+cat_name+'</a>';
+                html += '<input value="'+cat_name+'" class="nbdesigner-editcat-name" type="text"/>';
+                html += '<span class="dashicons dashicons-yes nbdesigner-delete-item nbdesigner-editcat-name" onclick="NBDESIGNADMIN.save_cat_font(this)"></span>';
+                html += '<span class="dashicons dashicons-no nbdesigner-delete-item nbdesigner-editcat-name" onclick="NBDESIGNADMIN.remove_action_cat_font(this)"></span>';
+                html += '</span>';
                 jQuery('#nbdesigner_list_cats').append(html);
                 jQuery('#nbdesigner_current_font_cat_id').val(parseInt(cat_id) + 1);
                 jQuery('#nbdesigner_font_newcat').html('');
@@ -256,6 +269,14 @@ var NBDESIGNADMIN = {
             jQuery('#nbdesigner_add_font_cat').show();
         });
     },
+    cancel_add_font_cat: function(){
+        jQuery('#nbdesigner_font_newcat').html('');
+        jQuery('#nbdesigner_add_font_cat').show();
+    },   
+    cancel_add_art_cat: function(){
+        jQuery('#nbdesigner_art_newcat').html('');
+        jQuery('#nbdesigner_add_art_cat').show();
+    },    
     add_art_cat: function (e) {     
         var cat_name = jQuery(e).parent().find('.nbdesigner_art_name').val(),
                 cat_id = jQuery('#nbdesigner_current_art_cat_id').val();
@@ -276,8 +297,15 @@ var NBDESIGNADMIN = {
         }).done(function (data) {
             if (data == 'success') {
                 var html = '<li id="nbdesigner_cat_art_' + cat_id + '" class="nbdesigner_action_delete_art_cat"><label>';
-                html += '<input value="' + cat_id + '" type="checkbox" name="nbdesigner_art_cat[]" />';
-                html += '</label><span class="nbdesigner-right nbdesigner-delete-item dashicons dashicons-no-alt" onclick="NBDESIGNADMIN.delete_cat_art(this)"></span>'+cat_name+'</li>';
+                html += '<input value="' + cat_id + '" type="checkbox" name="nbdesigner_art_cat[]" /></label>';
+                //html += '<span class="nbdesigner-right nbdesigner-delete-item dashicons dashicons-no-alt" onclick="NBDESIGNADMIN.delete_cat_art(this)"></span>'+cat_name+'</li>';
+                html += '<span class="nbdesigner-right nbdesigner-delete-item dashicons dashicons-no-alt" onclick="NBDESIGNADMIN.delete_cat_art(this)"></span>';
+                html += '<span class="dashicons dashicons-edit nbdesigner-right nbdesigner-delete-item" onclick="NBDESIGNADMIN.edit_cat_art(this)"></span>';
+                html += '<a href="?page=nbdesigner_manager_arts&cat_id='+cat_id+'" class="nbdesigner-cat-link">'+cat_name+'</a>';
+                html += '<input value="'+cat_name+'" class="nbdesigner-editcat-name" type="text"/>';
+                html += '<span class="dashicons dashicons-yes nbdesigner-delete-item nbdesigner-editcat-name" onclick="NBDESIGNADMIN.save_cat_art(this)"></span>';
+                html += '<span class="dashicons dashicons-no nbdesigner-delete-item nbdesigner-editcat-name" onclick="NBDESIGNADMIN.remove_action_cat_art(this)"></span>';
+                html += '</span>';                
                 jQuery('#nbdesigner_list_art_cats').append(html);
                 jQuery('#nbdesigner_current_art_cat_id').val(parseInt(cat_id) + 1);
                 jQuery('#nbdesigner_art_newcat').html('');
@@ -814,10 +842,13 @@ var NBDESIGNADMIN = {
         jQuery(e).parents('#nbdesigner_list_art_cats').find('.nbdesigner-cat-link').show();
         jQuery(e).parent().find('.nbdesigner-cat-link').hide();
         jQuery(e).parent().find('.nbdesigner-editcat-name').show(); 
+        jQuery(e).parents('#nbdesigner_list_art_cats').find('li').removeClass('active');
+        jQuery(e).parent().addClass('active');
     },
     remove_action_cat_art: function(e){
         jQuery(e).parents('#nbdesigner_list_art_cats').find('.nbdesigner-cat-link').show();
         jQuery(e).parents('#nbdesigner_list_art_cats').find('.nbdesigner-editcat-name').hide();
+        jQuery(e).parents('#nbdesigner_list_art_cats').find('li').removeClass('active');
         return;
     },
     save_cat_art: function(e){
@@ -841,17 +872,21 @@ var NBDESIGNADMIN = {
                 sefl.parent().find('input.nbdesigner-editcat-name').val(name); 
                 sefl.parent().find('.nbdesigner-editcat-name').val(name).hide(); 
             };
-        });        
+        }); 
+        jQuery(e).parents('#nbdesigner_list_art_cats').find('li').removeClass('active');
     },
     edit_cat_font: function(e){
         jQuery(e).parents('#nbdesigner_list_cats').find('.nbdesigner-editcat-name').hide();
         jQuery(e).parents('#nbdesigner_list_cats').find('.nbdesigner-cat-link').show();
         jQuery(e).parent().find('.nbdesigner-cat-link').hide();
-        jQuery(e).parent().find('.nbdesigner-editcat-name').show();         
+        jQuery(e).parent().find('.nbdesigner-editcat-name').show(); 
+        jQuery(e).parents('#nbdesigner_list_cats').find('li').removeClass('active');
+        jQuery(e).parent().addClass('active');
     },
     remove_action_cat_font: function(e){
         jQuery(e).parents('#nbdesigner_list_cats').find('.nbdesigner-cat-link').show();
         jQuery(e).parents('#nbdesigner_list_cats').find('.nbdesigner-editcat-name').hide();
+        jQuery(e).parents('#nbdesigner_list_cats').find('li').removeClass('active');
         return;
     },  
     save_cat_font: function(e){
@@ -875,30 +910,76 @@ var NBDESIGNADMIN = {
                 sefl.parent().find('input.nbdesigner-editcat-name').val(name); 
                 sefl.parent().find('.nbdesigner-editcat-name').val(name).hide(); 
             };
-        });        
+        }); 
+        jQuery(e).parents('#nbdesigner_list_cats').find('li').removeClass('active');
     },
     make_primary_design: function(id){
+        var task = jQuery('#nbdesigner-admin-template-action').val();
+        if(task == -1){
+            return;
+        }
         var val = jQuery('input[name=nbdesigner_primary]:checked').val(),
-        data = {'action': 'nbdesigner_make_primary_design', 'id': id, 'folder': val, 'nonce': admin_nbds.nonce};
-        if(val == 'primary') return;
-        jQuery.ajax({
-            url: admin_nbds.url,
-            method: "POST",
-            data: data,
-            beforeSend: function () {
-                jQuery('.nbdesigner_primary_design').removeClass('nbdesigner_loaded');
-            },
-            complete: function () {
-                jQuery('.nbdesigner_primary_design').addClass('nbdesigner_loaded');
+        data = {'action': 'nbdesigner_make_primary_design', 'id': id, 'folder': val, 'nonce': admin_nbds.nonce, 'task' : task};
+        //if(val == 'primary') return;
+        if(task == 'delete'){
+            if(val == 'primary'){
+                swal("Oops..", "Can't delete primary design", "error");
+                return;
             }
-        }).done(function (data) {
-            data = JSON.parse(data);
-            if (data['mes'] == 'success') {
-                alert('Change success!');
-            }else{
-                alert('Oops! Try again');
-            };
-        }); 
+            swal({
+                title: "Are you sure?",
+                text: "You will be delete this template!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel plx!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },function (isConfirm) {
+                if (isConfirm) {
+                    jQuery.ajax({
+                        url: admin_nbds.url,
+                        method: "POST",
+                        data: data,
+                        beforeSend: function () {
+                            jQuery('.nbdesigner_primary_design').removeClass('nbdesigner_loaded');
+                        },
+                        complete: function () {
+                            jQuery('.nbdesigner_primary_design').addClass('nbdesigner_loaded');
+                        }
+                    }).done(function (data) {
+                        data = JSON.parse(data);
+                        if (data['mes'] == 'success') {
+                            console.log(jQuery('#nbdesigner-template-item-' + val));
+                            jQuery('#nbdesigner-template-item-' + val).remove();
+                            swal("Deleted!", "Your template has been deleted.", "success");      
+                        }else{
+                            swal("Oops..", "Something went wrong!", "error");
+                        };
+                    }); 
+                } 
+            });  
+        }else{      
+            jQuery.ajax({
+                url: admin_nbds.url,
+                method: "POST",
+                data: data,
+                beforeSend: function () {
+                    jQuery('.nbdesigner_primary_design').removeClass('nbdesigner_loaded');
+                },
+                complete: function () {
+                    jQuery('.nbdesigner_primary_design').addClass('nbdesigner_loaded');
+                }
+            }).done(function (data) {
+                data = JSON.parse(data);
+                if (data['mes'] == 'success') {
+                    swal("Changed!", "Your template status has been changed.", "success"); 
+                }else{
+                    swal("Oops..", "Something went wrong!", "error");
+                };
+            })
+        }
     },
     check_theme: function(e){
         e.preventDefault();

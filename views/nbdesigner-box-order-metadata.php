@@ -5,31 +5,42 @@
 <div id="nbdesigner_order_info">
 	<?php foreach($products AS $order_item_id => $product): ?>
 		<?php 
-			$has_design = wc_get_order_item_meta($order_item_id, '_nbdesigner_has_design');
-			if($has_design == 'has_design'): 
-			$pid = 'nbds_'.$product["product_id"];			
+                    $has_design = wc_get_order_item_meta($order_item_id, '_nbdesigner_has_design');
+                    if($has_design == 'has_design'): 
+                    //$pid = 'nbds_'.$product["product_id"];
+                    $index_accept = 'nbds_'.$order_item_id;
+                    $folder = wc_get_order_item_meta($order_item_id, '_nbdesigner_folder_design');
 		?>
-			<div>
-				<h4 class="nbdesigner_order_product_name"><?php echo $product['name']; ?></h4>
-				<div class="nbdesigner_container_item_order <?php if(isset($data_designs[$pid])) { $status = ($data_designs[$pid] == 'accept') ? 'approved' : 'declined'; echo $status;}; ?>">
-				<?php 
-					$path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$product["product_id"] .'/thumbs';
-					$list_images = $this->nbdesigner_list_thumb($path, 1);											
-					if(count($list_images) > 0):
-					
-				?>
-					<input type="checkbox" name="_nbdesigner_design_file[]" class="nbdesigner_design_file" value="<?php echo $product["product_id"]; ?>" />
-					<?php foreach($list_images as $key => $image): 
-                                            $count_img_design++;
-                                            $src = $this->nbdesigner_create_secret_image_url($image);						
-					?>						
-						<img class="nbdesigner_order_image_design" src="<?php echo $src; ?>" />
-					<?php endforeach; ?>
-                                               
-					<a class="nbdesigner-right button button-small button-secondary"  href="<?php echo add_query_arg(array('product_id' => $product["product_id"], 'order_id' => $order->id), admin_url('admin.php?page=nbdesigner_detail_order')); ?>"><?php _e('View detail', $this->textdomain); ?></a>
-				<?php  endif; ?>
-				</div>
-			</div>
+                    <div>
+                        <h4 class="nbdesigner_order_product_name"><?php echo $product['name']; ?></h4>
+                        <div class="nbdesigner_container_item_order <?php if(isset($data_designs[$index_accept])) { $status = ($data_designs[$index_accept] == 'accept') ? 'approved' : 'declined'; echo $status;}; ?>">
+                        <?php 
+                            if($folder != ''){
+                                $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' . $folder .'/thumbs';
+                            }else{
+                                $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$product["product_id"] .'/thumbs';
+                            }
+                            $list_images = $this->nbdesigner_list_thumb($path, 1);											
+                            if(count($list_images) > 0):					
+                        ?>
+                            <input type="checkbox" name="_nbdesigner_design_file[]" class="nbdesigner_design_file" value="<?php echo $order_item_id; ?>" />
+                            <?php foreach($list_images as $key => $image): 
+                                $count_img_design++;
+                                $src = $this->nbdesigner_create_secret_image_url($image);						
+                            ?>						
+                                    <img class="nbdesigner_order_image_design" src="<?php echo $src; ?>" />
+                            <?php endforeach; ?>
+                            <?php 
+                                if($folder != ''){
+                                    $link_view_detail = add_query_arg(array('product_id' => $product["product_id"], 'order_id' => $order->id, 'order_item_id' => $order_item_id), admin_url('admin.php?page=nbdesigner_detail_order'));
+                                }else{
+                                    $link_view_detail = add_query_arg(array('product_id' => $product["product_id"], 'order_id' => $order->id), admin_url('admin.php?page=nbdesigner_detail_order'));
+                                }
+                            ?>
+                            <a class="nbdesigner-right button button-small button-secondary"  href="<?php echo $link_view_detail; ?>"><?php _e('View detail', $this->textdomain); ?></a>
+                        <?php  endif; ?>
+                        </div>
+                    </div>
 		<?php endif; ?>
 	<?php endforeach;?>
     <br /> 

@@ -5,7 +5,7 @@
         <h3><?php echo __("License", $this->textdomain); ?></h3>
         <table class="form-table">
             <tr valign="top" class="" id="nbdesigner_license" <?php if(isset($license['key'])) echo 'style="display: none;"'; ?>>
-                <th scope="row" class="titledesc"><?php echo __("Get license key", $this->textdomain); ?> </th>
+                <th scope="row" class="titledesc"><?php echo __("Get free license key", $this->textdomain); ?> </th>
                 <td class="forminp-text">
                     <input type="email" class="regular-text" name="nbdesigner[name]" placeholder="Enter your name"/><br /><br />
                     <input type="email" class="regular-text" name="nbdesigner[email]" placeholder="Enter your email"/>
@@ -19,6 +19,7 @@
                     <?php wp_nonce_field($this->plugin_id.'-get-key', $this->plugin_id . '_getkey_hidden'); ?>
                 </td>
             </tr>   
+            <tr <?php if(isset($license['key'])) echo 'style="display: none;"'; ?>><td colspan="2"><hr /></td></tr>
             <tr valign="top" class="" id="nbdesigner_active_license">
                 <?php wp_nonce_field('nbdesigner-active-key', '_nbdesigner_license_nonce'); ?>
                 <th scope="row" class="titledesc"><?php echo __("Active license key", $this->textdomain); ?> </th>
@@ -61,7 +62,18 @@
                 <td class="forminp-text">
                     <input type="text" name="nbdesigner[btname]" value="<?php echo $opt_val['btname']; ?>" />						
                 </td>
-            </tr>	
+            </tr>
+            <tr valign="top">
+                <th scope="row" class="titledesc"><?php echo __("Position of button design", $this->textdomain); ?> </th>
+                <td class="forminp-text">
+                    <input type="radio" name="nbdesigner[btn_position]" id="btn_position_1" value="1" <?php checked($opt_val['btn_position'], 1) ?>/>	
+                    <label for="btn_position_1"><?php echo __("Before add to cart button and after variantions option", $this->textdomain); ?></label><br />
+                    <input type="radio" name="nbdesigner[btn_position]" id="btn_position_2" value="2"  <?php checked($opt_val['btn_position'], 2) ?>/>	
+                    <label for="btn_position_2"><?php echo __("Before variantions option", $this->textdomain); ?></label><br />
+                    <input type="radio" name="nbdesigner[btn_position]" id="btn_position_3" value="3"  <?php checked($opt_val['btn_position'], 3) ?>/>	
+                    <label for="btn_position_3"><?php echo __("After add to cart button", $this->textdomain); ?></label><br />                  					
+                </td>
+            </tr>            
             <tr valign="top">
                 <th scope="row" class="titledesc"><?php echo __("Max size upload", $this->textdomain); ?> </th>
                 <td class="forminp-text">
