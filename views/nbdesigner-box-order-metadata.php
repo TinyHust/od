@@ -49,7 +49,7 @@
         <label for="nbdesigner_order_design_check_all"><small><?php _e('Check all', $this->textdomain); ?></small></label>
     </div>
 	<div class="nbdesigner-right" style="padding: 5px;">
-		<?php  if(class_exists('ZipArchive') && $count_img_design > 0): ?>
+		<?php  if($count_img_design > 0): ?>
 			<a href="<?php echo add_query_arg(array('download-all' => 'true', 'order_id' => $order->id), admin_url('admin.php?page=nbdesigner_detail_order')); ?>" class="button button-small button-secondary"><?php _e('Download all', $this->textdomain); ?></a>
 		<?php else: ?>
 			<span class="button button-small button-disabled" style="color: #dedede;"><?php _e('Download all', $this->textdomain); ?></span>

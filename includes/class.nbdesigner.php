@@ -2500,11 +2500,11 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         wp_die();        
     }    
     private function zip_files_and_download($file_names, $archive_file_name, $nameZip){
+        if(file_exists($archive_file_name)){
+            unlink($archive_file_name);
+        }        
         if (class_exists('ZipArchive')) {
             $zip = new ZipArchive();
-            if(file_exists($archive_file_name)){
-                unlink($archive_file_name);
-            }
             if ($zip->open($archive_file_name, ZIPARCHIVE::CREATE )!==TRUE) {
               exit("cannot open <$archive_file_name>\n");
             }
@@ -2515,13 +2515,22 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                 $zip->addFile($file, $name);
             }
             $zip->close();
-            header("Content-type: application/zip");
-            header("Content-Disposition: attachment; filename=$nameZip");
-            header("Pragma: no-cache");
-            header("Expires: 0");
-            readfile("$archive_file_name");
-            exit;
+        }else{         
+            require_once(ABSPATH . 'wp-admin/includes/class-pclzip.php');
+            $archive = new PclZip($archive_file_name);
+            foreach($file_names as $file)
+            {
+                $path_arr = explode('/', $file);
+                $dir =dirname($file).'/';                
+                $archive->add($file, PCLZIP_OPT_REMOVE_PATH, $dir, PCLZIP_OPT_ADD_PATH, $path_arr[count($path_arr) - 2]);               
+            }            
         }
+        header("Content-type: application/zip");
+        header("Content-Disposition: attachment; filename=$nameZip");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        readfile("$archive_file_name");
+        exit;        
     }
     public static function nbdesigner_add_redesign_page(){
 	global $wpdb;
