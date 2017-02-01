@@ -38,7 +38,7 @@
                     <div class="tab-pane" id="uploaded-photo">
                         <div class="row" id="dag-files-images">
                             <span class="view-thumb" ng-repeat="url in uploadURL | reverse | limitTo : imgPageSize">
-                                <img class="img-responsive img-thumbnail nbdesigner_upload_image shadow hover-shadow" ng-src="{{url}}" ng-click="addImage(url)"  spinner-on-load/>
+                                <img class="img-responsive img-thumbnail nbdesigner_upload_image shadow hover-shadow" ng-src="{{url}}" ng-click="addImage(url, readyReplaceImage)"  spinner-on-load/>
                             </span>                                                    
                         </div>						
                         <div id="image-load-more" ng-show="(uploadURL.length > 10) && (uploadURL.length > imgPageSize)"><button type="button" style="margin-top: 10px;" class="btn btn-primary shadow nbdesigner_upload" ng-click="imgPageSize = imgPageSize +10">{{(langs['MORE']) ? langs['MORE'] : "More"}}</button></div>

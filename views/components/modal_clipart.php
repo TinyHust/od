@@ -24,7 +24,7 @@
                     </span>
                 </div>
                 <div>
-                    <button ng-show="(countArt > 10) && (countArt > artPageSize)" style="margin-right: 15px; margin-top: 10px;" id="art-load-more" type="button" class="btn btn-primary shadow nbdesigner_upload" ng-click="artPageSize = artPageSize +10">{{(langs['MORE']) ? langs['MORE'] : "More"}}</button>
+                    <button ng-show="(countArt > 10) && (countArt > artPageSize)" style="margin-right: 15px; margin-top: 10px;" id="art-load-more" type="button" class="btn btn-primary shadow nbdesigner_upload" ng-click="loadMoreArt()">{{(langs['MORE']) ? langs['MORE'] : "More"}}</button>
                     <img id="loading_art_upload" class="hidden" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/images/ajax-loader.gif'; ?>" />
                 </div>
             </div>

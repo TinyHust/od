@@ -328,6 +328,14 @@ $(document).ready(function(){
     $('#toggle-config-style').on('click', function(){
         $('#config-style').toggleClass('open');
     });
+    $('.nbd-tooltip').tooltipster({
+        trigger: "click",
+        side: "bottom",
+        theme: 'tooltipster-borderless'
+    });
+    $('.nbd-tooltip').on('click', function(){
+        $(this).tooltip('hide');
+    });
 });
 $(window).on('resize' , function(){
     var w = $(window).width();	

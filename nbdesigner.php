@@ -90,7 +90,9 @@ if (!defined('NBDESIGNER_CSS_URL')) {
     define('NBDESIGNER_CSS_URL', NBDESIGNER_PLUGIN_URL . 'assets/css/');
 }
 
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.base.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.debug.php');
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.product.templates.table.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.php');
 
 register_activation_hook( __FILE__, array( 'Nbdesigner_Plugin', 'plugin_activation' ) );
@@ -102,4 +104,22 @@ if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
     require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
 }
 $nb_designer = new Nbdesigner_Plugin();
+$nb_designer->init();
+
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.widget.php');
+
+/**
+ * With the upgrade to WordPress 4.7.1, some non-image files fail to upload on certain server setups. 
+ * This will be fixed in 4.7.2, see the Trac ticket: https://core.trac.wordpress.org/ticket/39550
+ * 
+ */
+if (version_compare($GLOBALS['wp_version'], '4.7.1', '=')) {
+    add_filter( 'wp_check_filetype_and_ext', 'wp39550_disable_real_mime_check', 10, 4 );
+}
+function wp39550_disable_real_mime_check( $data, $file, $filename, $mimes ) {
+    $wp_filetype = wp_check_filetype( $filename, $mimes );
+    $ext = $wp_filetype['ext'];
+    $type = $wp_filetype['type'];
+    $proper_filename = $data['proper_filename'];
+    return compact( 'ext', 'type', 'proper_filename' );
+}
