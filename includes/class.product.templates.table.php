@@ -201,15 +201,15 @@ class Product_Template_List_Table extends WP_List_Table {
                 die('Go get a life script kiddies');
             }            
             self::delete_template(absint($_GET['template']));
-            wp_redirect(esc_url(add_query_arg()));
+            wp_redirect(esc_url(add_query_arg('','')));
             exit;
-        }
+        }      
         if (( isset($_POST['action']) && $_POST['action'] == 'bulk-delete' ) || ( isset($_POST['action2']) && $_POST['action2'] == 'bulk-delete' )) {
             $delete_ids = esc_sql($_POST['bulk-delete']);
             foreach ($delete_ids as $id) {
                 self::delete_template($id);
             }
-            wp_redirect(esc_url_raw(add_query_arg()));
+            wp_redirect(esc_url_raw(add_query_arg('','')));
             exit;
         }
         if (( isset($_POST['action']) && $_POST['action'] == 'bulk-publish' ) || ( isset($_POST['action2']) && $_POST['action2'] == 'bulk-publish' )) {
