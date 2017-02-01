@@ -15,8 +15,8 @@ Domain Path: /langs
 */
 
 if ( !function_exists( 'add_action' ) ) {
-	echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
-	exit;
+    echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
+    exit;
 }
 
 $upload_dir = wp_upload_dir();
@@ -28,6 +28,9 @@ if (!defined('NBDESIGNER_VERSION')) {
 }
 if (!defined('NBDESIGNER_MINIMUM_WP_VERSION')) {
     define('NBDESIGNER_MINIMUM_WP_VERSION', '4.1.1');
+}
+if (!defined('NBDESIGNER_MINIMUM_PHP_VERSION')) {
+    define('NBDESIGNER_MINIMUM_PHP_VERSION', '5.4');
 }
 if (!defined('NBDESIGNER_PLUGIN_URL')) {
     define('NBDESIGNER_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -89,8 +92,14 @@ if (!defined('NBDESIGNER_JS_URL')) {
 if (!defined('NBDESIGNER_CSS_URL')) {   
     define('NBDESIGNER_CSS_URL', NBDESIGNER_PLUGIN_URL . 'assets/css/');
 }
+if (!defined('NBDESIGNER_PRODUCT_TEMPLATES')) {   
+    define('NBDESIGNER_TEMPLATES', 'nbdesigner_templates');
+}
+if (!defined('NBDESIGNER_CATEGORY_TEMPLATES')) {   
+    define('NBDESIGNER_CATEGORY_TEMPLATES', 'nbdesigner_category_templates');
+}
 
-require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.base.php');
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.util.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.debug.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.product.templates.table.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.php');
@@ -110,10 +119,10 @@ require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.widget.php');
 
 /**
  * With the upgrade to WordPress 4.7.1, some non-image files fail to upload on certain server setups. 
- * This will be fixed in 4.7.2, see the Trac ticket: https://core.trac.wordpress.org/ticket/39550
+ * This will be fixed in 4.7.3, see the Trac ticket: https://core.trac.wordpress.org/ticket/39550
  * 
  */
-if (version_compare($GLOBALS['wp_version'], '4.7.1', '=')) {
+if (version_compare($GLOBALS['wp_version'], '4.7.2', '<=')) {
     add_filter( 'wp_check_filetype_and_ext', 'wp39550_disable_real_mime_check', 10, 4 );
 }
 function wp39550_disable_real_mime_check( $data, $file, $filename, $mimes ) {

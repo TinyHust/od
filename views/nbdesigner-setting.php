@@ -160,7 +160,7 @@
             <tr valign="top" style="display: none;" id="how-to-get-facebook-api">
                 <td colspan="2">
                     <div>
-                        <?php _e('<span style="color:#CB4B16;">Application</span> id and secret (also sometimes referred as <span style="color:#CB4B16;">Consumer</span> key and secret or <span style="color:#CB4B16;">Client</span> id and secret) are what we call an application credentials', $this->textdomain) ?>.
+                        <?php _e('<span style="color:#CB4B16;">Application</span> Key and Secret (also sometimes referred as <span style="color:#CB4B16;">Consumer</span> key and secret or <span style="color:#CB4B16;">Client</span> id and secret) are what we call an application credentials', $this->textdomain) ?>.
                         <?php echo sprintf( __( 'This application will link your website <code>%s</code> to <code>%s API</code> and these credentials are needed in order for <b>%s</b> users to access your website', 'wordpress-social-login'), $_SERVER["SERVER_NAME"], 'Facebook', 'Facebook' ) ?>.
                         <br />
                         <?php _e("These credentials may also differ in format, name and content depending on the social network.", $this->textdomain) ?>
@@ -172,7 +172,7 @@
                             <p><b>1. </b><?php _e('First go to:', $this->textdomain)  ?><a href="https://developers.facebook.com/apps">https://developers.facebook.com/apps</a></p>
                             <p><b>2. </b><?php _e('Select <b>Add a New App</b> from the <b>Apps</b> menu at the top', $this->textdomain)  ?></p>
                             <p><b>3. </b><?php _e('Fill out Display Name, Namespace, choose a category and click <b>Create App</b>', $this->textdomain)  ?></p>
-                            <p><b>4. </b><?php _e('Go to Settings page and click on <b>Add Platform</b>. Choose website and enter in the new screen your website url in <b>App Domains</b> and <b>Site URL</b> fields', $this->textdomain)  ?>.<?php _wsl_e("They should match with the current hostname", $this->textdomain) ?> <em style="color:#CB4B16;"><?php echo $_SERVER["SERVER_NAME"]; ?></em>.</p>
+                            <p><b>4. </b><?php _e('Go to Settings page and click on <b>Add Platform</b>. Choose website and enter in the new screen your website url in <b>App Domains</b> and <b>Site URL</b> fields', $this->textdomain)  ?>.<?php _e("They should match with the current hostname", $this->textdomain) ?> <em style="color:#CB4B16;"><?php echo $_SERVER["SERVER_NAME"]; ?></em>.</p>
                             <p><b>5. </b><?php _e('Go to the <b>App Review</b> page and choose <b>yes</b> where it says <b>Do you want to make this app and all its live features available to the general public?</b>', $this->textdomain)  ?>.
                             <?php _e('In section "Submit Items for Approval" click <b>Start a Submission</b>, in popup check "user_photos" and complete all steps', $this->textdomain); ?>
                             </p>
@@ -181,7 +181,7 @@
                         <hr />
                         <div>
                             <p>
-                                <b><?php _wsl_e("And that's it!", $this->textdomain) ?></b><br />
+                                <b><?php _e("And that's it!", $this->textdomain) ?></b><br />
                                 <?php echo sprintf( __( 'If for some reason you still can\'t manage to create an application for %s, first try to <a href="https://www.google.com/search?q=%s API create application" target="_blank">Google it</a>, then check it on <a href="http://www.youtube.com/results?search_query=%s API create application " target="_blank">Youtube</a>, and if nothing works <a href="https://cmsmart.net/support_ticket">ask for support</a>', $this->textdomain), 'Facebook', 'Facebook', 'Facebook' ) ?>
                             </p>
                         </div>

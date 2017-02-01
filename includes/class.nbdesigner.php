@@ -504,7 +504,7 @@ class Nbdesigner_Plugin {
             'title'		=> __('Backend'),
             'content'	=>
                     '<h2>' . __('Backend setting') . '</h2>' .
-                    '<iframe width="560" height="315" src="https://www.youtube.com/embed/2ZK0jmW2RR0?rel=0" frameborder="0" allowfullscreen></iframe>'      
+                    '<iframe width="560" height="315" src="https://www.youtube.com/embed/zegY2it0w3k?rel=0" frameborder="0" allowfullscreen></iframe>'      
         ));
         $screen->add_help_tab( array(
             'id'		=> 'front',
@@ -1400,8 +1400,7 @@ class Nbdesigner_Plugin {
     }
     public function save_design($post_id) {   
         if (!isset($_POST['nbdesigner_setting_box_nonce']) || !wp_verify_nonce($_POST['nbdesigner_setting_box_nonce'], 'nbdesigner_setting_box')
-            || !(current_user_can('administrator') || current_user_can('shop_manager') 
-            || (wp_roles()->is_role( 'wc_product_vendors_admin_vendor' ) && current_user_can('wc_product_vendors_admin_vendor')))) {
+            || !(current_user_can('administrator') || current_user_can('shop_manager'))) {
             return $post_id;
         }
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
@@ -2891,7 +2890,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         include_once(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-admin-template.php');
     }
     public function nbdesigner_make_primary_design(){
-        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
+        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_template_nonce') || !current_user_can('administrator')) {
             die('Security error');
         }
         $result = array();
@@ -2907,29 +2906,6 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                 if(!rename($path_primary, $path_primary_old)) $check = false; 
                 if(!rename($path_primary_new, $path_primary)) $check = false; 
                 if(!rename($path_primary_old, $path_primary_new)) $check = false;                 
-            }
-            if($task != 'primary' && $task != 'delete') {
-                $publish = 0;
-                $private = '';                
-                if($task == 'private') {
-                    $publish = 0;
-                    $private = 1;
-                }
-                if($task == 'publish') {
-                    $publish = 1;
-                    $private = 0;
-                }   
-                if(! $this->nbdesigner_update_table_templates($pid, $folder, '', $publish, $private )) $check = false; 
-                
-            }
-            if($task == 'delete'){
-                if($folder == 'primary'){
-                    $check = false;  
-                }else{
-                    $path = $this->plugin_path_data . 'admindesign/' . $pid . '/' .$folder;
-                    if(! $this->nbdesigner_delete_folder($path)) $check = false; 
-                    if(! $this->nbdesigner_delete_record_templates($pid, $folder)) $check = false;                     
-                }
             }
             if( $check ) $result['mes'] = 'success'; else $result['mes'] = 'error';             
         }else{

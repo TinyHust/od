@@ -4,7 +4,7 @@
     <?php  if(isset($_GET['pid'])):?>  
         <div class="wrap">
             <h2>
-                <?php _e('Templates', $this->textdomain); ?> : <a href="<?php echo get_edit_post_link($_GET['pid']); ?>"><?php echo $pro->get_title(); ?></a>
+                <?php _e('Templates for', $this->textdomain); ?>: <a href="<?php echo get_edit_post_link($_GET['pid']); ?>"><?php echo $pro->get_title(); ?></a>
                 <a href="<?php echo admin_url('admin.php?page=nbdesigner_admin_template') ?>" class="button-primary nbdesigner-right"><?php _e('Back', $this->textdomain); ?></a>
             </h2>
             <div id="poststuff">
@@ -38,4 +38,10 @@
     .column-user_id {
         width: 10%;
     }
+    .column-folder img{
+        width: 60px;
+        margin-right: 5px;
+        border: 1px solid #ddd;
+        border-radius: 2px;
+    }   
 </style>

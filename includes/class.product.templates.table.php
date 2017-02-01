@@ -5,14 +5,15 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 class Product_Template_List_Table extends WP_List_Table {
     public function __construct() {
-        parent::__construct([
+        parent::__construct(array(
             'singular' => __('Template', 'nbdesigner'), 
             'plural' => __('Templates', 'nbdesigner'), 
             'ajax' => false 
-        ]);
+        ));
+        $this->textdomain = 'nbdesigner';
     }
     /**
-     * Retrieve template’s data from the database
+     * Retrieve template's data from the database
      *
      * @param int $per_page
      * @param int $page_number
@@ -22,12 +23,19 @@ class Product_Template_List_Table extends WP_List_Table {
     public static function get_templates($per_page = 5, $page_number = 1) {
         global $wpdb;
         $sql = "SELECT * FROM {$wpdb->prefix}nbdesigner_templates";
+        if (!empty($_REQUEST['pid'])) {
+            $sql .= " WHERE product_id = " . esc_sql($_REQUEST['pid']);
+        }   
+        if (!empty($_REQUEST['nbdesigner_filter']) && -1 != $_REQUEST['nbdesigner_filter']) {
+            if($_REQUEST['nbdesigner_filter'] == 'unpublish'){
+                $sql .= " AND publish = 0";
+            }else {
+                $sql .= " AND ".esc_sql($_REQUEST['nbdesigner_filter'])." = 1";
+            }            
+        }          
         if (!empty($_REQUEST['orderby'])) {
             $sql .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
             $sql .=!empty($_REQUEST['order']) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
-        }
-        if (!empty($_REQUEST['pid'])) {
-            $sql .= " WHERE product_id = " . esc_sql($_REQUEST['pid']);
         }        
         $sql .= " LIMIT $per_page";
         $sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;
@@ -42,14 +50,28 @@ class Product_Template_List_Table extends WP_List_Table {
     public static function delete_template($id) {
         global $wpdb;
         $item = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}nbdesigner_templates WHERE id = $id");
+        if($item->folder == 'primary') return;
         $path = NBDESIGNER_ADMINDESIGN_DIR. '/' .$item->product_id. '/' .$item->folder;
-        if (Nbdesigner_Util::delete_folder($path)) {
+        if (Nbdesigner_IO::delete_folder($path)) {
             $wpdb->delete("{$wpdb->prefix}nbdesigner_templates", array('id' => $id), array('%d'));
         }
     }
-    public static function update_template($id, $status, $value){
+    public static function make_primary_template($id, $pid){
         global $wpdb;
-        $wpdb->update("{$wpdb->prefix}nbdesigner_templates", array( $status => $value), array( 'id' => $id) );
+        $item = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}nbdesigner_templates WHERE id = $id");
+        $item_primary = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}nbdesigner_templates WHERE product_id = $pid AND folder = 'primary'");
+        $path_primary = NBDESIGNER_ADMINDESIGN_DIR . '/' . $pid . '/primary'; 
+        $path_primary_old = NBDESIGNER_ADMINDESIGN_DIR . '/' . $pid . '/primary_old'; 
+        $path_primary_new = NBDESIGNER_ADMINDESIGN_DIR . '/' . $pid . '/' .$item->folder; 
+        if(!rename($path_primary, $path_primary_old)) return 1; 
+        if(!rename($path_primary_new, $path_primary)) return 1; 
+        if(!rename($path_primary_old, $path_primary_new)) return 1;          
+        self::update_template($id, array('priority' => 1, 'folder' => 'primary'));
+        self::update_template($item_primary->id, array('priority' => 0, 'folder' => $item->folder));
+    }
+    public static function update_template($id, $arr){
+        global $wpdb;
+        $wpdb->update("{$wpdb->prefix}nbdesigner_templates", $arr, array( 'id' => $id) );
     }  
     /**
      * Returns the count of records in the database.
@@ -66,7 +88,7 @@ class Product_Template_List_Table extends WP_List_Table {
     }
     /** Text displayed when no template data is available */
     public function no_items() {
-        _e( 'No templates avaliable.', 'nbdesigner' );
+        _e( 'No templates avaliable.', $this->textdomain );
     }
     /**
      * Method for name column
@@ -76,12 +98,18 @@ class Product_Template_List_Table extends WP_List_Table {
      * @return string
      */
     function column_product_id($item) {
-        // create a nonce
-        $delete_nonce = wp_create_nonce('nbdesigner_delete_template');
+        $_nonce = wp_create_nonce('nbdesigner_template_nonce');
         $title = '<strong>' . $item['product_id'] . '</strong>';
+        $paged = 1;       
         $actions = array(
-            'delete' => sprintf('<a href="?page=%s&action=%s&template=%s&_wpnonce=%s">Delete</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $delete_nonce)
-        );        
+            'delete' => sprintf('<a href="?page=%s&action=%s&template=%s&_wpnonce=%s&pid=%s&paged=%s">Delete</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $_nonce, esc_attr($_REQUEST['pid']), $this->get_pagenum()),
+            'primary' => sprintf('<a href="?page=%s&action=%s&template=%s&pid=%s&_wpnonce=%s&paged=%s">Primary</a>', esc_attr($_REQUEST['page']), 'primary', absint($item['id']), esc_attr($_REQUEST['pid']), $_nonce, $this->get_pagenum()),
+            'detail' => sprintf('<a href="#">Detail</a>', esc_attr($_REQUEST['pid']), 'detail', absint($item['id']))
+        );     
+        if($item['priority']){
+            unset($actions['delete']);
+            unset($actions['primary']);
+        }
         return $title . $this->row_actions($actions);
     }
     function column_default($item, $column_name){
@@ -101,7 +129,7 @@ class Product_Template_List_Table extends WP_List_Table {
         $html = '';
         $list_design = array(); 
         $mid_path = $item['product_id']. '/' .$item['folder']. '/preview/'; 
-        $listThumb = Nbdesigner_Util::get_list_thumbs(NBDESIGNER_ADMINDESIGN_DIR. '/' .$item['product_id']. '/' .$item['folder']. '/preview/', 1);
+        $listThumb = Nbdesigner_IO::get_list_thumbs(NBDESIGNER_ADMINDESIGN_DIR. '/' .$item['product_id']. '/' .$item['folder']. '/preview/', 1);
         if(count($listThumb)){
             foreach ($listThumb as $img){
                 $name = basename($img);
@@ -125,9 +153,9 @@ class Product_Template_List_Table extends WP_List_Table {
      */
     function get_columns() {
         $columns = [
-            'cb' => '<input type="checkbox" />',
-            'product_id' => __('Product ID', 'nbdesigner'),
+            'cb' => '<input type="checkbox" />',            
             'folder' => __('Preview', 'nbdesigner'),
+            'product_id' => __('Actions', 'nbdesigner'),
             'user_id' => __('Created By', 'nbdesigner'),
             'created_date' => __('Created', 'nbdesigner')
         ];
@@ -142,6 +170,7 @@ class Product_Template_List_Table extends WP_List_Table {
                 <option value="publish"><?php _e('Publish design', $this->textdomain); ?></option>
                 <option value="unpublish"><?php _e('Unpublish design', $this->textdomain); ?></option>
                 <option value="private"><?php _e('Private design', $this->textdomain); ?></option>
+                <option value="priority"><?php _e('Primary design', $this->textdomain); ?></option>
             </select>
             <?php wp_nonce_field($this->plugin_id, $this->plugin_id . '_hidden'); ?>	
             <button class="button-primary" type="submit"><?php _e('Filter', $this->textdomain); ?></button>
@@ -197,13 +226,22 @@ class Product_Template_List_Table extends WP_List_Table {
     public function process_bulk_action() {
         if ('delete' === $this->current_action()) {    
             $nonce = esc_attr($_REQUEST['_wpnonce']);
-            if (!wp_verify_nonce($nonce, 'nbdesigner_delete_template')) {
+            if (!wp_verify_nonce($nonce, 'nbdesigner_template_nonce')) {
                 die('Go get a life script kiddies');
             }            
             self::delete_template(absint($_GET['template']));
-            wp_redirect(esc_url(add_query_arg('','')));
+            wp_redirect(esc_url_raw(add_query_arg(array('pid' => $_REQUEST['pid'], 'paged' => $this->get_pagenum()), admin_url('admin.php?page=nbdesigner_admin_template'))));
             exit;
         }      
+        if ('primary' === $this->current_action()) {    
+            $nonce = esc_attr($_REQUEST['_wpnonce']);
+            if (!wp_verify_nonce($nonce, 'nbdesigner_template_nonce')) {
+                die('Go get a life script kiddies');
+            }            
+            self::make_primary_template(absint($_GET['template']), absint($_GET['pid']));
+            wp_redirect(esc_url_raw(add_query_arg(array('pid' => $_REQUEST['pid'], 'paged' => $this->get_pagenum()), admin_url('admin.php?page=nbdesigner_admin_template'))));
+            exit;
+        }          
         if (( isset($_POST['action']) && $_POST['action'] == 'bulk-delete' ) || ( isset($_POST['action2']) && $_POST['action2'] == 'bulk-delete' )) {
             $delete_ids = esc_sql($_POST['bulk-delete']);
             foreach ($delete_ids as $id) {
@@ -215,7 +253,7 @@ class Product_Template_List_Table extends WP_List_Table {
         if (( isset($_POST['action']) && $_POST['action'] == 'bulk-publish' ) || ( isset($_POST['action2']) && $_POST['action2'] == 'bulk-publish' )) {
             $delete_ids = esc_sql($_POST['bulk-delete']);
             foreach ($delete_ids as $id) {
-                self::update_template($id, 'publish', 1);
+                self::update_template($id, array('publish' => 1));
             }
             wp_redirect(esc_url_raw(add_query_arg('','')));
             exit;
@@ -223,11 +261,19 @@ class Product_Template_List_Table extends WP_List_Table {
         if (( isset($_POST['action']) && $_POST['action'] == 'bulk-unpublish' ) || ( isset($_POST['action2']) && $_POST['action2'] == 'bulk-unpublish' )) {
             $delete_ids = esc_sql($_POST['bulk-delete']);
             foreach ($delete_ids as $id) {
-                self::update_template($id, 'publish', 0);
+                self::update_template($id, array('publish' => 0));
             }
             wp_redirect(esc_url_raw(add_query_arg('','')));
             exit;
         } 
+        if (( isset($_POST['action']) && $_POST['action'] == 'bulk-private' ) || ( isset($_POST['action2']) && $_POST['action2'] == 'bulk-private' )) {
+            $delete_ids = esc_sql($_POST['bulk-delete']);
+            foreach ($delete_ids as $id) {
+                self::update_template($id, array('private' => 1));
+            }
+            wp_redirect(esc_url_raw(add_query_arg('','')));
+            exit;
+        }         
     }
 
 }
