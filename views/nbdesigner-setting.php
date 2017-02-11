@@ -31,7 +31,7 @@
                     <div>
                         <small id="nbdesigner_license_mes">
                             <?php //if(!isset($license['type'])) _e('Your license is incorrect or expired! ', $this->textdomain);?>
-                            <?php if(!isset($license['type']) || (isset($license['type']) && $license['type'] == 'free')) echo '<a href="'.$this->author_site.'wordpress-themes/wordpress-online-product-designer-plugin" target="_blank">Upgrade Pro version!</a>';?>
+                            <?php if(!isset($license['type']) || (isset($license['type']) && $license['type'] == 'free')) echo '<a href="'.$this->author_site.'wordpress-plugins/woocommerce-online-product-designer-plugin" target="_blank">Upgrade Pro version!</a>';?>
                         </small>
                     </div>
                 </td>

@@ -68,5 +68,27 @@ class Nbdesigner_IO {
                 if ($file != "." && $file != "..") self::copy_dir("$src/$file", "$dst/$file");
             }
         } else if (file_exists($src)) copy($src, $dst);
-    }    
+    }        
+    public static function image_path(){
+        
+    }   
+    public static function secret_image_url($file_path){
+        $type = pathinfo($file_path, PATHINFO_EXTENSION);
+        $data = file_get_contents($file_path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);   
+        return $base64;        
+    }   
+    public static function convert_path_to_url($path){
+        //TODO
+    }
+    public static function save_data_to_file($path, $data){
+        if (!$fp = fopen($path, 'w')) {
+            return FALSE;
+        }
+        flock($fp, LOCK_EX);
+        fwrite($fp, $data);
+        flock($fp, LOCK_UN);
+        fclose($fp);
+        return TRUE;        
+    }
 }

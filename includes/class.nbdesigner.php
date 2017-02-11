@@ -93,7 +93,8 @@ class Nbdesigner_Plugin {
             'nbdesigner_theme_check' => false,
             'nbdesigner_custom_css' => false,
             'nbdesigner_copy_image_from_url' => true,
-            'nbdesigner_get_suggest_design' => true
+            'nbdesigner_get_suggest_design' => true,
+            'save_partial_customer_design' => true
         );
 	foreach ($ajax_events as $ajax_event => $nopriv) {
             add_action('wp_ajax_' . $ajax_event, array($this, $ajax_event));
@@ -165,8 +166,8 @@ class Nbdesigner_Plugin {
                     ($hook == 'nbdesigner_page_nbdesigner_manager_product' ) || ($hook == 'toplevel_page_nbdesigner_shoper') || ($hook == 'nbdesigner_page_nbdesigner_frontend_translate') ||
                     ($hook == 'nbdesigner_page_nbdesigner_manager_fonts') || ($hook == 'nbdesigner_page_nbdesigner_manager_arts') || ($hook == 'nbdesigner_page_nbdesigner_admin_template')
                      || ($hook == 'nbdesigner_page_nbdesigner_tools')) {
-                wp_register_style('admin_nbdesigner', NBDESIGNER_CSS_URL . 'admin-nbdesigner.css');
-                wp_register_script('admin_nbdesigner', NBDESIGNER_JS_URL . 'admin-nbdesigner.js', array('jquery', 'jquery-ui-resizable', 'jquery-ui-draggable', 'jquery-ui-autocomplete'));
+                wp_register_style('admin_nbdesigner', NBDESIGNER_CSS_URL . 'admin-nbdesigner.css', array(), NBDESIGNER_VERSION);
+                wp_register_script('admin_nbdesigner', NBDESIGNER_JS_URL . 'admin-nbdesigner.js', array('jquery', 'jquery-ui-resizable', 'jquery-ui-draggable', 'jquery-ui-autocomplete'), NBDESIGNER_VERSION);
                 wp_localize_script('admin_nbdesigner', 'admin_nbds', array(
                     'url' => admin_url('admin-ajax.php'),
                     'nonce' => wp_create_nonce('nbdesigner_add_cat'),
@@ -180,9 +181,9 @@ class Nbdesigner_Plugin {
             }
             if($hook == 'admin_page_nbdesigner_detail_order'){
                 wp_register_style('admin_nbdesigner_detail_order_slider', NBDESIGNER_CSS_URL . 'owl.carousel.css');
-                wp_register_style('admin_nbdesigner_detail_order', NBDESIGNER_CSS_URL . 'detail_order.css');
+                wp_register_style('admin_nbdesigner_detail_order', NBDESIGNER_CSS_URL . 'detail_order.css', array(), NBDESIGNER_VERSION);
                 wp_enqueue_style(array('admin_nbdesigner_detail_order_slider', 'admin_nbdesigner_detail_order'));
-                wp_register_script('admin_nbdesigner_detail_order_slider', NBDESIGNER_JS_URL . 'owl.carousel.min.js', array('jquery'));
+                wp_register_script('admin_nbdesigner_detail_order_slider', NBDESIGNER_JS_URL . 'owl.carousel.min.js', array('jquery'), NBDESIGNER_VERSION);
                 wp_enqueue_script('admin_nbdesigner_detail_order_slider');
             }
             if($hook == 'nbdesigner_page_nbdesigner_frontend_translate'){
@@ -202,7 +203,7 @@ class Nbdesigner_Plugin {
     }
     public function nbdesigner_frontend_enqueue_scripts(){
         add_action('wp_enqueue_scripts', function() {
-            wp_register_style('nbdesigner', NBDESIGNER_CSS_URL . 'nbdesigner.css');
+            wp_register_style('nbdesigner', NBDESIGNER_CSS_URL . 'nbdesigner.css', array(), NBDESIGNER_VERSION);
             wp_enqueue_style('nbdesigner');
             $opt_val = get_option('nbdesigner');
             if(is_array($opt_val)){
@@ -213,7 +214,7 @@ class Nbdesigner_Plugin {
                 $max_size = 5;
                 $api_key = '';
             }                
-            wp_register_script('nbdesigner', NBDESIGNER_JS_URL . 'nbdesigner.js', array('jquery'));
+            wp_register_script('nbdesigner', NBDESIGNER_JS_URL . 'nbdesigner.js', array('jquery'), NBDESIGNER_VERSION);
             wp_localize_script('nbdesigner', 'nbds_frontend', array(
                 'url' => admin_url('admin-ajax.php'),
                 'sid' => session_id(),
@@ -402,13 +403,83 @@ class Nbdesigner_Plugin {
         $mimes['ttf'] = 'application/x-font-ttf';
         return $mimes;
     }
+    public function nbdesigner_settings(){
+        $page_id = 'nbdesigner';
+        $tabs = apply_filters('nbdesigner_settings_tabs', array(
+            'general' => __('General', NBDESIGNER_TEXTDOMAIN),
+            'frontend' => __('Frontend', NBDESIGNER_TEXTDOMAIN)            
+        ));
+        require_once(NBDESIGNER_PLUGIN_DIR . 'includes/settings/general.php');
+        require_once(NBDESIGNER_PLUGIN_DIR . 'includes/settings/frontend.php');
+        $Nbdesigner_Settings = new Nbdesigner_Settings(array(
+            'page_id' => $page_id,
+            'tabs' => $tabs    
+        ));   
+        $blocks = apply_filters('nbdesigner_settings_blocks', array(
+            'general' => array(
+                    'general-product-designer' => __('Product Designer', 'radykal'),
+                    'custom-images' => __('Custom Image Uploads', 'radykal')
+            ),
+            'frontend' => array(
+                    'general-product-designer' => __('Product Designer', 'radykal')
+            )
+        ));  
+        $Nbdesigner_Settings->add_blocks($blocks);
+        $Nbdesigner_Settings->add_blocks_description(array());
+        $general_options = Nbdesigner_Settings_Frontend::get_options();
+        $options = apply_filters('nbdesigner_settings_options', array(
+            'general-product-designer' => $general_options['general-product-designer'],
+            'custom-images' => $general_options['custom-images']
+        ));    
+        foreach($options as $key => $option){
+            $Nbdesigner_Settings->add_block_options( $key, $option);  
+        }    
+        do_action( 'nbdesigner_before_options_save', $page_id );
+        if ( isset($_POST['nbdesigner_save_options_'.$page_id]) ) {
+            check_admin_referer( $page_id.'_nonce' );
+            $Nbdesigner_Settings->save_options();
+        }
+        else if( isset($_POST['nbdesigner_reset_options_'.$page_id]) ) {
+            check_admin_referer( $page_id.'_nonce' );
+            $Nbdesigner_Settings->reset_options();
+        }         
+        $Nbdesigner_Settings->output();              
+    }
+    public function add_help_option(){
+        $screen = get_current_screen();
+        $screen->add_help_tab( array(
+            'id'		=> 'backend',
+            'title'		=> __('Backend', NBDESIGNER_TEXTDOMAIN),
+            'content'	=>
+                '<h2>' . __('Backend setting', NBDESIGNER_TEXTDOMAIN) . '</h2>' .
+                '<iframe width="560" height="315" src="https://www.youtube.com/embed/zegY2it0w3k?rel=0" frameborder="0" allowfullscreen></iframe>'      
+        ));
+        $screen->add_help_tab( array(
+            'id'		=> 'frontend',
+            'title'		=> __('Frontend', NBDESIGNER_TEXTDOMAIN),
+            'content'	=>
+                '<h2>' . __('Frontend setting', NBDESIGNER_TEXTDOMAIN) . '</h2>' .
+                '<iframe width="560" height="315" src="https://www.youtube.com/embed/FLv_kMV3jv0?rel=0" frameborder="0" allowfullscreen></iframe>'          
+        ));       
+        $screen->add_help_tab( array(
+            'id'		=> 'facebook',
+            'title'		=> __('Frontend', NBDESIGNER_TEXTDOMAIN),
+            'content'	=>
+                ''
+        ));
+        $screen->set_help_sidebar(
+            '<p><strong>' . __('For more information', NBDESIGNER_TEXTDOMAIN) . ':</strong></p>' .
+            '<p>' . __('<a href="https://cmsmart.net/support_ticket" target="_blank">Support ticket</a>') . '</p>' .
+            '<p>' . __('<a href="https://cmsmart.net/forum/" target="_blank">Forum</a>') . '</p>' 
+        );            
+    }
     public function nbdesigner_menu() {
         if (current_user_can('administrator')) {
-            add_menu_page('Nbdesigner', 'NBDesigner', 'administrator', 'nbdesigner', array($this, 'nbdesigner_manager'), NBDESIGNER_PLUGIN_URL . 'assets/images/logo.png', 26);
+            add_menu_page('Nbdesigner', 'NBDesigner', 'administrator', 'nbdesigner', array($this, 'nbdesigner_settings'), NBDESIGNER_PLUGIN_URL . 'assets/images/logo.png', 26);
             $nbdesigner_manage = add_submenu_page(
-                    'nbdesigner', 'NBDesigner Setting', 'Setting', 'administrator', 'nbdesigner', array($this, 'nbdesigner_manager')
+                    'nbdesigner', 'NBDesigner Settings', 'Settings', 'administrator', 'nbdesigner', array($this, 'nbdesigner_settings')
             );
-            add_action('load-'.$nbdesigner_manage, array($this, 'nbdesigner_add_help_option'));
+            add_action('load-'.$nbdesigner_manage, array('Nbdesigner_Helper', 'settings_helper'));
             add_submenu_page(
                     'nbdesigner', 'Manager Products', 'Products', 'administrator', 'nbdesigner_manager_product', array($this, 'nbdesigner_manager_product')
             );
@@ -433,8 +504,7 @@ class Nbdesigner_Plugin {
             );  
             add_submenu_page(
                     'nbdesigner', 'NBDesigner Analytics', 'Analytics', 'administrator', 'nbdesigner_analytics', array($this, 'nbdesigner_analytics')
-            ); 
-            
+            );            
         }
         if (current_user_can('shop_manager')) {
             add_menu_page('NBdesigner', 'NBdesigner', 'shop_manager', 'nbdesigner_shoper', array($this, 'nbdesigner_manager_product'), NBDESIGNER_PLUGIN_URL . 'assets/images/logo.png', 26);
@@ -496,28 +566,6 @@ class Nbdesigner_Plugin {
         $site_title = get_bloginfo( 'name' );
         $site_url = base64_encode(network_site_url( '/' ));
         require(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-setting.php');
-    }
-    public function nbdesigner_add_help_option(){
-        $screen = get_current_screen();
-        $screen->add_help_tab( array(
-            'id'		=> 'backend',
-            'title'		=> __('Backend'),
-            'content'	=>
-                    '<h2>' . __('Backend setting') . '</h2>' .
-                    '<iframe width="560" height="315" src="https://www.youtube.com/embed/zegY2it0w3k?rel=0" frameborder="0" allowfullscreen></iframe>'      
-        ));
-        $screen->add_help_tab( array(
-            'id'		=> 'front',
-            'title'		=> __('Frontend'),
-            'content'	=>
-                    '<h2>' . __('Front setting') . '</h2>' .
-                    '<iframe width="560" height="315" src="https://www.youtube.com/embed/VmbaOt8jjd8?rel=0" frameborder="0" allowfullscreen></iframe>'          
-        ));        
-        $screen->set_help_sidebar(
-                '<p><strong>' . __('For more information:') . '</strong></p>' .
-                '<p>' . __('<a href="https://cmsmart.net/support_ticket" target="_blank">Support ticket</a>') . '</p>' .
-                '<p>' . __('<a href="https://cmsmart.net/forum/" target="_blank">Forum</a>') . '</p>' 
-        );
     }
     public function nbdesigner_get_license_key(){
         
@@ -1190,7 +1238,6 @@ class Nbdesigner_Plugin {
         /*TODO*/
     }
     public function nbdesigner_allow_create_product($id){
-        $check = $this->nbdesigner_check_license();
         $args = array(
             'post_type'  => 'product',
             'meta_key' => '_nbdesigner_enable',
@@ -1327,7 +1374,7 @@ class Nbdesigner_Plugin {
         wp_die();        
     }
     private function nbdesiger_request_license($license, $task){
-        $url_root = base64_encode(get_bloginfo('wpurl'));	
+        $url_root = base64_encode(rtrim(get_bloginfo('wpurl')), '/');	
         if(ini_get('allow_url_fopen')){
             $result_from_json = file_get_contents($this->author_site.$task.$this->nbdesigner_sku.'/'.$license.'/'.$url_root);    
         }else{
@@ -1589,6 +1636,88 @@ class Nbdesigner_Plugin {
         }
         wp_die();
     }
+    public function save_partial_customer_design(){
+        if (!wp_verify_nonce($_POST['nonce'], 'save-design')) {
+            die('Security error');
+        } 
+        $result = array();
+        $force_new_folder = true;
+        $result['flag'] = 0;       
+        $sid = esc_html($_POST['sid']);
+        $pid = $_POST['product_id'];  
+        $flag = (int)$_POST['flag'];  
+        $order = 'nb_order';
+        if(!$flag){
+            $config = str_replace('\"', '"', $_POST['config']);
+            $fonts = str_replace('\"', '"', $_POST['fonts']);            
+        }
+        if(isset($_POST['image'])){
+            $data = $_POST['image']['img'];
+            if(!$flag){
+                $json = str_replace('\"', '"', $_POST['image']['json']);	
+                $json = str_replace('\\\\', '\\', $json);	                
+            }
+        } else{
+            die('Incorect data!');
+        }        
+        $uid = get_current_user_id(); 
+        $iid = $sid;
+        if($uid > 0) $iid = $uid;    
+        $path = NBDESIGNER_CUSTOMER_DIR . '/' . $iid . '/' . $order . '/' . $pid;
+        $path_thumb = $path . '/thumbs';
+        if(!$flag){      
+            $json_file = $path . '/design.json';
+            $json_config = $path . '/config.json';
+            $json_used_font = $path . '/used_font.json';    
+            file_put_contents($json_file, $json);
+            file_put_contents($json_config, $config);
+            file_put_contents($json_used_font, $fonts);            
+        }
+        if(file_exists($path) && !$flag){
+            Nbdesigner_IO::delete_folder($path);
+        }    
+        if (!file_exists($path) ) {
+            if (wp_mkdir_p($path)) {
+                if (!file_exists($path_thumb))
+                    if (!wp_mkdir_p($path_thumb)) {
+                        $result['mes'] = __('Your server not allow creat folder', NBDESIGNER_TEXTDOMAIN);
+                    }
+            } else {
+                $result['mes'] = __('Your server not allow creat folder', NBDESIGNER_TEXTDOMAIN);
+            }
+        }
+        $opt_val = get_option('nbdesigner');  
+        $configs = unserialize(get_post_meta($pid, '_designer_setting', true)); 
+        $ratio = 1;
+        if(is_array($configs)){
+            $ratio = $configs[$flag]["area_design_width"] / $configs[$flag]["area_design_height"];
+        }        
+        if(is_array($opt_val)){
+            extract($opt_val);   
+            $thumb_width = isset($thumbnail_width) ? $thumbnail_width : 60;
+            $thumb_height = isset($thumbnail_height) ? $thumbnail_height * $ratio : 60 * $ratio;
+            $thumb_quality = isset($thumbnail_quality) ? $thumbnail_quality : 76;
+        }        
+        foreach ($data as $key => $val) {
+            $temp = explode(';base64,', $val);
+            $buffer = base64_decode($temp[1]);
+            $full_name = $path . '/' . $key . '.png';
+            if (Nbdesigner_IO::save_data_to_file($full_name, $buffer)) {
+                $image = wp_get_image_editor($full_name);
+                if (!is_wp_error($image)) {
+                    $thumb_file = $path_thumb . '/' . $key . '.png';
+                    $image->resize($thumb_width, $thumb_height, 1);
+                    $image->set_quality($thumb_quality);
+                    if ($image->save($thumb_file, 'image/png')) $result['link'] = Nbdesigner_IO::secret_image_url($thumb_file);
+                }                
+            } else {
+                $result['mes'] = __('Your server not allow writable file', NBDESIGNER_TEXTDOMAIN);
+            }            
+        }       
+        $result['flag'] = "success";
+        echo json_encode($result);
+        wp_die();        
+    }
     public function nbdesigner_save_customer_design() {
         if (!wp_verify_nonce($_POST['nonce'], 'save-design')) {
             die('Security error');
@@ -1726,6 +1855,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
  publish TINYINT(1) NOT NULL default 1,
  private TINYINT(1) NOT NULL default 0,
  priority  TINYINT(1) NOT NULL default 0,
+ hit BIGINT(20) NULL, 
  PRIMARY KEY  (id) 
 ) $collate;
             ";
@@ -1826,6 +1956,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                 $mes[] = __('Your server not allow creat folder', $this->textdomain);
             }
         }
+        //$configs = unserialize(get_post_meta($pid, '_designer_setting', true));   
         foreach ($data as $key => $val) {
             $temp = explode(';base64,', $val);
             $buffer = base64_decode($temp[1]);
@@ -2450,7 +2581,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         } 
         if(isset($_REQUEST['data'])){
             $content = $_REQUEST['data'];
-            include_once NBDESIGNER_PLUGIN_DIR.'includes/class.nbdesigner.qrcode.php';
+            include_once NBDESIGNER_PLUGIN_DIR.'includes/class-qrcode.php';
             $qr = new Nbdesigner_Qrcode();
             $qr->setText($content);
             $image = $qr->getImage(500);

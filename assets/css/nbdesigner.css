@@ -1,7 +1,15 @@
-#nbdesigner_frontend_area img {
+#nbdesigner_frontend_area .img-con {
     margin: 0 5px 5px 0;
     border: 1px solid #ddd;
     border-radius: 4px;
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    text-align: center;
+}
+#nbdesigner_frontend_area .img-con img{
+    width: 100%;
+    height: auto;
 }
 .nbdesigner_pp_close {
     position: absolute;

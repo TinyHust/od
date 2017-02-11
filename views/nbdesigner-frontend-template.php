@@ -118,6 +118,7 @@
                 <span></span>
             </div>	
             <p id="first_message">{{(langs['NBDESIGNER_PROCESSING']) ? langs['NBDESIGNER_PROCESSING'] : "NBDESIGNER PROCESSING"}}...</p>
+            <p ng-show="partialSave"><span id="saved_sides">0</span> / <span id="total_sides">1</span></p>
         </div>
 <!--        <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>-->
         <script type='text/javascript' src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/libs/jquery.min.js'; ?>"></script>

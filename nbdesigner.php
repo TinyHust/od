@@ -6,7 +6,7 @@
 Plugin Name: Nbdesigner
 Plugin URI: https://cmsmart.net/wordpress-plugins/woocommerce-online-product-designer-plugin
 Description: Allow customer design product before purchase.
-Version: 1.5.0
+Version: 1.6.0
 Author: Netbaseteam
 Author URI: http://netbaseteam.com/
 License: GPLv2 or later
@@ -24,7 +24,7 @@ $basedir = $upload_dir['basedir'];
 $baseurl = $upload_dir['baseurl'];
 
 if (!defined('NBDESIGNER_VERSION')) {
-    define('NBDESIGNER_VERSION', '1.5.0');
+    define('NBDESIGNER_VERSION', '1.6.0');
 }
 if (!defined('NBDESIGNER_MINIMUM_WP_VERSION')) {
     define('NBDESIGNER_MINIMUM_WP_VERSION', '4.1.1');
@@ -74,6 +74,12 @@ if (!defined('NBDESIGNER_ADMINDESIGN_DIR')) {
 if (!defined('NBDESIGNER_ADMINDESIGN_URL')) {   
     define('NBDESIGNER_ADMINDESIGN_URL', NBDESIGNER_DATA_URL . '/admindesign');
 }
+if (!defined('NBDESIGNER_CUSTOMER_DIR')) {   
+    define('NBDESIGNER_CUSTOMER_DIR', NBDESIGNER_DATA_DIR . '/designs');
+}
+if (!defined('NBDESIGNER_CUSTOMER_URL')) {   
+    define('NBDESIGNER_CUSTOMER_URL', NBDESIGNER_DATA_URL . '/designs');
+}
 if (!defined('NBDESIGNER_SUGGEST_DESIGN_DIR')) {   
     define('NBDESIGNER_SUGGEST_DESIGN_DIR', NBDESIGNER_DATA_DIR . '/suggest_designs');
 }
@@ -98,10 +104,15 @@ if (!defined('NBDESIGNER_PRODUCT_TEMPLATES')) {
 if (!defined('NBDESIGNER_CATEGORY_TEMPLATES')) {   
     define('NBDESIGNER_CATEGORY_TEMPLATES', 'nbdesigner_category_templates');
 }
+if (!defined('NBDESIGNER_TEXTDOMAIN')) {   
+    define('NBDESIGNER_TEXTDOMAIN', 'nbdesigner');
+}
 
-require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.util.php');
-require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.debug.php');
-require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.product.templates.table.php');
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-util.php');
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-settings.php');
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-debug.php');
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-helper.php');
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/table/class.product.templates.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.php');
 
 register_activation_hook( __FILE__, array( 'Nbdesigner_Plugin', 'plugin_activation' ) );
@@ -115,7 +126,7 @@ if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 $nb_designer = new Nbdesigner_Plugin();
 $nb_designer->init();
 
-require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.widget.php');
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-widget.php');
 
 /**
  * With the upgrade to WordPress 4.7.1, some non-image files fail to upload on certain server setups. 

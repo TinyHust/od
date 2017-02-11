@@ -50,7 +50,7 @@ var NBDESIGNERPRODUCT = {
     show_design_thumbnail: function (arr) {
         var html = '<h4>Preview your design</h4>';
         jQuery.each(arr, function (key, val) {
-            html += '<img style="width: 60px; height: 60px; display: inline-block;" src="' + val + '" />'
+            html += '<div class="img-con"><img src="' + val + '" /></div>'
         });
         jQuery('#nbdesigner_frontend_area').html('');
         jQuery('#nbdesigner_frontend_area').append(html);
