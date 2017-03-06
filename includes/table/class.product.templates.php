@@ -152,13 +152,13 @@ class Product_Template_List_Table extends WP_List_Table {
      * @return array
      */
     function get_columns() {
-        $columns = [
+        $columns = array(
             'cb' => '<input type="checkbox" />',            
             'folder' => __('Preview', 'nbdesigner'),
             'product_id' => __('Actions', 'nbdesigner'),
             'user_id' => __('Created By', 'nbdesigner'),
             'created_date' => __('Created', 'nbdesigner')
-        ];
+        );
         return $columns;
     }
     function extra_tablenav( $which ) {
@@ -217,10 +217,10 @@ class Product_Template_List_Table extends WP_List_Table {
         $per_page = $this->get_items_per_page('templates_per_page', 10);
         $current_page = $this->get_pagenum();
         $total_items = self::record_count();
-        $this->set_pagination_args([
+        $this->set_pagination_args(array(
             'total_items' => $total_items, //WE have to calculate the total number of items
             'per_page' => $per_page //WE have to determine how many items to show on a page
-        ]);
+        ));
         $this->items = self::get_templates($per_page, $current_page);
     }
     public function process_bulk_action() {

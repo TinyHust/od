@@ -20,11 +20,13 @@
             <img src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/images/helpdesk06.jpg'; ?>" />
             <img src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/images/helpdesk03.jpg'; ?>" />
         </div>	
-        <div id="shortcuts">           
+        <div id="shortcuts">    
+            <p><span class="shortkey left"><span class="key nbd-icon-mouse"></span></span><span class="shortkey right">{{(langs['SELECT_LAYER']) ? langs['SELECT_LAYER'] : "Select layer (item)"}}</span></p>
             <p><span class="shortkey left"><span class="key">&larr;</span></span><span class="shortkey right">{{(langs['MOVE_LEFT']) ? langs['MOVE_LEFT'] : "Move left"}}</span></p>
             <p><span class="shortkey left"><span class="key">&rarr;</span></span><span class="shortkey right">{{(langs['MOVE_RIGHT']) ? langs['MOVE_RIGHT'] : "Move right"}}</span></p>
             <p><span class="shortkey left"><span class="key">&uarr;</span></span><span class="shortkey right">{{(langs['MOVE_UP']) ? langs['MOVE_UP'] : "Move up"}}</span></p>
             <p><span class="shortkey left"><span class="key">&darr;</span></span><span class="shortkey right">{{(langs['MOVE_DOWN']) ? langs['MOVE_DOWN'] : "Move down"}}</span></p>
+            <p><span class="shortkey left"><span class="key long">Delete</span></span><span class="shortkey right">{{(langs['DELETE_LAYER']) ? langs['DELETE_LAYER'] : "Delete layer (item)"}}</span></p>
             <p><span class="shortkey left"><span class="key long">Shift</span><span class="key">-</span></span><span class="shortkey right">{{(langs['ITEM_ZOOM_IN']) ? langs['ITEM_ZOOM_IN'] : "Zoom in item"}}</span></p>
             <p><span class="shortkey left"><span class="key long">Shift</span><span class="key">+</span></span><span class="shortkey right">{{(langs['ITEM_ZOOM_OUT']) ? langs['ITEM_ZOOM_OUT'] : "Zoom out item"}}</span></p>
             <p><span class="shortkey left"><span class="key long">Ctrl</span><span class="key">Z</span></span><span class="shortkey right">{{(langs['UNDO_DESIGN']) ? langs['UNDO_DESIGN'] : "Undo"}}</span></p>

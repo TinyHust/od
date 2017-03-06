@@ -26,6 +26,9 @@ $baseurl = $upload_dir['baseurl'];
 if (!defined('NBDESIGNER_VERSION')) {
     define('NBDESIGNER_VERSION', '1.6.0');
 }
+if (!defined('NBDESIGNER_NUMBER_VERSION')) {
+    define('NBDESIGNER_NUMBER_VERSION', 160);
+}
 if (!defined('NBDESIGNER_MINIMUM_WP_VERSION')) {
     define('NBDESIGNER_MINIMUM_WP_VERSION', '4.1.1');
 }
@@ -74,6 +77,12 @@ if (!defined('NBDESIGNER_ADMINDESIGN_DIR')) {
 if (!defined('NBDESIGNER_ADMINDESIGN_URL')) {   
     define('NBDESIGNER_ADMINDESIGN_URL', NBDESIGNER_DATA_URL . '/admindesign');
 }
+if (!defined('NBDESIGNER_PDF_DIR')) {   
+    define('NBDESIGNER_PDF_DIR', NBDESIGNER_DATA_DIR . '/pdfs');
+}
+if (!defined('NBDESIGNER_PDF_URL')) {   
+    define('NBDESIGNER_PDF_URL', NBDESIGNER_DATA_URL . '/pdfs');
+}
 if (!defined('NBDESIGNER_CUSTOMER_DIR')) {   
     define('NBDESIGNER_CUSTOMER_DIR', NBDESIGNER_DATA_DIR . '/designs');
 }
@@ -106,6 +115,12 @@ if (!defined('NBDESIGNER_CATEGORY_TEMPLATES')) {
 }
 if (!defined('NBDESIGNER_TEXTDOMAIN')) {   
     define('NBDESIGNER_TEXTDOMAIN', 'nbdesigner');
+}
+if (!defined('NBDESIGNER_AUTHOR_SITE')) {   
+    define('NBDESIGNER_AUTHOR_SITE', 'https://cmsmart.net/');
+}
+if (!defined('NBDESIGNER_SKU')) {   
+    define('NBDESIGNER_SKU', 'WPP1074');
 }
 
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-util.php');

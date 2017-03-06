@@ -8,37 +8,75 @@
     </div>    
     <div class="nbdesigner-right add_more" style="<?php if(!$enable) echo 'display: none;'; ?>">
         <a class="button button-primary" onclick="NBDESIGNADMIN.addOrientation(<?php echo $vid; ?>)"><?php echo __('Add More', $this->textdomain); ?></a>
+        <a class="button button-primary" onclick="NBDESIGNADMIN.collapseAll(<?php echo $vid; ?>)"><?php echo __('Collapse All', $this->textdomain); ?></a>
     </div>    
     <div class="nbdesigner-clearfix"></div>
     <div id="nbdesigner-boxes<?php echo $vid; ?>" class="<?php if (!$enable) echo 'nbdesigner-disable'; ?> nbdesigner-variation-setting">
         <?php foreach ($designer_setting as $k => $v): ?>
             <div class="nbdesigner-box-container">
                 <div class="nbdesigner-box">
-                    <label class="nbdesigner-setting-box-label"><?php _e('Name:', $this->textdomain); ?></label>
+                    <label class="nbdesigner-setting-box-label"><?php _e('Name', $this->textdomain); ?></label>
                     <div class="nbdesigner-setting-box-value">
                         <input name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][orientation_name]" class="short orientation_name" value="<?php echo $v['orientation_name']; ?>" type="text" required/>
                     </div>
                     <div class="nbdesigner-right">
                         <a class="button nbdesigner-collapse" onclick="NBDESIGNADMIN.collapseBox(this)"><span class="dashicons dashicons-arrow-down"></span><?php _e('More setting', $this->textdomain); ?></a>
                         <a class="button nbdesigner-delete delete_orientation" data-index="<?php echo $k; ?>" data-variation="<?php echo $vid; ?>" onclick="NBDESIGNADMIN.deleteOrientation(this)">&times;</a>
-                        <input type="hidden" class="nbdesigner-variation-status" value="0" name="_nbdesigner_variation_status<?php echo $vid; ?>"/>
                     </div>
                 </div>
                 <div class="nbdesigner-box nbdesigner-box-collapse" data-variation="<?php echo $vid; ?>" style="display: none;">
                     <div class="nbdesigner-image-box">
                         <div class="nbdesigner-image-inner">
-                            <div class="nbdesigner-image-original">
+                            <?php 
+                                if($v['product_width'] >= $v['product_height']){
+                                    $ratio = 500 / $v['product_width'];
+                                    $style_width = 500;
+                                    $style_height = round($v['product_height'] * $ratio);
+                                    $style_left = 0;
+                                    $style_top = round((500 - $style_height) / 2);
+                                } else {
+                                    $ratio = 500 / $v['product_height'];
+                                    $style_height = 500;
+                                    $style_width = round($v['product_width'] * $ratio);
+                                    $style_top = 0;
+                                    $style_left = round((500 - $style_width) / 2);                                    
+                                }
+                            ?>     
+                            <div class="nbdesigner-image-original <?php if($v['bg_type'] == 'tran') echo "background-transparent"; ?>"
+                                style="width: <?php echo $style_width; ?>px;
+                                       height: <?php echo $style_height; ?>px;
+                                       left: <?php echo $style_left; ?>px;
+                                       top: <?php echo $style_top; ?>px;
+                                <?php if($v['bg_type'] == 'color') echo 'background: ' .$v['bg_color_value']?>"       
+                            >     
                                 <img src="<?php if ($v['img_src'] != '') {echo $v['img_src'];} else {echo NBDESIGNER_PLUGIN_URL . 'assets/images/default.png';} ?>" 
-                                     class="designer_img_src"
+                                    <?php if($v['bg_type'] != 'image') echo ' style="display: none;"' ?>
+                                     class="designer_img_src "
                                     />
+                            </div>   
+                            <?php $overlay_style = 'none'; if($v['show_overlay']) $overlay_style = 'block'; ?>
+                            <div class="nbdesigner-image-overlay"
+                                style="width: <?php echo $v['area_design_width']; ?>px;
+                                       height: <?php echo $v['area_design_height']; ?>px;
+                                       left: <?php echo $v['area_design_left']; ?>px;
+                                       top: <?php echo $v['area_design_top']; ?>px;
+                                       display: <?php echo $overlay_style; ?>"                                 
+                            >
+                                <img src="<?php if ($v['img_overlay'] != '') {echo $v['img_overlay'];} else {echo NBDESIGNER_PLUGIN_URL . 'assets/images/overlay.png';} ?>" class="img_overlay"/>
                             </div>
-                            <div class="nbdesigner-area-design" style="width: <?php echo $v['area_design_width'] . 'px'; ?>; height: <?php echo $v['area_design_height'] . 'px'; ?>; left: <?php echo $v['area_design_left'] . 'px'; ?>; top: <?php echo $v['area_design_top'] . 'px'; ?>;"> </div>
+                            <div class="nbdesigner-area-design" id="nbdesigner-area-design-<?php echo $k; ?>" 
+                                 style="width: <?php echo $v['area_design_width'] . 'px'; ?>; 
+                                        height: <?php echo $v['area_design_height'] . 'px'; ?>; 
+                                        left: <?php echo $v['area_design_left'] . 'px'; ?>; 
+                                        top: <?php echo $v['area_design_top'] . 'px'; ?>;"> </div>                            
                         </div>
                         <input type="hidden" class="hidden_img_src" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][img_src]" value="<?php echo $v['img_src']; ?>" >
-                        <input type="hidden" class="hidden_img_src_top" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][img_src_top]">
-                        <input type="hidden" class="hidden_img_src_left" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][img_src_left]">
-                        <input type="hidden" class="hidden_img_src_width" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][img_src_width]">
-                        <input type="hidden" class="hidden_img_src_height" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][img_src_height]">
+                        <input type="hidden" class="hidden_img_src_top" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][img_src_top]" value="<?php echo $v['img_src_top']; ?>" >
+                        <input type="hidden" class="hidden_img_src_left" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][img_src_left]" value="<?php echo $v['img_src_left']; ?>">
+                        <input type="hidden" class="hidden_img_src_width" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][img_src_width]" value="<?php echo $v['img_src_width']; ?>">
+                        <input type="hidden" class="hidden_img_src_height" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][img_src_height]" value="<?php echo $v['img_src_height']; ?>">
+                        <input type="hidden" class="hidden_overlay_src" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][img_overlay]" value="<?php echo $v['img_overlay']; ?>">
+                        <input type="hidden" class="hidden_nbd_version" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][version]" value="<?php echo $v['version']; ?>">
                         <div>	
                             <a class="button nbdesigner_move nbdesigner_move_left" data-index="<?php echo $k; ?>" onclick="NBDESIGNADMIN.nbdesigner_move(this, 'left')">&larr;</a>
                             <a class="button nbdesigner_move nbdesigner_move_right" data-index="<?php echo $k; ?>" onclick="NBDESIGNADMIN.nbdesigner_move(this, 'right')">&rarr;</a>
@@ -46,48 +84,128 @@
                             <a class="button nbdesigner_move nbdesigner_move_down" data-index="<?php echo $k; ?>" onclick="NBDESIGNADMIN.nbdesigner_move(this, 'down')">&darr;</a>
                             <a class="button nbdesigner_move nbdesigner_move_center" data-index="<?php echo $k; ?>" onclick="NBDESIGNADMIN.nbdesigner_move(this, 'center')">&frac12;</a>
                             <a class="button nbdesigner_move nbdesigner_move_center" style="padding-left: 7px; padding-right: 7px;" data-index="<?php echo $k; ?>" onclick="NBDESIGNADMIN.nbdesigner_move(this, 'fit')"><i class="mce-ico mce-i-dfw" style="margin: 4px 0px 0px 0px !important; padding: 0 !important;"></i></a>
-                            <a class="button nbdesigner-button nbdesigner-add-image" style="margin-top: 10px;" onclick="NBDESIGNADMIN.loadImage(this)" data-index="<?php echo $k; ?>"><?php echo __('Change image', $this->textdomain); ?></a>
                         </div>
+                        <div>
+                            <p>
+                                <label class="nbdesigner-setting-box-label"><?php _e('Background type'); ?>:</label>
+                                <input type="radio" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_type]" value="image" 
+                                    <?php checked($v['bg_type'], 'image', true); ?> class="bg_type"
+                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Image', $this->textdomain); ?>
+                                <input type="radio" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_type]" value="color" 
+                                    <?php checked($v['bg_type'], 'color', true); ?> class="bg_type"
+                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Color', $this->textdomain); ?>
+                                <input type="radio" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_type]" value="tran" 
+                                    <?php checked($v['bg_type'], 'tran', true); ?> class="bg_type"
+                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Transparent', $this->textdomain); ?>
+                            </p>
+                        </div>   
+                        <div class="nbdesigner_bg_image" <?php if($v['bg_type'] != 'image') echo ' style="display: none;"' ?>>
+                            <a class="button nbdesigner-button nbdesigner-add-image" onclick="NBDESIGNADMIN.loadImage(this)" data-index="<?php echo $k; ?>"><?php echo __('Set image', $this->textdomain); ?></a>     
+                        </div>     
+                        <div class="nbdesigner_bg_color" <?php if($v['bg_type'] != 'color') echo ' style="display: none;"' ?>>
+                            <input type="text" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_color_value]" value="<?php echo $v['bg_color_value'] ?>" class="nbd-color-picker" />
+                        </div> 
+                        <div class="nbdesigner_overlay_box">
+                            <label class="nbdesigner-setting-box-label"><?php _e('Overlay', $this->textdomain); ?></label>
+                            <input type="hidden" value="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][show_overlay]" class="show_overlay"/>                   
+                            <input type="checkbox" value="1" 
+                                name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][show_overlay]" id="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_type]" <?php checked($v['show_overlay']); ?> 
+                                class="show_overlay" onchange="NBDESIGNADMIN.toggleShowOverlay(this)"/>  
+                            <a class="button overlay-toggle" onclick="NBDESIGNADMIN.loadImageOverlay(this)" style="display: <?php if($v['show_overlay']) {echo 'inline-block';} else {echo 'none';} ?>">
+                                <?php echo __('Set image', $this->textdomain); ?>
+                            </a>
+                            <img style="display: <?php if($v['show_overlay']) {echo 'inline-block';} else {echo 'none';} ?>"
+                                 src="<?php if ($v['img_overlay'] != '') {echo $v['img_overlay'];} else {echo NBDESIGNER_PLUGIN_URL . 'assets/images/overlay.png';} ?>" class="img_overlay"/>                            
+                        </div>                        
                     </div>
+                    <hr style="clear: both;"/>
                     <div class="nbdesigner-info-box">
-                        <div class="nbdesigner-info-box-inner">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Real width', $this->textdomain); ?></label>
+                        <p class="nbd-setting-section-title"><?php echo __('Product size:', $this->textdomain); ?></p>
+                        <div class="nbdesigner-info-box-inner notice-width nbd-has-notice">
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Width', $this->textdomain); ?></label>
                             <div>
-                                <input type="number" step="any" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][real_width]" value="<?php echo $v['real_width']; ?>" class="short real_width" onchange="NBDESIGNADMIN.updateDimensionRealOutputImage(this, 'width')">&nbsp;cm <span class="real_width_hidden"><?php echo $v['real_width']; ?></span><br /><small>&asymp; <?php echo round($v['real_width']/ 2.54, 2) ?> <?php _e('inches', $this->textdomain); ?> ~ <?php _e('Output image width', $this->textdomain); ?>: <span class="real_width_px"><?php echo round($v['real_width'] * $dpi / 2.54, 0); ?></span> px</small>
+                                <input type="number" step="any" min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][product_width]" 
+                                       value="<?php echo $v['product_width']; ?>" class="short product_width" 
+                                       onchange="NBDESIGNADMIN.change_dimension_product(this, 'width')"> <?php echo $unit; ?>
                             </div>
                         </div>
-                        <div class="nbdesigner-info-box-inner">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Real height', $this->textdomain); ?></label>
+                        <div class="nbdesigner-info-box-inner notice-height nbd-has-notice">
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Height', $this->textdomain); ?></label>
                             <div>
-                                <input type="number" step="any" min="1" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][real_height]" value="<?php echo $v['real_height']; ?>" class="short real_height"  onchange="NBDESIGNADMIN.updateDimensionRealOutputImage(this, 'height')">&nbsp;cm <span class="real_height_hidden"><?php echo $v['real_height']; ?></span><small><br />&asymp; <?php echo round($v['real_height']/ 2.54, 2) ?> <?php _e('inches', $this->textdomain); ?> ~ <?php _e('Output image height', $this->textdomain); ?>: <span class="real_height_px"><?php echo round($v['real_height'] * $dpi / 2.54, 0); ?></span> px</small>
+                                <input type="number" step="any" min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][product_height]" 
+                                       value="<?php echo $v['product_height']; ?>" class="short product_height"  
+                                       onchange="NBDESIGNADMIN.change_dimension_product(this, 'height')"> <?php echo $unit; ?>
                             </div>
                         </div>
-                        <hr />
-                        <p><?php echo __('Setting relative position for design area', $this->textdomain); ?>
-                        <div class="nbdesigner-info-box-inner">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Margin top', $this->textdomain); ?></label>
+                        <p class="nbd-setting-section-title"><?php echo __('Design area size:', $this->textdomain); ?></p>
+                        <div class="nbdesigner-info-box-inner notice-width nbd-has-notice">
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Width', $this->textdomain); ?></label>
                             <div>
-                                <input type="number" step="any"  min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][area_design_top]" value="<?php echo $v['area_design_top']; ?>" class="short area_design_dimension area_design_top" data-index="top" onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px     
+                                <input type="number" step="any" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][real_width]" 
+                                       value="<?php echo $v['real_width']; ?>" class="short real_width" 
+                                       onchange="NBDESIGNADMIN.updateRelativePosition(this, 'width')"> <?php echo $unit; ?> 
                             </div>
                         </div>
-                        <div class="nbdesigner-info-box-inner">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Margin left', $this->textdomain); ?></label>
+                        <div class="nbdesigner-info-box-inner notice-height nbd-has-notice">
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Height', $this->textdomain); ?></label>
                             <div>
-                                <input type="number" step="any"  min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][area_design_left]" value="<?php echo $v['area_design_left']; ?>" class="short area_design_dimension area_design_left" data-index="left" onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px
+                                <input type="number" step="any" min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][real_height]" 
+                                       value="<?php echo $v['real_height']; ?>" class="short real_height"  
+                                       onchange="NBDESIGNADMIN.updateRelativePosition(this, 'height')"> <?php echo $unit; ?> 
                             </div>
-                        </div>	
+                        </div>   
+                        <div class="nbdesigner-info-box-inner notice-height nbd-has-notice">
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Top', $this->textdomain); ?></label>
+                            <div>
+                                <input type="number" step="any" min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][real_top]" 
+                                       value="<?php echo $v['real_top']; ?>" class="short real_top"  
+                                       onchange="NBDESIGNADMIN.updateRelativePosition(this, 'top')"> <?php echo $unit; ?> 
+                            </div>
+                        </div> 
+                        <div class="nbdesigner-info-box-inner notice-width nbd-has-notice">
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Left', $this->textdomain); ?></label>
+                            <div>
+                                <input type="number" step="any" min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][real_left]" 
+                                       value="<?php echo $v['real_left']; ?>" class="short real_left"  
+                                       onchange="NBDESIGNADMIN.updateRelativePosition(this, 'left')"> <?php echo $unit; ?> 
+                            </div>
+                        </div> 	
+                        <p class="nbd-setting-section-title">
+                            <?php echo __('Relative position:', $this->textdomain); ?>
+                        </p>
                         <div class="nbdesigner-info-box-inner">
                             <label class="nbdesigner-setting-box-label"><?php echo __('Width', $this->textdomain); ?></label>
                             <div>
-                                <input type="number" step="any"  min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][area_design_width]" value="<?php echo $v['area_design_width']; ?>" class="short area_design_dimension area_design_width" data-index="width" onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px
+                                <input type="number" step="any"  min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][area_design_width]" 
+                                       value="<?php echo $v['area_design_width']; ?>" class="short area_design_dimension area_design_width" data-index="width" 
+                                       onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px
+                                <small class="nbd-notice-setup"><?php _e('', $this->textdomain) ?></small>
                             </div>
                         </div>
                         <div class="nbdesigner-info-box-inner">
                             <label class="nbdesigner-setting-box-label"><?php echo __('Height', $this->textdomain); ?></label>
                             <div>
-                                <input type="number"  step="any" min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][area_design_height]" value="<?php echo $v['area_design_height']; ?>" class="short area_design_dimension area_design_height" data-index="height" onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px
+                                <input type="number"  step="any" min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][area_design_height]" 
+                                       value="<?php echo $v['area_design_height']; ?>" class="short area_design_dimension area_design_height" data-index="height" 
+                                       onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px
                             </div>
-                        </div>					
+                        </div>	
+                        <div class="nbdesigner-info-box-inner">
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Left', $this->textdomain); ?></label>
+                            <div>
+                                <input type="number" step="any"  min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][area_design_left]" 
+                                       value="<?php echo $v['area_design_left']; ?>" class="short area_design_dimension area_design_left" data-index="left" 
+                                       onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px
+                            </div>
+                        </div>	                        
+                        <div class="nbdesigner-info-box-inner">
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Top', $this->textdomain); ?></label>
+                            <div>
+                                <input type="number" step="any"  min="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][area_design_top]" 
+                                       value="<?php echo $v['area_design_top']; ?>" class="short area_design_dimension area_design_top" data-index="top" 
+                                       onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px                                
+                            </div>
+                        </div>                         
                     </div>	
                 </div>
             </div>        

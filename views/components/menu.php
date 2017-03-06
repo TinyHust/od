@@ -1,31 +1,31 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
 <div id="main_menu">	
     <ul class="tool_draw">
-        <li>
+        <li ng-show="settings['enable_text'] == 'yes'">
             <a class="add_text shadow" ng-click="addText()">
                 <i class="fa fa-font" aria-hidden="true"></i>
                 <span class="after">{{(langs['ADD_TEXT']) ? langs['ADD_TEXT'] : "Add Text"}}</span>
             </a>
         </li>
-        <li>
+        <li ng-show="settings['enable_clipart'] == 'yes'">
             <a class="add_art shadow" data-toggle="modal" data-target="#dg-cliparts" ng-click="loadArt()">
                 <i class="fa fa-picture-o" aria-hidden="true"></i>
                 <span class="after">{{(langs['ADD_CLIPART']) ? langs['ADD_CLIPART'] : "Add Clipart"}}</span>
             </a>
         </li>
-        <li>
+        <li ng-show="settings['enable_image'] == 'yes'">
             <a class="add_image shadow" data-toggle="modal" data-target="#dg-myclipart" ng-click="loadLocalStorageImage()">
                 <i class="fa fa-camera-retro" aria-hidden="true"></i>
                 <span class="after">{{(langs['ADD_IMAGE']) ? langs['ADD_IMAGE'] : "Add Image"}}</span>
             </a>
         </li>
-        <li>
+        <li ng-show="settings['enable_draw'] == 'yes'">
             <a class="draw_free shadow" ng-click="showDrawConfig()">
                 <i class="fa fa-paint-brush" aria-hidden="true"></i>
                 <span class="after">{{(langs['FREE_DRAW']) ? langs['FREE_DRAW'] : "Free Draw"}}</span>
             </a>
         </li>
-        <li>
+        <li ng-show="settings['enable_qrcode'] == 'yes'">
             <a class="add_code shadow" data-toggle="modal" data-target="#dg-qrcode">
                 <i class="fa fa-qrcode" aria-hidden="true"></i>
                 <span class="after">{{(langs['ADD_QRCODE']) ? langs['ADD_QRCODE'] : "Add QRCode"}}</span>

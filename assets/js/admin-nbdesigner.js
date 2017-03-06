@@ -1,15 +1,22 @@
+var NBD_STAGE = {
+    'width' : 500,
+    'height' : 500
+};
+var _round = function(num, dec){
+    return Number((num).toFixed(dec)); 
+};  
 jQuery(document).ready(function ($) {
     NBDESIGNADMIN.loopConfigAreaDesign();
-    NBDESIGNADMIN.ajustImage();
+    NBDESIGNADMIN.init_color_picker();
     if($('#_nbdesigner_enable').prop("checked")){
         $('.nbdesigner-right.add_more').show();
-    }
+    };
+    NBDESIGNADMIN.collapseAll('com');
     $('#_nbdesigner_enable').change(function () {
         $('#nbdesigner-boxes').toggleClass('nbdesigner-disable');     
         $('#nbdesigner_dpi_con').toggleClass('nbdesigner-disable');     
         $('#nbdesigner-option').toggleClass('nbdesigner-disable');     
         $('.nbdesigner-right.add_more').toggle();
-        NBDESIGNADMIN.ajustImage();
     });
     $('#nbdesigner_add_font_cat').on('click', function () {
         var html = '<input class="form-required nbdesigner_font_name" type="text" id="nbdesigner_name_font_newcat"><br /><br />';
@@ -216,7 +223,6 @@ jQuery(document).ready(function ($) {
             jQuery('#nbdesigner_check_theme_loading').addClass('nbdesigner_loaded');
             data = JSON.parse(data);
             if(data.flag == 'ok'){
-                console.log(data);
                 jQuery('.theme_check_note').html(data.html);
                 //alert('Update success!');
             }else{
@@ -224,10 +230,110 @@ jQuery(document).ready(function ($) {
             }                  
         });         
     });
+    $('#nbdesigner_update_product').on('click', function(e){
+        e.preventDefault();
+        var formdata = jQuery('.update-setting-data').find('textarea, select, input').serialize();
+        formdata = formdata + '&action=nbdesigner_update_all_product';
+        jQuery('#nbdesigner_update_product_loading').removeClass('nbdesigner_loaded');
+        jQuery.post(admin_nbds.url, formdata, function(data){
+            jQuery('#nbdesigner_update_product_loading').addClass('nbdesigner_loaded');
+            data = JSON.parse(data);
+            if(parseInt(data.flag) == 1){
+                alert('Update success!');
+            }else {
+                alert('Oops! Try again!');
+            }              
+        });         
+    });
     $('#woocommerce-product-data').on('woocommerce_variations_loaded', function(event) {
         NBDESIGNADMIN.loopConfigAreaDesign();
-        NBDESIGNADMIN.ajustImage(); 
     });  
+    $('#nbdesigner-values-group-input--hex_key, .nbdesigner-color-picker').wpColorPicker({
+        change: function (evt, ui) {
+            var $input = $(this);
+            setTimeout(function () {
+                if ($input.wpColorPicker('color') !== $input.data('tempcolor')) {
+                    $input.change().data('tempcolor', $input.wpColorPicker('color'));
+                    $input.val($input.wpColorPicker('color'));
+                }
+            }, 10);
+        }
+    });  
+    $('.nbdesigner-values-group-add').on('click', function(e){
+        e.preventDefault();
+        var $this = $(this),
+            $tbody = $this.parents('table:first').find('tbody'),
+            $inputs = $this.parents('tr:first').find('input[type="text"]');
+        var values = [];
+        $inputs.each(function(i, item) {
+            values.push(item.value);
+        });       
+        _appendValuesGroupRow($tbody, values);
+        _saveValuesGroup($tbody);       
+    });
+    function _appendValuesGroupRow($tbody, values) {
+        var row = '<tr>',
+                prefix = '';
+        for (var i = 0; i < values.length; ++i) {
+            if ($tbody.prev('thead').find('input').eq(i).prev('span').length > 0) {
+                prefix = $tbody.prev('thead').find('input').eq(i).prev('span').html();
+            }
+            if(values[i][0] == "#"){
+                row += '<td>' + prefix + '<span class="nbdesigner-values-group-td-value button" style="background: '+values[i]+'">' + values[i] + '</span></td>';
+            }else{
+                row += '<td>' + prefix + '<span class="nbdesigner-values-group-td-value">' + values[i] + '</span></td>';
+            }           
+        };      
+        row += '<td><a href="#" class="nbdesigner-values-group-remove">&times;</a></td></tr>';
+        $tbody.append(row).find('tr:last .nbdesigner-values-group-remove').click(function (evt) {
+            evt.preventDefault();
+            $(this).parents('tr:first').remove();
+            _saveValuesGroup($tbody);
+        });
+    };   
+    function _saveValuesGroup($tbody) {
+        var inputValue = '',
+            $rows = $tbody.find('tr');
+        $rows.each(function(i, row) {
+            var $tds = $(row).children('td:not(:last)');
+            $tds.each(function(j, td) {
+                inputValue += $(td).children('.nbdesigner-values-group-td-value').text();
+                if(j < $tds.length-1) {
+                        inputValue += ':';
+                }
+            });
+            if(i < $rows.length-1) {
+                inputValue += ',';
+            }
+        });
+        $tbody.parents('.nbdesigner-option-type--values-group:first').children('.nbdesigner-option-value').val(inputValue);
+    };    
+    $('.nbdesigner-option-type--values-group .nbdesigner-option-value').each(function(i, item) {
+        var $tbody = $(this).parent().find('tbody'),
+            value = item.value;
+        if(value.trim().length <= 0) {
+            return false;
+        }
+        var values = value.split(',');
+        for(var i=0; i < values.length; ++i) {
+            _appendValuesGroupRow($tbody, values[i].split(':'));
+        }
+    });    
+    $('.nbdesigner-multi-values .select-all').on('click', function(){
+        $(this).parents('.nbdesigner-multi-values').find('input:checkbox').attr('checked','checked');
+    });
+    $('.nbdesigner-multi-values .select-none').on('click', function(){
+        $(this).parents('.nbdesigner-multi-values').find('input:checkbox').removeAttr('checked');
+    });    
+    if($('input[name="nbdesigner_show_all_color"]:checked').val() == 'yes') $('#color-setting > tbody tr:nth-child(2)').hide();
+    $('input[name="nbdesigner_show_all_color"]').on('click', function(){
+        var value = $(this).val();
+        if(value == 'no'){
+            $('#color-setting > tbody tr:nth-child(2)').show()
+        }else{
+            $('#color-setting > tbody tr:nth-child(2)').hide()
+        }
+    });
 });
 var NBDESIGNADMIN = {
     add_font_cat: function (e) {
@@ -456,8 +562,8 @@ var NBDESIGNADMIN = {
         }
         var self = this;
         var index = jQuery(e).data('index'),
-                _img = jQuery(e).parent().parent().find('.designer_img_src'),
-                _input = jQuery(e).parent().parent().find('.hidden_img_src');
+            _img = jQuery(e).parents('.nbdesigner-box-collapse').find('.designer_img_src'),
+            _input = jQuery(e).parents('.nbdesigner-box-collapse').find('.hidden_img_src');
         upload = wp.media.frames.file_frame = wp.media({
             title: 'Choose Image',
             button: {
@@ -469,11 +575,32 @@ var NBDESIGNADMIN = {
             attachment = upload.state().get('selection').first().toJSON();
             _img.attr('src', attachment.url);
             _img.show();
-            self.calcMargin(attachment.width, attachment.height, _img);
-            self.calcPositionImg(_img);
             _input.val(attachment.url);
         });
         upload.open();
+    },
+    loadImageOverlay: function(e){
+        var upload;
+        if (upload) {
+            upload.open();
+            return;
+        }  
+        var ip_image = jQuery(e).parents('.nbdesigner-box-collapse').find('.hidden_overlay_src'),  
+            image = jQuery(e).parents('.nbdesigner-box-collapse').find('.img_overlay');  
+        upload = wp.media.frames.file_frame = wp.media({
+            title: 'Choose Image',
+            button: {
+                text: 'Choose Image'
+            },
+            multiple: false
+        });
+        upload.on('select', function () {
+            attachment = upload.state().get('selection').first().toJSON();
+            image.attr('src', attachment.url);
+            image.show();
+            ip_image.val(attachment.url);
+        });
+        upload.open();        
     },
     deleteOrientation: function (e) {
         var variantion = jQuery(e).data('variation');
@@ -491,7 +618,6 @@ var NBDESIGNADMIN = {
         jQuery.each(jQuery(index + ' .nbdesigner-box-container'), function (key, val) {
             jQuery(this).find('.orientation_name').attr('name', name + '[' + key + '][orientation_name]');
             jQuery(this).find('.delete_orientation').attr('data-index', key);
-            //jQuery(this).find('.nbdesigner-area-design').attr('id', 'nbdesigner-area-design-' + key);
             jQuery(this).find('.hidden_img_src').attr('name', name + '[' + key + '][img_src]');
             jQuery(this).find('.hidden_img_src_top').attr('name', name + '[' + key + '][img_src_top]');
             jQuery(this).find('.hidden_img_src_left').attr('name', name + '[' + key + '][img_src_left]');
@@ -501,10 +627,19 @@ var NBDESIGNADMIN = {
             jQuery(this).find('.nbdesigner-add-image').attr('data-index', key);
             jQuery(this).find('.real_width').attr('name', name + '[' + key + '][real_width]');
             jQuery(this).find('.real_height').attr('name', name + '[' + key + '][real_height]');
+            jQuery(this).find('.real_top').attr('name', name + '[' + key + '][real_top]');
+            jQuery(this).find('.real_left').attr('name', name + '[' + key + '][real_left]');
             jQuery(this).find('.area_design_top').attr('name', name + '[' + key + '][area_design_top]');
             jQuery(this).find('.area_design_left').attr('name', name + '[' + key + '][area_design_left]');
             jQuery(this).find('.area_design_width').attr('name', name + '[' + key + '][area_design_width]');
             jQuery(this).find('.area_design_height').attr('name', name + '[' + key + '][area_design_height]');
+            jQuery(this).find('.product_width').attr('name', name + '[' + key + '][product_width]');
+            jQuery(this).find('.product_height').attr('name', name + '[' + key + '][product_height]');
+            jQuery(this).find('.nbd-color-picker').attr('name', name + '[' + key + '][bg_color_value]');
+            jQuery(this).find('.bg_type').attr('name', name + '[' + key + '][bg_type]');
+            jQuery(this).find('.hidden_overlay_src').attr('name', name + '[' + key + '][img_overlay]');
+            jQuery(this).find('.show_overlay').attr('name', name + '[' + key + '][show_overlay]');
+            jQuery(this).find('.hidden_nbd_version').attr('name', name + '[' + key + '][version]');
         });
         this.loopConfigAreaDesign();
     },
@@ -532,8 +667,8 @@ var NBDESIGNADMIN = {
             jQuery(this).resizable({
                 handles: "ne, se, sw, nw",
                 aspectRatio: false,
-                maxWidth: 300,
-                maxHeight: 300,
+                maxWidth: NBD_STAGE.width,
+                maxHeight: NBD_STAGE.height,
                 resize: function (event, ui) {
                     parent.updateDimension(self, ui.size.width, ui.size.height, ui.position.left, ui.position.top);
                 },
@@ -546,6 +681,7 @@ var NBDESIGNADMIN = {
                 }
             });
         });
+        this.init_color_picker();
     },
     calcMargin: function (w, h, _img) {
         setTimeout(function(){
@@ -565,17 +701,16 @@ var NBDESIGNADMIN = {
         },0);      
     },
     nbdesigner_move: function (e, command) {
-        var index = jQuery(e).data('index');
-        var id_area = 'nbdesigner-area-design',
-        area = jQuery(e).parents('.nbdesigner-box-collapse').find('.' + id_area),
+        var parent = jQuery(e).parents('.nbdesigner-box-collapse'),
+        area = parent.find('.nbdesigner-area-design'),
         left = area.css('left'),
-        top = area.css('top');
-        var w = area.width(),
+        top = area.css('top'),
+        w = area.width(),
         h = area.height(),
-        ip_left = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_left'),
-        ip_top = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_top'),
-        ip_width = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_width'),
-        ip_height = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_height');
+        ip_left = parent.find('.area_design_left'),
+        ip_top = parent.find('.area_design_top'),
+        ip_width = parent.find('.area_design_width'),
+        ip_height = parent.find('.area_design_height');
         switch (command) {
             case 'left':
                 area.css('left', parseFloat(left) - 1);
@@ -594,17 +729,23 @@ var NBDESIGNADMIN = {
                 ip_top.val(parseFloat(top) - 1);
                 break;
             case 'center':
-                left = (300 - w) / 2;
-                top = (300 - h) / 2;
+                left = (NBD_STAGE.width - w) / 2;
+                top = (NBD_STAGE.height - h) / 2;
                 area.css({'top': top + 'px', 'left': left + 'px'});
                 ip_left.val(left);
                 ip_top.val(top);
                 break;
             case 'fit':             
-                var width = jQuery(e).parents('.nbdesigner-box-collapse').find('.designer_img_src').width();
-                var height = jQuery(e).parents('.nbdesigner-box-collapse').find('.designer_img_src').height();
-                left = (300 - width) / 2;
-                top = (300 - height) / 2;
+                var width = parent.find('.nbdesigner-image-original').width(),
+                height = parent.find('.nbdesigner-image-original').height(),
+                p_width = parent.find('.product_width').val(),
+                p_height = parent.find('.product_height').val();
+                parent.find('.real_width').val(p_width);
+                parent.find('.real_height').val(p_height);
+                parent.find('.real_top').val(0);
+                parent.find('.real_left').val(0);
+                left = (NBD_STAGE.width - width) / 2;
+                top = (NBD_STAGE.height - height) / 2;
                 area.css({'top': top + 'px', 'left': left + 'px', 'width': width + 'px',  'height': height + 'px'});
                 ip_left.val(left);
                 ip_top.val(top);                
@@ -612,6 +753,7 @@ var NBDESIGNADMIN = {
                 ip_height.val(height);   
                 break;
         }
+        parent.find('.nbdesiger-update-area-design').addClass('active');
     },
     ajustImage: function () {
         var self = this;   
@@ -624,59 +766,49 @@ var NBDESIGNADMIN = {
         });      
     },
     updateDimension: function (e, width, height, left, top) {
-        var ip_left = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_left'),
-                ip_top = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_top'),
-                ip_width = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_width'),
-                ip_height = jQuery(e).parents('.nbdesigner-box-collapse').find('.area_design_height');
-        if (left)
-            ip_left.val(left);
-        if (top)
-            ip_top.val(top);
-        if (width)
-            ip_width.val(width);
-        if (height)
-            ip_height.val(height);
+        var parent = jQuery(e).parents('.nbdesigner-box-collapse');
+        var ip_left = parent.find('.area_design_left'),
+            ip_top = parent.find('.area_design_top'),
+            ip_width = parent.find('.area_design_width'),
+            ip_height = parent.find('.area_design_height');
+        if (left) ip_left.val(left);
+        if (top) ip_top.val(top);
+        if (width) ip_width.val(width);
+        if (height) ip_height.val(height);
+        parent.find('.nbdesiger-update-area-design').addClass('active');
     },
     updatePositionDesignArea: function (e) {
         var att = jQuery(e).data('index'),
         value = jQuery(e).val(),
         parent = jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-info-box'),              
         area = jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-area-design'),
-        dpi = jQuery('#nbdesigner_dpi').val(),
+        height = parent.find('.area_design_height').val(),
+        width = parent.find('.area_design_width').val(),
+        left = parent.find('.area_design_left').val(),
+        top = parent.find('.area_design_top').val(),
         sefl = jQuery(e);
         if(att == 'width'){
-            var height = parent.find('.area_design_height').val(),
-            left = parent.find('.area_design_left').val();
             if(value < 0) value = 0;
-            if(value > (300 - left)) value = 300 - left;
-            var ratio = value / height,
-            real_width = parent.find('.real_width').val(),
-            real_height = parent.find('.real_height').val(),
-            new_width = parseInt(ratio * real_height);
-            parent.find('.real_width').val(new_width); 
-            parent.find('.real_width_hidden').html(new_width);
-            parent.find('.real_width_px').html(parseInt(new_width * dpi / 2.54));
+            if(value > (NBD_STAGE.width - left)) value = NBD_STAGE.width - left;
         } else if(att == 'height'){
-            var width = parent.find('.area_design_width').val(),
-            top = parent.find('.area_design_top').val();
             if(value < 0) value = 0;
-            if(value > (300 - top)) value = 300 - top;
-            var ratio = value / width,
-            real_width = parent.find('.real_width').val(),
-            real_height = parent.find('.real_height').val(),
-            new_height = parseInt(ratio * real_width);
-            parent.find('.real_height').val(new_height); 
-            parent.find('.real_height_hidden').html(new_height);
-            parent.find('.real_height_px').html(parseInt(new_height * dpi / 2.54));            
+            if(value > (NBD_STAGE.height - top)) value = NBD_STAGE.height - top;         
         } else if(att == 'left'){
-            var width = parent.find('.area_design_width').val();
             if(value < 0) value = 0;
-            if(value > (300 - width)) value = 300 - width;            
+            if(value > (NBD_STAGE.width - width)){
+                if(value > NBD_STAGE.width) value = NBD_STAGE.width;
+                parent.find('.area_design_width').val(NBD_STAGE.width -value);
+                area.css('width', (NBD_STAGE.width - value) + 'px');
+            }            
         } else if(att == 'top'){
-            var height = parent.find('.area_design_height').val();
-            if(value < 0) value = 0;
-            if(value > (300 - height)) value = 300 - height;                
+            if(value < 0) value = 0;  
+            if(value > (NBD_STAGE.height - height)){
+                if(value > NBD_STAGE.height) value = NBD_STAGE.height;
+                parent.find('.area_design_height').val(NBD_STAGE.height -value);
+                area.css('height', (NBD_STAGE.height - value) + 'px');
+            }              
         }
+        parent.find('.nbdesiger-update-area-design').addClass('active');
         area.css(att, value + 'px');
         sefl.val(value);
     },
@@ -730,34 +862,32 @@ var NBDESIGNADMIN = {
         if(old_box.css('display') == 'none'){
             old_box.show();
         }else{
+            var checked = old_box.find('.bg_type:checked').val();
             var new_box = old_box.clone();
-            new_box.appendTo(id);
+            new_box.appendTo(id);           
+            jQuery(new_box).find('.bg_type').each(function(index, attr) { 
+                jQuery(this).attr('name', 'bg_type_clone');
+            });
+            jQuery(old_box).find('.bg_type[value="'+checked+'"]').prop('checked', true);
+            jQuery(new_box).find('.bg_type[value="'+checked+'"]').prop('checked', true);
             new_box.find('.ui-resizable-handle').remove();
+            new_box.find('.nbd-helper').remove();
+            new_box.find('.nbdesigner_bg_color').html("");
+            new_box.find('.nbdesigner_bg_color').append('<input type="text" name="_designer_setting[0][bg_color_value]" value="#ffffff" class="nbd-color-picker" />');
             this.resetBoxes(command);            
         };
+        
     },
     collapseBox: function (e) {
         var clicked_element = jQuery(e);
         var toggle_element = jQuery(e).parents('.nbdesigner-box-container').find('.nbdesigner-box-collapse');
-        if(jQuery(e).parents('.nbdesigner-setting-variation').length && !toggle_element.is(':visible')){
-            jQuery.each(jQuery(e).parents('.nbdesigner-setting-variation').find('.nbdesigner-collapse'), function(){
-                var self = jQuery(this),
-                _toggle_element = jQuery(this).parents('.nbdesigner-box-container').find('.nbdesigner-box-collapse');
-                _toggle_element.slideDown(function(){
-                    self.html('<span class="dashicons dashicons-arrow-up"></span> Less setting');
-                });
-            });
-            jQuery(e).parents('.nbdesigner-setting-variation').find('.nbdesigner-variation-status').val("1");
-        }else{
-            toggle_element.slideToggle(function () {
-                if (toggle_element.is(':visible')) {
-                    clicked_element.html('<span class="dashicons dashicons-arrow-up"></span> Less setting');
-                } else {
-                    clicked_element.html('<span class="dashicons dashicons-arrow-down"></span> More setting');
-                }
-            });            
-        }        
-        this.ajustImage();
+        toggle_element.slideToggle(function () {
+            if (toggle_element.is(':visible')) {
+                clicked_element.html('<span class="dashicons dashicons-arrow-up"></span> Less setting');
+            } else {
+                clicked_element.html('<span class="dashicons dashicons-arrow-down"></span> More setting');
+            }
+        });                   
     },
     changeLang: function(){
         var code = jQuery("#nbdesigner-translate-code").val();
@@ -791,12 +921,12 @@ var NBDESIGNADMIN = {
     },
     saveLang: function(e){        
         var langs = {},
-        code = jQuery(e).data('code');
+        code = jQuery(e).data('code');       
         jQuery('.click_edit').each(function(){
             var label = jQuery(this).data('label');
-            var text = jQuery(this).html();
+            var text = jQuery(this).text();
             langs[label] = text.replace(/"/g,"");
-        });
+        });       
         jQuery.ajax({
             url: admin_nbds.url,
             method: "POST",
@@ -811,7 +941,51 @@ var NBDESIGNADMIN = {
             alert(data);
         });        
     },
+    deleteLang : function(e){
+        var code = jQuery("#nbdesigner-translate-code").val(),
+            index =  jQuery("#nbdesigner-translate-code").find(":selected").data('index'),   
+            self = this,
+            con = confirm("Do your want delete this language?");    
+        if(con){    
+            jQuery.ajax({
+                url: admin_nbds.url,
+                method: "POST",
+                data: {'action': 'nbdesigner_delete_language', 'code': code, 'nonce': admin_nbds.nonce, 'index': index},
+                beforeSend: function () {
+                    jQuery('#nbdesigner_translate_loading').removeClass('nbdesigner_loaded');
+                },
+                complete: function () {
+                    jQuery('#nbdesigner_translate_loading').addClass('nbdesigner_loaded');
+                }           
+            }).done(function (data) {
+                data = JSON.parse(data);
+                alert(data.mes);
+                if(parseInt(data.flag) == 1){
+                    jQuery('#nbdesigner-translate-code option[data-index="'+index+'"]').remove();
+                    self.resetIndexLang();
+                    var html = "";
+                    console.log(data.langs);
+                    jQuery.each(data.langs, function(key, value ){
+                        html += '<li><p class="click_edit" data-label="'+key+'">'+value+'</p></li>';
+                    });
+                    jQuery(".nbdesigner-translate").html(html);
+                    jQuery('.click_edit').editable(function(value, settings) {
+                        return(value);
+                    },{ 
+                        submit : 'OK',
+                        tooltip : 'Click to edit...'
+                    });                     
+                }
+            });     
+        }
+    },
+    resetIndexLang : function(){
+        jQuery.each(jQuery('#nbdesigner-translate-code option'), function(key, value ){
+            jQuery(this).attr('data-index', key);
+        })        
+    },
     createLang: function(){
+        var self = this;    
         var formdata = jQuery('#nbdesigner-new-lang-con').find('textarea, select, input').serialize();
         var nbdesigner_namelang = jQuery('#nbdesign-language-option option:selected').text();
         formdata = formdata + '&nbdesigner_namelang='+nbdesigner_namelang+'&action=nbdesigner_create_language';
@@ -833,6 +1007,7 @@ var NBDESIGNADMIN = {
                 });  
                 jQuery('#nbdesigner-translate-code').append('<option value="'+data.code+'" selected>'+data.name+'</option>');
                 jQuery("#nbdesigner-trans-code").attr('data-code', data.code);
+                self.resetIndexLang();
                 tb_remove();
             };
         });        
@@ -951,7 +1126,6 @@ var NBDESIGNADMIN = {
                     }).done(function (data) {
                         data = JSON.parse(data);
                         if (data['mes'] == 'success') {
-                            console.log(jQuery('#nbdesigner-template-item-' + val));
                             jQuery('#nbdesigner-template-item-' + val).remove();
                             swal("Deleted!", "Your template has been deleted.", "success");      
                         }else{
@@ -990,7 +1164,6 @@ var NBDESIGNADMIN = {
             jQuery('#nbdesigner_check_theme_loading').addClass('nbdesigner_loaded');
             data = JSON.parse(data);
             if(data.flag == 'ok'){
-                console.log(data);
                 jQuery('.theme_check_note').html(data.html);
                 //alert('Update success!');
             }else{
@@ -1009,8 +1182,8 @@ var NBDESIGNADMIN = {
                 jQuery(this).resizable({
                     handles: "ne, se, sw, nw",
                     aspectRatio: false,
-                    maxWidth: 300,
-                    maxHeight: 300,
+                    maxWidth: NBD_STAGE.width,
+                    maxHeight: NBD_STAGE.height,
                     resize: function (event, ui) {
                         self.updateDimension(_this, ui.size.width, ui.size.height, ui.position.left, ui.position.top);
                     },
@@ -1028,6 +1201,197 @@ var NBDESIGNADMIN = {
             parent.find('.nbdesigner-right.add_more').hide();
             parent.find('.nbdesigner-variation-setting').hide();            
         }
+    },
+    init_color_picker: function(){
+        jQuery.each(jQuery('.nbd-color-picker'), function () {
+            jQuery(this).wpColorPicker({
+                change: function (evt, ui) {
+                    var $input = jQuery(this);
+                    setTimeout(function () {
+                        if ($input.wpColorPicker('color') !== $input.data('tempcolor')) {
+                            $input.change().data('tempcolor', $input.wpColorPicker('color'));
+                            $input.val($input.wpColorPicker('color'));
+                            $input.parents('.nbdesigner-box-collapse').find('.nbdesigner-image-original').css("background", ""); 
+                            $input.parents('.nbdesigner-box-collapse').find('.nbdesigner-image-original').css("background", $input.wpColorPicker('color')); 
+                        }
+                    }, 10);
+                }
+            });            
+        })
+    },
+    toggleShowOverlay : function(e){
+        jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-image-overlay').toggle();
+        jQuery(e).parents('.nbdesigner-box-collapse').find('.overlay-toggle').toggle();
+    },
+    change_background_type : function(e){
+        var value = jQuery(e).val();
+        if(value == 'image'){
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner_bg_image').show();
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner_bg_color').hide();   
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.designer_img_src').show();
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-image-original').removeClass("background-transparent");  
+        }else if(value == 'color'){
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner_bg_image').hide();
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner_bg_color').show();      
+            var color = jQuery(e).parents('.nbdesigner-box-collapse').find('.nbd-color-picker').val();
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-image-original').removeClass("background-transparent"); 
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-image-original').css("background", color);      
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.designer_img_src').hide();
+        }else{
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner_bg_image').hide();
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner_bg_color').hide();    
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.designer_img_src').hide();
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-image-original').css("background", "");      
+            jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-image-original').addClass("background-transparent");      
+        }
+    },
+    change_dimension_product: function(e){
+        var parent = jQuery(e).parents('.nbdesigner-box-collapse'),
+        ip_left = parent.find('.hidden_img_src_left'),
+        ip_top = parent.find('.hidden_img_src_top'),
+        ip_width = parent.find('.hidden_img_src_width'),
+        ip_height = parent.find('.hidden_img_src_height');
+        var config = this.initParameter(e);
+        ip_left.val(config.proSize.left);
+        ip_top.val(config.proSize.top);
+        ip_width.val(config.proSize.width);
+        ip_height.val(config.proSize.height);
+        parent.find('.nbdesigner-image-original').css({
+            'width' : config.proSize.width,
+            'height' : config.proSize.height,
+            'left' : config.proSize.left,
+            'top' : config.proSize.top
+        });
+        this.updateRelativePosition(e, 'width');
+        this.updateRelativePosition(e, 'height');
+        this.updateRelativePosition(e, 'top');
+        this.updateRelativePosition(e, 'left');
+    },
+    updateRelativePosition: function(e, command){
+        var parent = jQuery(e).parents('.nbdesigner-box-collapse');
+        parent.find('.nbd-has-notice').removeClass('nbd-notice');
+        var config = this.initParameter(e),
+            new_value = 0;
+        switch (command) {
+            case 'width':
+                new_value =  Math.round(config.ratio *  config.vRealWidth);
+                config.iRelWidth.val(new_value);
+                break;
+            case 'height':
+                new_value =  Math.round(config.ratio *  config.vRealHeight);
+                config.iRelHeight.val(new_value);
+                break;
+            case 'top':             
+                new_value =  Math.round(config.ratio *  (config.vRealTop + config.offset.top));
+                config.iRelTop.val(new_value);             
+                break;
+            case 'left':
+                new_value =  Math.round(config.ratio *  (config.vRealLeft + config.offset.left));
+                config.iRelLeft.val(new_value);               
+                break;
+        }
+        config.design_area.css(command, new_value);
+        config.overlay_area.css(command, new_value);
+        if((config.vRealWidth + config.vRealLeft) > config.vProWidth) parent.find('.notice-width').addClass('nbd-notice');
+        if((config.vRealHeight + config.vRealTop) > config.vProHeight) parent.find('.notice-height').addClass('nbd-notice');
+    },
+    collapseAll : function(command){
+        if(command == 'com') command = '';
+        var id = '#nbdesigner-boxes' + command;
+        jQuery.each(jQuery(id + ' .nbdesigner-collapse'), function(){
+            var self = jQuery(this),
+            toggle_element = self.parents('.nbdesigner-box-container').find('.nbdesigner-box-collapse');
+            if (toggle_element.is(':visible')) {
+                self.html('<span class="dashicons dashicons-arrow-down"></span> More setting');
+                toggle_element.slideToggle();
+            }          
+        });
+        return false;
+    },
+    updateDesignAreaSize : function(e){
+        var config = this.initParameter(e);
+        var vRealWidth = _round(config.vRelWidth / config.ratio, 2),
+            vRealHeight = _round(config.vRelHeight / config.ratio, 2),
+            vRealLeft = _round(config.vRelLeft / config.ratio - config.offset.left, 2),
+            vRealTop = _round(config.vRelTop / config.ratio - config.offset.top, 2);
+        config.iRealWidth.val(vRealWidth) ;   
+        config.iRealHeight.val(vRealHeight) ;   
+        config.iRealLeft.val(vRealLeft) ;   
+        config.iRealTop.val(vRealTop) ;   
+        config.updateRealSizeButton.removeClass('active');
+        var config = this.initParameter(e);
+    },
+    initParameter: function(e){
+        var parent = jQuery(e).parents('.nbdesigner-box-collapse'),
+            iProWidth = parent.find('.product_width'),
+            iProHeight = parent.find('.product_height'),
+            vProWidth = parseFloat(iProWidth.val()),
+            vProHeight = parseFloat(iProHeight.val()),
+            iRealWidth = parent.find('.real_width'),
+            iRealHeight = parent.find('.real_height'),
+            iRealLeft = parent.find('.real_left'),
+            iRealTop = parent.find('.real_top'),
+            vRealWidth = parseFloat(iRealWidth.val()),
+            vRealHeight = parseFloat(iRealHeight.val()),
+            vRealLeft = parseFloat(iRealLeft.val()),
+            vRealTop = parseFloat(iRealTop.val()),
+            iRelWidth = parent.find('.area_design_width'),
+            iRelHeight = parent.find('.area_design_height'),
+            iRelLeft = parent.find('.area_design_left'),
+            iRelTop = parent.find('.area_design_top'),
+            vRelWidth = parseFloat(iRelWidth.val()),
+            vRelHeight = parseFloat(iRelHeight.val()),
+            vRelLeft = parseFloat(iRelLeft.val()),
+            vRelTop = parseFloat(iRelTop.val()),         
+            design_area = parent.find('.nbdesigner-area-design'),
+            overlay_area = parent.find('.nbdesigner-image-overlay'),
+            updateRealSizeButton = parent.find('.nbdesiger-update-area-design'),
+            offset = {'left' : parseFloat(vProHeight - vProWidth)/2, 'top' : 0},
+            ratio = NBD_STAGE.height / vProHeight,
+            proSize = {
+                'height' : NBD_STAGE.height,
+                'width'  : round(vProWidth * ratio),
+                'left'   : round((NBD_STAGE.width - vProWidth * ratio) / 2),
+                'top'    : 0
+            };
+            if(vProWidth/vProHeight > NBD_STAGE.width/NBD_STAGE.height) {
+                ratio = NBD_STAGE.width / vProWidth;
+                offset = {'left' : 0, 'top' : parseFloat(vProWidth - vProHeight)/2};
+                proSize = {
+                    'width' : NBD_STAGE.width,
+                    'height'  : round(vProHeight * ratio),
+                    'top'   : round((NBD_STAGE.height - vProHeight * ratio) / 2),
+                    'left'    : 0
+                };                
+            }            
+        return {
+            iProWidth : iProWidth,
+            iProHeight : iProHeight,
+            vProWidth : vProWidth,
+            vProHeight : vProHeight,
+            iRealWidth : iRealWidth,
+            iRealHeight : iRealHeight,
+            iRealLeft : iRealLeft,
+            iRealTop : iRealTop,
+            vRealWidth : vRealWidth,
+            vRealHeight : vRealHeight,
+            vRealLeft : vRealLeft,
+            vRealTop : vRealTop,
+            iRelWidth : iRelWidth,
+            iRelHeight : iRelHeight,
+            iRelLeft : iRelLeft,
+            iRelTop : iRelTop,
+            vRelWidth : vRelWidth,
+            vRelHeight : vRelHeight,
+            vRelLeft : vRelLeft,
+            vRelTop : vRelTop,
+            design_area : design_area,
+            overlay_area : overlay_area,
+            ratio : ratio,
+            offset : offset,
+            updateRealSizeButton : updateRealSizeButton,
+            proSize : proSize
+        };
     }
 };
 function base64Encode(str) {

@@ -158,11 +158,13 @@ if( !class_exists('Nbdesigner_Settings') ) {
             $default = isset($parameters['default']) ? $parameters['default'] : '';
             $css = isset($parameters['css']) ? $parameters['css'] : '';
             $class = isset($parameters['class']) ? $parameters['class'] : '';
+            $prefix = isset($parameters['prefix']) ? $parameters['prefix'] : false;
+            $subfix = isset($parameters['subfix']) ? $parameters['subfix'] : false;
             $value = get_option($id) !== false ? get_option($id) : '';
             $options = isset($parameters['options']) ? $parameters['options'] : array();
             $custom_attributes = isset($parameters['custom_attributes']) ? $parameters['custom_attributes'] : array();
             $relations = isset($parameters['relations']) ? $parameters['relations'] : array();
-            $placeholder = isset($parameters['placeholder']) ? 'placeholder="'.esc_attr( $parameters['placeholder'] ).'"' : '';
+            $placeholder = isset($parameters['placeholder']) ? 'placeholder="' . esc_attr($parameters['placeholder']) . '"' : '';
 
             $input_html = '';
             $input_class = $class;
@@ -170,144 +172,125 @@ if( !class_exists('Nbdesigner_Settings') ) {
             $current_value = empty($value) && $value != '0' ? $default : $value;
 
             $custom_attributes_html = '';
-            foreach( $custom_attributes as $ca_key => $ca_value ) {
-                    $custom_attributes_html .= $ca_key.'="'.esc_attr( $ca_value ).'"';
+            foreach ($custom_attributes as $ca_key => $ca_value) {
+                $custom_attributes_html .= $ca_key . '="' . esc_attr($ca_value) . '"';
             }
-
             //text,number, checkbox
-            if( $type == 'text' || $type == 'number' || $type == 'checkbox' || $type == 'colorpicker' || $type == 'upload' ) {
-
-                    $additional_attrs = '';
-                    $relation_attr = '';
-                    $current_value = stripslashes($current_value);
-
-                    if($type == 'checkbox') {
-                            $additional_attrs .= $current_value === 'yes' ? 'checked="checked"' : '';
-                            $current_value = 'yes';
-                            $new_line_desc = '';
-                            if( !empty($relations) )
-                                    $relation_attr = 'data-relation="'.http_build_query($relations).'"';
-                    }
-                    else if($placeholder == '') {
-                            $placeholder = 'placeholder="'.esc_attr( $default ).'"';
-                    }
-
-                    if( $type == 'colorpicker' ) {
-                            $type = 'text';
-                            $input_class .= ' nbdesigner-color-picker';
-                    }
-
-                    $input_html = '';
-
-                    if($type == 'upload')
-                            $input_html .= '<a href="#" class="nbdesigner-add-image">+</a>';
-
-                    $input_html .= '<input type="'.esc_attr( $type ).'" id="'.esc_attr( $id ).'" name="'.esc_attr( $id ).'" '.$placeholder.' value="'.esc_attr($current_value).'" '.$additional_attrs.' style="'.$css.'" '.$custom_attributes_html.' class="'.esc_attr( $input_class ).'" '.$relation_attr.' />';
-
-                    if($type == 'upload')
-                            $input_html .= '<a href="#" class="nbdesigner-remove-image">-</a>';
-
-                    $input_html .= $new_line_desc;
-
+            if ($type == 'text' || $type == 'number' || $type == 'checkbox' || $type == 'colorpicker' || $type == 'upload') {
+                $additional_attrs = '';
+                $relation_attr = '';
+                $current_value = stripslashes($current_value);
+                if ($type == 'checkbox') {
+                    $additional_attrs .= $current_value === 'yes' ? 'checked="checked"' : '';
+                    $current_value = 'yes';
+                    $new_line_desc = '';
+                    if (!empty($relations))
+                        $relation_attr = 'data-relation="' . http_build_query($relations) . '"';
+                }
+                else if ($placeholder == '') {
+                    $placeholder = 'placeholder="' . esc_attr($default) . '"';
+                }
+                if ($type == 'colorpicker') {
+                    $type = 'text';
+                    $input_class .= ' nbdesigner-color-picker';
+                }
+                $input_html = '';
+                if ($prefix !== false) $input_html .= $prefix;
+                if ($type == 'upload')
+                    $input_html .= '<a href="#" class="nbdesigner-add-image">+</a>';
+                $input_html .= '<input type="' . esc_attr($type) . '" id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" ' . $placeholder . ' value="' . esc_attr($current_value) . '" ' . $additional_attrs . ' style="' . $css . '" ' . $custom_attributes_html . ' class="' . esc_attr($input_class) . '" ' . $relation_attr . ' />';
+                if ($type == 'upload') $input_html .= '<a href="#" class="nbdesigner-remove-image">-</a>';
+                if ($subfix !== false) $input_html .= $subfix;
+                $input_html .= $new_line_desc;
             }
             //textarea
-            else if($type == 'textarea') {
-                $input_html = '<textarea id="'.esc_attr( $id ).'" name="'.esc_attr( $id ).'" class="'.esc_attr( $class ).'" style="'.esc_attr( $css ).'">'.esc_textarea( $current_value ).'</textarea>'.$new_line_desc;
+            else if ($type == 'textarea') {
+                $input_html = '<textarea id="' . esc_attr($id) . '" name="' . esc_attr($id) . '" class="' . esc_attr($class) . '" style="' . esc_attr($css) . '">' . stripslashes(esc_textarea($current_value)) . '</textarea>' . $new_line_desc;
             }
             //select
-            else if($type == 'select' || $type == 'multiselect') {
+            else if ($type == 'select' || $type == 'multiselect') {
                 $multiple = $type == 'multiselect' ? 'multiple' : '';
                 $brackets = $type == 'multiselect' ? '[]' : '';
-
-                $input_html = '<select id="'.esc_attr( $id ).'" name="'.esc_attr( $id.$brackets ).'" style="'.esc_attr( $css ).'" class="'.esc_attr( $class ).'" '.$multiple.'>';
-                foreach($options as $option_key => $option_val) {
-                    if( is_array($current_value) ) {
+                $input_html = '<select id="' . esc_attr($id) . '" name="' . esc_attr($id . $brackets) . '" style="' . esc_attr($css) . '" class="' . esc_attr($class) . '" ' . $multiple . '>';
+                foreach ($options as $option_key => $option_val) {
+                    if (is_array($current_value)) {
                         $selected = selected(in_array($option_key, $current_value), true, false);
-                    }
-                    else {
+                    } else {
                         $selected = selected($current_value, $option_key, false);
                     }
-                    $input_html .= '<option value="'.esc_attr( $option_key ).'" '.$selected.'>'.$option_val.'</option>';
+                    $input_html .= '<option value="' . esc_attr($option_key) . '" ' . $selected . '>' . $option_val . '</option>';
                 }
-                $input_html .= '</select>'.$new_line_desc;
+                $input_html .= '</select>' . $new_line_desc;
             }
             //radio
-            else if( $type == 'radio' ) {
+            else if ($type == 'radio') {
                 $input_html .= '<div style="margin-bottom: 10px;">';
-                foreach($options as $option_key => $option_val) {
+                foreach ($options as $option_key => $option_val) {
                     $relation_attr = '';
-                    if( isset($relations[$option_key]) )
-                        $relation_attr = is_array($relations[$option_key]) ? 'data-relation="'.http_build_query($relations[$option_key]).'"' : '';
-                    $input_html .= '<p><label><input type="radio" '.$relation_attr.' name="'.esc_attr( $id ).'" value="'.esc_attr( $option_key ).'" '.checked($current_value, $option_key, false).' />'.$option_val.'</label></p>';
+                    if (isset($relations[$option_key]))
+                        $relation_attr = is_array($relations[$option_key]) ? 'data-relation="' . http_build_query($relations[$option_key]) . '"' : '';
+                    $input_html .= '<p><label><input type="radio" ' . $relation_attr . ' name="' . esc_attr($id) . '" value="' . esc_attr($option_key) . '" ' . checked($current_value, $option_key, false) . ' />' . $option_val . '</label></p>';
                 }
                 $input_html .= '</div>';
             }
             //ace editor
-            else if( $type == 'ace-editor' ) {
-                $input_html = '<div id="'.esc_attr( $id ).'" style="'.esc_attr( $css ).'" class="nbdesigner-ace-editor '.esc_attr( $class ).'">'.stripslashes($current_value).'</div><textarea class="nbdesigner-hidden" name="'.esc_attr( $id ).'">'.stripslashes($current_value).'</textarea>';
-            }
-            else if( $type == 'values-group' ) {
-
-                    $prefixes = isset($parameters['prefixes']) ? $parameters['prefixes'] : array();
-                    $regexs = isset($parameters['regexs']) ? $parameters['regexs'] : array();
-                    $head_th = '';
-                    $head_td = '';
-                    $prefixes_html = '';
-                    $add_btn = '';
-                    $regex_html = '';
-                    foreach( $options as $key => $value ) {
-
-                            $head_th .= '<th>'.$value.'</th>';
-
-                            if( isset($prefixes[$key]) )
-                                    $prefixes_html = '<span class="nbdesigner-values-group-prefix">'.$prefixes[$key].'</span>';
-
-                            if( isset($regexs[$key]) )
-                                    $regex_html = 'data-regex="'.esc_attr( $regexs[$key] ).'"';
-
-                            $head_td .= '<td>'.$prefixes_html.'<input type="text" id="nbdesigner-values-group-input--'.esc_attr( $key ).'" '.$regex_html.' /></td>';
-                    }
-
-                    $head_th .= '<th></th>';
-                    $head_td .= '<td><a href="#" class="nbdesigner-values-group-add button-secondary" id="nbdesigner-values-group-add--'.$id.'">'.__('Add', 'nbdesigner').'</a></td>';
-
-                    $input_html = '<div id="'.esc_attr( $id ).'" style="'.esc_attr( $css ).'" class="nbdesigner-values-group '.esc_attr( $class ).'"><table><thead><tr>'.$head_th.'</tr><tr>'.$head_td.'</tr></thead><tbody></tbody></table></div><input class="nbdesigner-option-value nbdesigner-hidden" name="'.esc_attr( $id ).'" value="'.esc_attr( $current_value ).'" />';
-
+            else if ($type == 'ace-editor') {
+                $input_html = '<div id="' . esc_attr($id) . '" style="' . esc_attr($css) . '" class="nbdesigner-ace-editor ' . esc_attr($class) . '">' . stripslashes($current_value) . '</div><textarea class="nbdesigner-hidden" name="' . esc_attr($id) . '">' . stripslashes($current_value) . '</textarea>';
+            } else if ($type == 'values-group') {
+                $prefixes = isset($parameters['prefixes']) ? $parameters['prefixes'] : array();
+                $regexs = isset($parameters['regexs']) ? $parameters['regexs'] : array();
+                $head_th = '';
+                $head_td = '';
+                $prefixes_html = '';
+                $add_btn = '';
+                $regex_html = '';
+                foreach ($options as $key => $value) {
+                    $head_th .= '<th>' . $value . '</th>';
+                    if (isset($prefixes[$key]))
+                        $prefixes_html = '<span class="nbdesigner-values-group-prefix">' . $prefixes[$key] . '</span>';
+                    if (isset($regexs[$key]))
+                        $regex_html = 'data-regex="' . esc_attr($regexs[$key]) . '"';
+                    $head_td .= '<td>' . $prefixes_html . '<input type="text" id="nbdesigner-values-group-input--' . esc_attr($key) . '" ' . $regex_html . ' /></td>';
+                }
+                $head_th .= '<th></th>';
+                $head_td .= '<td><a href="#" class="nbdesigner-values-group-add button-secondary" id="nbdesigner-values-group-add--' . $id . '">' . __('Add', 'nbdesigner') . '</a></td>';
+                $input_html = '<div id="' . esc_attr($id) . '" style="' . esc_attr($css) . '" class="nbdesigner-values-group ' . esc_attr($class) . '"><table><thead><tr>' . $head_th . '</tr><tr>' . $head_td . '</tr></thead><tbody></tbody></table></div><input class="nbdesigner-option-value nbdesigner-hidden" name="' . esc_attr($id) . '" value="' . esc_attr($current_value) . '" />';
             }
             //multivalues
-            else if( $type == 'multivalues' ) {
-
-                    $input_html = '<div id="'.esc_attr( $id ).'" style="'.esc_attr( $css ).'" class="nbdesigner-multi-values '.esc_attr( $class ).'"><input type="hidden" name="'.esc_attr( $id ).'" value="'.esc_attr( $current_value ).'" />';
-
-                    foreach( $options as $key => $value ) {
-
-                            $input_id = sanitize_key($key);
-                            $value = $value;
-                            $input_html .= '<label for="'.$input_id.'">'.esc_attr( $key ).': <input type="number" name="'.$input_id.'" value="'.esc_attr( $value ).'" placeholder="'.esc_attr( $value ).'" '.$custom_attributes_html.' /></label>';
-
-                    }
-
-                    $input_html .= '</div>';
-
+            else if ($type == 'multivalues') {
+                $input_html = '<div id="' . esc_attr($id) . '" style="' . esc_attr($css) . '" class="nbdesigner-multi-values ' . esc_attr($class) . '"><input type="hidden" name="' . esc_attr($id) . '" value="' . esc_attr($current_value) . '" />';
+                foreach ($options as $key => $value) {
+                    $input_id = sanitize_key($key);
+                    $value = $value;
+                    $input_html .= '<label for="' . $input_id . '">' . esc_attr($key) . ': <input type="number" name="' . $input_id . '" value="' . esc_attr($value) . '" placeholder="' . esc_attr($value) . '" ' . $custom_attributes_html . ' /></label>';
+                }
+                $input_html .= '</div>';
+            }else if($type == 'multicheckbox'){
+                $input_html = '<div id="' . esc_attr($id) . '" class="nbdesigner-multi-values ' . esc_attr($class) . '"><input type="hidden" name="' . esc_attr($id) . '" value="' . esc_attr($current_value) . '" />';
+                $input_html .= '<p>'.__('Select', 'nbdesigner').': <a class="nbd-select select-all">All</a>&nbsp;&nbsp;<a class="nbd-select select-none">None</a></p>';
+                foreach ($options as $key => $label) {
+                    $val = nbdesigner_get_option($key);
+                    $op_checked = $val == 1 ? 'checked="checked"' : '';                    
+                    $input_html .= '<p><input type="hidden" value="0" name="'. esc_attr($key) .'"/><input value="1" type="checkbox" '.$op_checked.' id="'. esc_attr($key) .'" name="'.esc_attr($key).'"/><label for="'. esc_attr($key) .'" style="'. esc_attr($css) .'">' .esc_attr($label). '</label></p>';
+                }
+                $input_html .= '</div>';
             }
-
             $description_html = '';
-            if( $description !== false ) {
-                    $description_html = '<label for="'.$id.'"><span class="description">'.wp_kses_post( $description ).'</span></label>';
+            if ($description !== false) {
+                $description_html = '<label for="' . $id . '"><span class="description">' . wp_kses_post($description) . '</span></label>';
             }
-
             ?>
             <tr>
-                    <th scope="row" <?php echo $type === 'section_title' ? 'colspan="2" class="nbdesigner-section-title"' : ''; ?>>
-                            <?php echo $title; ?>
-                    </th>
-                    <?php if( $type !== 'section_title' ): ?>
-                    <td class="nbdesigner-option-type--<?php echo $type; ?> nbdesigner-clearfix">
-                            <?php if( $type == 'ace-editor' ) echo $description_html;  ?>
-                            <?php echo $input_html; ?>
-                            <?php if( $type != 'ace-editor' ) echo $description_html;  ?>
-                    </td>
-                    <?php endif; ?>
+                <th scope="row" <?php echo $type === 'section_title' ? 'colspan="2" class="nbdesigner-section-title"' : ''; ?>>
+            <?php echo $title; ?>
+                </th>
+            <?php if ($type !== 'section_title'): ?>
+                <td class="nbdesigner-option-type--<?php echo $type; ?> nbdesigner-clearfix">
+                <?php if ($type == 'ace-editor') echo $description_html; ?>
+                <?php echo $input_html; ?>
+                <?php if ($type != 'ace-editor') echo $description_html; ?>
+                </td>
+            <?php endif; ?>
             </tr>
             <?php
         }
@@ -325,6 +308,7 @@ if( !class_exists('Nbdesigner_Settings') ) {
         }
         public function save_options(){
             $options_in_tab = $this->get_options_by_tab($this->current_tab);
+            $latest_recurrence = get_option('nbdesigner_notifications_recurrence', false);   
             foreach ($options_in_tab as $key => $value) {
                 $post_val = '';
                 if (!isset($_POST[$key]) && $this->get_option_type($key) == 'checkbox') {
@@ -333,14 +317,40 @@ if( !class_exists('Nbdesigner_Settings') ) {
                     $post_val = $_POST[$key];
                 } else if ($this->get_option_type($key) == 'multiselect') {
                     if (isset($_POST[$key])) $post_val = $_POST[$key];
-                }
-                else {
+                } else {
                     $post_val = $_POST[$key];
                 }
                 update_option($key, $post_val);
             }
+            $this->setting_cron_job($latest_recurrence);
+            $this->update_option_frontend();
             do_action( 'nbdesigner_save_options', $this->current_tab );
         }
+        public function update_option_frontend(){
+            $settings = default_frontend_setting();
+            foreach ($settings as $key => $val){
+                if(isset($_POST[$key])){
+                    $post_val = $_POST[$key];             
+                    update_option($key, $post_val);                    
+                }
+            }
+        }
+        public function setting_cron_job($latest_recurrence){
+            $notifications = get_option('nbdesigner_notifications');
+            $recurrence = get_option('nbdesigner_notifications_recurrence');       
+            if($notifications == 'yes'){              
+                if($recurrence != $latest_recurrence){
+                    wp_clear_scheduled_hook( 'nbdesigner_admin_notifications_event' );                  
+                    wp_schedule_event(time(), $recurrence, 'nbdesigner_admin_notifications_event');
+                }   
+                $timestamp = wp_next_scheduled( 'nbdesigner_admin_notifications_event' );	                
+                if($timestamp == false){
+                    wp_schedule_event(time(), $recurrence, 'nbdesigner_admin_notifications_event');
+                }                
+            }else{            
+                wp_clear_scheduled_hook( 'nbdesigner_admin_notifications_event' );    
+            }
+        }        
         public function reset_options(){
             $options_in_tab = $this->get_options_by_tab($this->current_tab);
             foreach( $options_in_tab as $key => $value ) {

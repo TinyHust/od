@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
-<h2><?php echo __('Manager NBDesigner Product', $this->textdomain); ?></h2>
+<h2 class="nbd-title-page"><?php echo __('Manager NBDesigner Product', $this->textdomain); ?></h2>
 <div class="wrap postbox nbdesigner-manager-product">
     <div>
 	<?php foreach($pro as $key => $val): ?>

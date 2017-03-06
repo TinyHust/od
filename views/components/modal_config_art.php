@@ -7,7 +7,20 @@
                 <button style="margin-top: 0;" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>	
             </div>   
             <div class="modal-body nbdesigner_config_svg">
-               <input readonly="true"  data-jscolor="{zIndex: 9999}" disabled class="jscolor shadow hover-shadow" ng-repeat="color in editable.paths " ng-model="pathColor[color.key]" ng-change="updatePathColor(color)" ng-style="{'background-color': getColorCode(color.fill)}" path-art-directive>                    
+                <?php  if($enableColor == 'yes'): ?>
+               <input readonly="true"  data-jscolor="{zIndex: 9999}" disabled class="jscolor shadow hover-shadow" ng-repeat="color in editable.paths " ng-model="pathColor[color.key]" ng-change="updatePathColor(color)" ng-style="{'background-color': getColorCode(color.fill)}" path-art-directive>                                  
+               <?php else: ?>
+                <spectrum-colorpicker
+                    ng-repeat="color in editable.paths"
+                    ng-model="pathColor[color.key]" 
+                    ng-change="updatePathColor(color)"                     
+                    options="{
+                        showPaletteOnly: true, 
+                        togglePaletteOnly: false, 
+                        hideAfterPaletteSelect:true,
+                        palette: colorPalette}">
+                </spectrum-colorpicker>    
+               <?php endif; ?>  
             </div>
         </div>
     </div>

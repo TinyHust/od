@@ -7,12 +7,16 @@
 		<?php 
                     $has_design = wc_get_order_item_meta($order_item_id, '_nbdesigner_has_design');
                     if($has_design == 'has_design'): 
-                    //$pid = 'nbds_'.$product["product_id"];
                     $index_accept = 'nbds_'.$order_item_id;
                     $folder = wc_get_order_item_meta($order_item_id, '_nbdesigner_folder_design');
+                    $item_meta = new WC_Order_Item_Meta( $product );
+                    $variation = $item_meta->display($flat=true,$return=true);                    
 		?>
                     <div>
-                        <h4 class="nbdesigner_order_product_name"><?php echo $product['name']; ?></h4>
+                        <h4 class="nbdesigner_order_product_name">
+                            <?php echo $product['name']; ?>
+                            <?php echo (!empty($variation))?'<span class="nbt-umf-ou-upload-product-variation"> - '.$variation.'</span>':''; ?>
+                        </h4>
                         <div class="nbdesigner_container_item_order <?php if(isset($data_designs[$index_accept])) { $status = ($data_designs[$index_accept] == 'accept') ? 'approved' : 'declined'; echo $status;}; ?>">
                         <?php 
                             if($folder != ''){

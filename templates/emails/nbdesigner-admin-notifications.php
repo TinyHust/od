@@ -4,7 +4,7 @@
 <?php if (is_array($orders)): ?>
     <ul>
     <?php foreach ($orders AS $order_id => $order_number): ?>
-        <li><?php _e('View order', $plugin_id); ?>: <a href="<?php echo admin_url("post.php?post=$order_id&action=edit"); ?>"a<?php echo $order_number; ?></a></li>
+        <li><?php _e('View order', $plugin_id); ?>: <a href="<?php echo admin_url("post.php?post=$order_id&action=edit"); ?>"><?php echo $order_number; ?></a></li>
     <?php endforeach; ?>
     </ul>
     <small><?php _e('Login is required to edit orders', $plugin_id); ?></small>

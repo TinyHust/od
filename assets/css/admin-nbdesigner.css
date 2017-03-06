@@ -1,85 +1,91 @@
 .nbdesigner-left {
-	float: left;
+    float: left;
 }
 .nbdesigner-right {
-	float: right;
+    float: right;
 }
 .nbdesigner-clearfix {
-	clear: both;
+    clear: both;
 }
 .nbdesigner-box {
-	padding: 10px 0;
+    padding: 10px 0;
 }
 .nbdesigner-box:after, .nbdesigner-info-box-inner:after {
-	display: block;
-	clear: both;
-	content: '';
+    display: block;
+    clear: both;
+    content: '';
 }
 .nbdesigner-setting-box-label {
-	display: block;
-    width: 200px;
+    display: block;
+    margin-right: 15px;
     font-weight: bold;
     float: left;
     margin-bottom: 5px;
-	font-size: 13px;
+    font-size: 13px;
 }
 .nbdesigner-setting-box-value {
-	float: left;
+    float: left;
 }
 .nbdesigner-image-box {
-	width: 300px;
-	float: left;
+    width: 500px;
+    float: left;
     vertical-align: middle;
     text-align: center;	
 }
 .nbdesigner-image-box img {
-    max-height: 100%;
-    max-width: 100%;
+    width: 100%;
+    height: 100%;
     margin: 0 auto;
     display: block;
 }
 .nbdesigner-image-box img:hover {
-/*    border: 1px dashed #0073aa;*/
+    /*    border: 1px dashed #0073aa;*/
 }
 .real_width_hidden, .real_height_hidden {
     display: none;
 }
 .nbdesigner-info-box {
-    min-width: 300px;
+    width: calc(100% - 520px);
     float: left;
     padding-left: 20px;
 }
 .nbdesigner-info-box-inner {
-	margin-bottom: 10px;
-	padding-left: 10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
+.nbdesigner-info-box-inner:after{
+    display: block;
+    content: '';
+    clear: both;
+}
+.nbdesigner-info-box-inner div {
+    display: inline-block;
+    float: right;
 }
 .nbdesigner-info-box-inner div input {
-	width: 60px;
+    width: 90px;
 }
 .nbdesigner-image-inner {
-	width: 300px;
-	height: 300px;
-	position: relative;
-	border: 1px solid #eee;
-	border-radius: 3px;
-	margin-bottom: 10px;
+    width: 500px;
+    height: 500px;
+    position: relative;
+    border: 2px solid #f0c6f6;
+    margin-bottom: 10px;
 }
 .nbdesigner-image-original {
-	width: 100%;
-	height: 100%;
-	position: absolute;	
+    position: absolute;	
 }
 .nbdesigner-box-container {
-	border: 1px solid #eee;
-	margin-top: 10px;
-	padding: 5px;
+    border: 1px solid #eee;
+    margin-top: 10px;
+    padding: 5px;
 }
 .nbdesigner-area-design {	
-	border: 1px dashed #000;
-	cursor: move;
+    border: 1px dashed #000;
+    cursor: move;
 }
 .nbdesigner-area-design.selected {
-	background: rgba(0,0,0,0.3);
+    background: rgba(0,0,0,0.3);
 }
 .nbdesigner-area-design  .ui-resizable-handle {
     background-color: #FFF;
@@ -102,20 +108,20 @@
     color: #FFF;
 }
 .nbdesigner-product {
-	display: inline-block;
-	text-align: center;
-	width: 150px;
-	margin: 0 10px 10px 0;
+    display: inline-block;
+    text-align: center;
+    width: 145px;
+    margin: 0 10px 10px 0;
 }
 .nbdesigner-product a {
-	display: block;
-	color: #394264;
-	cursor: pointer;
+    display: block;
+    color: #394264;
+    cursor: pointer;
 }
 .nbdesigner-product a img {
-	max-width: 100%;
-	max-height: 100%;
-	height: initial;
+    max-width: 100%;
+    max-height: 100%;
+    height: initial;
     width: initial;	
 }
 .nbdesigner-product a:last-child{
@@ -128,49 +134,52 @@
     height: 20px;
 }
 .nbdesigner-product a:hover {
-	color: #cc324b;
+    color: #cc324b;
 }
 .nbdesigner-product a.nbdesigner-product-link {
-	padding: 3px;
-	border: 1px solid #ddd;
-	border-radius: 3px;
+    padding: 3px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
 }
 .nbdesigner-disable {
-	display: none;
+    display: none;
 }
 .nbdesigner-manager-product {
-	padding: 10px;
+    padding: 10px;
+    margin-right: 15px;
+    margin-top: 0;
+    margin-left: 0
 }
 .nbdesigner-content-full {
-	margin-right: 400px;
+    margin-right: 400px;
 }
 .nbdesigner-content-side {
-	margin-right: -400px;
-	width: 380px;
-	float: right;
+    margin-right: -400px;
+    width: 380px;
+    float: right;
 }
 .nbdesigner-content-side .inside {
     max-height: 300px;
     overflow-x: hidden;    
 }
 .nbdesigner-content-left {
-	float: left;
-	width: 100%;
+    float: left;
+    width: 100%;
 }
 .nbdesigner-container .postbox {
-	background: transparent;
+    background: transparent;
 }
 .nbdesigner-container .postbox  h3 {
-	border-bottom: 1px solid #ddd;
-	padding: 0 12px 12px;
-	margin-bottom: 0;
+    border-bottom: 1px solid #ddd;
+    padding: 0 12px 12px;
+    margin-bottom: 0;
 }
 .nbdesigner-container a {
-	cursor: pointer;
-        text-decoration: none;
+    cursor: pointer;
+    text-decoration: none;
 }
 img.nbdesigner_loaded {
-	display: none;
+    display: none;
 }
 .nbdesigner-delete-item {
     cursor: pointer;
@@ -195,22 +204,22 @@ img.nbdesigner_loaded {
     margin: 0px 5px 5px 0;	
 }
 .nbdesigner_uploaded_font:hover, .nbdesigner_google_link:hover {
-	color: #fff;
-	background: #006799;
+    color: #fff;
+    background: #006799;
 }
 .nbdesigner_uploaded_font:focus, .nbdesigner_google_link a:focus {
-	outline: none;
+    outline: none;
 }
 .nbdesigner_font_info {
-	width: 50%;
-	float: left;
+    width: 50%;
+    float: left;
 }
 .nbdesigner_font_preview {
-	width: 30%;
-	float: right;
+    width: 30%;
+    float: right;
 }
 .nbdesigner_google_link {
-	position: relative;
+    position: relative;
     background: #0085ba;
     border-radius: 16px;
     height: 20px;
@@ -221,42 +230,42 @@ img.nbdesigner_loaded {
     margin: 0px 5px 10px 0;		
 }
 .nbdesigner_google_link a {
-	color: #fff;
-	text-decoration: none;
+    color: #fff;
+    text-decoration: none;
 }
 .nbdesigner_google_link  > span, .nbdesigner_art_link  > span{
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	width: 20px;
-	height: 20px;
-	border-radius: 50%;
-	background: #e24949;
-	line-height: 20px;
-	display: block;
-	text-align: center;
-	cursor: pointer;
-	opacity: 0;
-        color: #fff;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #e24949;
+    line-height: 20px;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    opacity: 0;
+    color: #fff;
 }
 .nbdesigner_google_link  > span {
     top: -10px;
     right: -10px;
 }
 .nbdesigner_google_link:hover  > span , .nbdesigner_art_link:hover  > span{
-	opacity: 1;
+    opacity: 1;
 }
 .nbdesigner_google_added {
-	width: 60%;
-	position: absolute;
-	left: 0;
-	top: 0;
+    width: 60%;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 .nbdesigner_google_preview {
-	position: absolute;
-	right: 0;
-	top: 0;
-	width: 30%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30%;
 }
 .nbdesigner_art_link {
     position: relative;
@@ -375,6 +384,7 @@ h4.nbdesigner_order_product_name {
 }
 .nbdesigner-variation-setting .nbdesigner-info-box {
     min-width: inherit !important;
+    width: 50%;
 }
 .nbdesigner-variation-setting  .nbdesigner-setting-box-label {
     min-width: 100px;
@@ -471,4 +481,109 @@ div[aria-describedby="nbdesiger-tiny-mce-dialog"] .ui-dialog-titlebar-close span
     border: 1px solid #ddd;
     padding: 15px;
     margin-top: 15px;
+}
+.nbd-title-page {
+    background: #fff;
+    margin: 0;
+    padding: 15px;
+    border-left: 1px solid #ddd;
+    margin-right: 15px;
+    border-bottom: 1px solid #ddd;    
+}
+.nbd-notice-setup {
+    color: #f40404;
+    opacity: 0;
+    -webkit-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    transition: all 0.4s;
+}
+.nbdesigner-info-box .nbd-setting-section-title {
+    font-weight: bold;    
+    margin-top: 0;    
+}
+.nbdesigner-info-box .nbd-setting-section-title:not(:last-child) {
+    border-bottom: 1px solid #ddd;
+}
+.background-transparent {
+    background-image: -webkit-linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4), -webkit-linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4);
+    background-image: -moz-linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4), -webkit-linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4);
+    background-image: -o-linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4), -webkit-linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4);
+    background-image: linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4), linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4);
+    background-position: 0 0, 10px 10px;
+    -webkit-background-size: 20px 20px;
+    background-size: 20px 20px;    
+}
+.nbdesigner-image-overlay {
+    position: absolute;
+}
+.nbdesigner_overlay_box {
+    margin-top: 10px;
+}
+.nbdesigner_overlay_box img {
+    display: inline-block;
+    margin-left: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    width: 28px;
+    height: 28px;
+    vertical-align: top;
+}
+.nbdesigner-option-type--values-group thead th {
+    padding-top: 5px;
+    padding-left: 0;
+    text-align: center;
+    font-weight: normal;
+    font-size: 13px;
+    padding-bottom: 12px;
+}
+.nbdesigner-option-type--values-group thead td {
+    padding-top: 0;
+    padding-left: 0;
+    padding-bottom: 6px;
+}
+.nbdesigner-hidden {
+    display: none !important;
+}
+#nbdesigner-options-form-nbdesigner .updated {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.nbdesigner-option-type--values-group tbody td {
+    font-size: 12px;
+    padding: 5px 10px 5px 5px;
+    color: rgba(0,0,0,0.6);
+}
+.nbdesigner-option-type--values-group tbody a {
+    text-decoration: none !important; 
+    font-size: 16px;
+}
+.nbdesigner-variation-setting .nbdesigner-image-box {
+    margin-bottom: 15px;
+}
+input.product_width, input.product_height {
+    background: #b8dce8;
+    font-weight: bold;
+}
+input.real_width, input.real_height, input.real_top, input.real_left {
+    background: #dddacd;
+    font-weight: bold;
+}
+input.area_design_width, input.area_design_height, input.area_design_top, input.area_design_left {
+    background: #f0c6f6;
+    font-weight: bold;
+}
+.nbdesigner-setting-box-label small {
+    font-weight: normal;
+}
+.nbd-notice {
+    color: red;
+}
+.nbdesiger-update-area-design {
+    float: right;
+    margin-right: 20px;
+    cursor: pointer;    
+}
+.nbdesiger-update-area-design.active {
+    color: #cb2154;
 }

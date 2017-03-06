@@ -5,12 +5,13 @@
         <b><?php echo __('Choose language', $this->textdomain); ?></b>
         <?php if(is_array($list) && count($list) > 0): ?>
         <select id="nbdesigner-translate-code" onchange="NBDESIGNADMIN.changeLang()">
-            <?php foreach ($list as $l): ?>
-            <option value="<?php echo $l->code; ?>"><?php echo $l->name; ?></option>
+            <?php foreach ($list as $key => $l): ?>
+            <option value="<?php echo $l->code; ?>" data-index="<?php echo $key; ?>"><?php echo $l->name; ?></option>
             <?php endforeach; ?>
         </select>
         <?php endif; ?>
-        <a class="button btn-primary" onclick="NBDESIGNADMIN.saveLang(this)" data-code="en" id="nbdesigner-trans-code"><?php echo __('Save Language', $this->textdomain); ?></a>
+        <a class="button nbutton-primary" onclick="NBDESIGNADMIN.saveLang(this)" data-code="en" id="nbdesigner-trans-code"><?php echo __('Save Language', $this->textdomain); ?></a>
+        <a class="button btn-primary nbdesigner-delete" onclick="NBDESIGNADMIN.deleteLang(this)" ><?php echo __('Delete Language', $this->textdomain); ?></a>       
         <?php add_thickbox(); ?>
         <div id="nbdesigner-new-lang" style="display:none;">
             <div id="nbdesigner-new-lang-con" class="nbdesigner-align-center">
@@ -33,7 +34,7 @@
                 </p>                
             </div>
         </div>        
-        <a name="<?php _e('Create new language', $this->textdomain); ?>" href="#TB_inline?width=300&height=160&inlineId=nbdesigner-new-lang" class="thickbox button btn-primary" onclick=""><?php echo __('Add New Language', $this->textdomain); ?></a>   
+        <a name="<?php _e('Create new language', $this->textdomain); ?>" href="#TB_inline?width=300&height=160&inlineId=nbdesigner-new-lang" class="thickbox button button-primary" onclick=""><?php echo __('Add New Language', $this->textdomain); ?></a>   
         <img class="nbdesigner_loaded" id="nbdesigner_translate_loading" src="<?php echo NBDESIGNER_PLUGIN_URL . 'assets/images/loading.gif' ?>" />
     </div>
     <div>

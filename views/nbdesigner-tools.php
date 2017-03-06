@@ -78,3 +78,13 @@
             
     </script>    
 </div>
+<hr />
+<div class="update-setting-data">
+    <h2><?php echo __('Update product design setting data', $this->textdomain); ?></h2>
+    <div>
+        <?php wp_nonce_field('nbdesigner-update-product', '_nbdesigner_cupdate_product'); ?>
+        <button class="button nbdesigner-delete" id="nbdesigner_update_product"><?php echo __("Update", $this->textdomain); ?></button>
+        <img src="<?php echo NBDESIGNER_PLUGIN_URL.'assets/images/loading.gif' ?>" class="nbdesigner_loaded" id="nbdesigner_update_product_loading" style="margin-left: 15px;"/>        
+        <p><small><?php _e('Make sure backup data before update avoid lost data!') ?></small></p>
+    </div>
+</div>

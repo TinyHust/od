@@ -309,8 +309,6 @@ $(document).ready(function(){
     }else{
         setCookie("nbdesigner_user", 'Hello World', 0.05);
     }
-    var maxsize = window.parent.nbds_frontend.upload_max;
-    $('#nbdesigner_maxsize').html(maxsize);
     $( "#scroll-layer-slider" ).slider({
         animate: true,
         max: 200,

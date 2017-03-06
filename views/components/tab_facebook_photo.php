@@ -1,18 +1,9 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
-<?php 
-$opt_val = get_option('nbdesigner'); 
-if(is_array($opt_val)){
-    extract($opt_val);
-    $api_key = $facebook_api_key;
-}else{
-    $api_key = '';
-}
-?>
 <div id="fb-root"></div>
 <script>
   window.fbAsyncInit = function() {
     FB.init({
-        appId      : '<?php echo $api_key; ?>',
+        appId      : '<?php echo nbdesigner_get_option('nbdesigner_facebook_app_id'); ?>',
         status     : true, 
         cookie     : true,      
         xfbml      : true,

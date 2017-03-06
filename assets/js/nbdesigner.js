@@ -57,11 +57,11 @@ var NBDESIGNERPRODUCT = {
     },
     nbdesigner_ready: function(){
         jQuery('.nbdesign-button').removeClass('nbdesigner-disable');
-        jQuery('.nbdesign-button-loading').addClass('nbdesigner-disable');
+        jQuery('.nbdesigner-img-loading').hide();
     },
     nbdesigner_unready: function(){
         jQuery('.nbdesign-button').addClass('nbdesigner-disable');
-        jQuery('.nbdesign-button-loading').removeClass('nbdesigner-disable');
+        jQuery('.nbdesigner-img-loading').show();
     },
     get_sugget_design: function(pid){
         if(!jQuery('.nbdesigner-related-product-image').length) return;

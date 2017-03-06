@@ -5,7 +5,7 @@
         <li><a href="#draw_shape" ng-click="disableDrawMode()"><span class="fa fa-star" aria-hidden="true"></span></a></li>                       
     </ul>
     <div class="list-indicator"></div>
-    <div id="draw_shape" class="nbdesigner_config_content content">
+    <div id="draw_shape" class="nbdesigner_config_content content" ng-show="uiLayout['nbdesigner_draw_shape'] == 1">
         <div class="nb-col-2">
             <p class="label-config">{{(langs['GEOMETRICAL']) ? langs['GEOMETRICAL'] : "Geometrical"}}</p>
             <div class="btn-group dropup">
@@ -19,11 +19,23 @@
                 </ul>                
             </div>
         </div>
-        <div class="nb-col-2" style="padding-left: 15px;">
+        <div class="nb-col-30" style="padding-left: 15px;">
             <p class="label-config">{{(langs['COLOR']) ? langs['COLOR'] : "Color"}}</p>
+            <?php  if($enableColor == 'yes'): ?>
             <input readonly="true" disabled class="jscolor shadow hover-shadow" value="{{colorShape}}" ng-model="colorShape" ng-change="setShapeColor(colorShape)">
+            <?php else: ?>
+            <spectrum-colorpicker
+                ng-model="colorShape" 
+                ng-change="setShapeColor(colorShape)" 
+                options="{
+                    showPaletteOnly: true, 
+                    togglePaletteOnly: false, 
+                    hideAfterPaletteSelect:true,
+                    palette: colorPalette}">
+            </spectrum-colorpicker>       
+            <?php endif; ?>           
         </div>  
-        <div class="nb-col-30" ng-show="shapeMode">
+        <div class="nb-col-2" ng-show="shapeMode">
             <p class="label-config label-rotate">{{(langs['ROTATE']) ? langs['ROTATE'] : "Rotate"}}</p>
             <div class="rotation-text"><input type="text" id="rotation-shape" data-min="0" data-max="359"></div>
         </div>  
@@ -32,7 +44,7 @@
             <div class="container-dg-slider"><div class="dg-slider" id="opacity_shape"></div></div>					
         </div>         
     </div>
-    <div id="free_draw" class="nbdesigner_config_content content">
+    <div id="free_draw" class="nbdesigner_config_content content" ng-show="uiLayout['nbdesigner_draw_brush'] == 1">
         <div class="nb-col-2 has-popover-option">
             <p class="label-config">{{(langs['MODE']) ? langs['MODE'] : "Mode"}}</p>
             <div class="btn-group dropup">
@@ -53,7 +65,19 @@
         </div>
         <div class="nb-col-2">
             <p class="label-config">{{(langs['COLOR']) ? langs['COLOR'] : "Color"}}</p>
+            <?php  if($enableColor == 'yes'): ?>
             <input readonly="true" disabled class="jscolor shadow hover-shadow" value="{{colorBrush}}" ng-model="colorBrush" ng-change="setDrawingLineColor(colorBrush)">
+            <?php else: ?>
+            <spectrum-colorpicker
+                ng-model="colorBrush" 
+                ng-change="setDrawingLineColor(colorBrush)" 
+                options="{
+                    showPaletteOnly: true, 
+                    togglePaletteOnly: false, 
+                    hideAfterPaletteSelect:true,
+                    palette: colorPalette}">
+            </spectrum-colorpicker>       
+            <?php endif; ?>      
         </div> 
         <div class="nb-col-30">
             <p class="label-config">{{(langs['BRUSH_WIDTH']) ? langs['BRUSH_WIDTH'] : "Brush width"}}</p>

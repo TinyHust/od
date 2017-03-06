@@ -9,9 +9,9 @@
                     <input type="search" class="form-control hover-shadow" placeholder="{{(langs['SEARCH_ART']) ? langs['SEARCH_ART'] : 'Search Art'}}" ng-model="artName"/>
                     <div class="btn-group">
                         <button class="btn btn-primary dropdown-toggle shadow hover-shadow" type="button" data-toggle="dropdown">{{currentCatArtName}}&nbsp;<span class="caret"></span></button>
-                        <ul class="dropdown-menu dropup  shadow hover-shadow">
+                        <ul class="dropdown-menu dropup  shadow hover-shadow nbd-cat">
                             <li ng-repeat="cat in artCat">
-                                <a ng-click="changeArtCat(cat)">{{cat.name}}</a>
+                                <a ng-click="changeArtCat(cat)">{{cat.name}}<span class="nbd-align-right">{{cat.amount}}</span></a>
                             </li>                            
                         </ul>
                     </div>

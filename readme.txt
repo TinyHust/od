@@ -2,9 +2,9 @@
 Contributors: netbaseteam
 Donate link: http://netbaseteam.com/donate_siteorigin.html
 Tags: product designer,online design,canvas, print, phone case, t-shirt, web to print, woocommerce, web2print
-Requires at least: 3.5
-Tested up to: 4.6.1
-Stable tag: 1.0.0
+Requires at least: 4.1
+Tested up to: 4.7.2
+Stable tag: 1.5.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,10 +18,10 @@ With customizable products collection, customer can get a vast artwork gallery w
  
 The design tool is easy to install and provide final outcome in printing process. Come with many ideal features, this plugin enables the users to showcase unique ideas and make an awesom design through smooth clickable options like rotating, dragging and flipping of text & picture.
 
-== Main Features ==
+**-Main Features-**
 
 This is free product include full featured, but only allows the shop owner created or modify maximum five of product 
-You can purchase premium version here [Web to Print Online Designer](http://cmsmart.net/wordpress-plugins/woocommerce-online-product-designer-plugin)
+You can purchase premium version here [Online Product Designer Plugin for Woocommerce WordPress](http://cmsmart.net/wordpress-plugins/woocommerce-online-product-designer-plugin)
 
 **Easy to use**
 Shopper can easily use this product, it is very friendly with customer, and special it is very simple to use .
@@ -30,13 +30,13 @@ Shopper can easily use this product, it is very friendly with customer, and spec
 This plugin is an extension of WooCommerce plugin that allow your users to design products easily
 
 **Add Text and Curve Text**
-Shopper can add text with many colors, fonts, and other sizes. Specially, shopper can curve text in their design easily and edit anything of text as shadow, pattern, rotate, opacity, outline, line height, background,…
+Shopper can add text with many colors, fonts, and other sizes. Specially, shopper can curve text in their design easily and edit anything of text as shadow, pattern, rotate, opacity, outline, line height, background,...
 
 **Add Art**
 You can add art, change colors, move, resize, rotate, delete art, flip, center function and so on
 
 **Uploading images**
-If shopper do not satisfied with sample picture, they can upload image as they want. They also can select from different many sources as Facebook or enter image’s url.
+If shopper do not satisfied with sample picture, they can upload image as they want. They also can select from different many sources as Facebook or enter image's url.
 
 **Free-hand drawing**
 Especially, you also can use many available brush to draw, you can create  your own signature.
@@ -76,13 +76,13 @@ If your design is rejected, please go to your account to design again. You can d
 
 **Power helpdesk**
 The customer can easily design with power helpdesk.
-**And much more…….**
+**And more...**
 
 == Installation ==
 
 **Minimum Requirements**
 
-- WordPress 3.5 or greater
+- WordPress 4.1 or greater
 - Woocommerce version 2.0 or greater
 - PHP version 5.4.x or greater
 - MySQL version 5.0 or greater
@@ -103,12 +103,68 @@ The customer can easily design with power helpdesk.
 == Screenshots ==
 
 1. Design interface
-2. Settings
-3. Shop with custom products
-4. Product configuration
+2. Detail order design
+3. Clip-art management
+4. Font setting
+5. Box Order design
+6. Product Configuration
 
 == Changelog ==
+= 1.6.0 (2017, Mar 06)=
+- Output PDF
+- Configuration show/hide tools design in frontend
+- Predefined color, limit color palette
+- Improve setting product design (Go to NBDesigner â†’ Tools â†’ Update product design setting data â†’ Update) 
 
-= 1.0 =
+= 1.5.0 (2017, Feb 02)=
+
+- Improved work follow
+- Add frontend functions: 
+	+ Hotkeys
+	+ Undo/redo (Ctrl + Z  / Ctrl + Y)
+	+ Strict mode for admin template (Lock movement,lock edit content, click to upload)
+	+ Snap grid
+	+ Align group layers
+- Fixed bug: multiple designs with same product
+- Fixed bug: upload SVG on Wordpress 4.7.1 and 4.7.2
+- Test compatibility with Wordpress 4.7.2
+
+= 1.4.0 (2016, Dec 28)=
+
+- Support rtl languge
+- Compatibility with WordPress 4.7
+- Shortcode gallery design template ex: [nbdesigner_gallery row="5" per_row="3" pagination="1"]
+- Widget NBDesigner suguest product design (suguest related product with customer design)
+- Custom CSS
+
+= 1.3.0 (2016, Dec 12)=
+
+- Add feature capture image from webcam
+- Add feature update url/path cliparts, fonts when migrate domain
+- Add feature check theme compatibility with plugin
+- Add feature setup design for variations of variable product
+- Fix bug active domain 
+
+= 1.2.0 (2016, Nov 24)=
+
+- Add feature admin template, manage admin templates
+- Add feature export/import design, load admin design template
+- Fix bug render design after resize window
+- Fix bug duplicate item
+- Fix bug load font
+- Fix bug change color SVG path
+- Remove function drag to sort layer in touch device
+
+= 1.1.0 (2016, Nov 07)=
+
+- Add feature setup multi-language
+- Add feature switch frontend language without re-load page
+- Add feature edit category clipart, font
+- Improve interface
+- Add feature choose DPI for print resolution
+- Fix bug crop image
+- Fix bug detail order design
+
+= 1.0 (2016, Oct 19)=
 
 First release

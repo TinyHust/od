@@ -4,18 +4,37 @@ if(typeof(tinymce) !== 'undefined'){
         editor.addButton('nbdesigner_button', {
             title: 'NBDesigner Shortcode Creator',
             icon: 'icon nbdesigner-icon',
-            onclick: function () {
-                editor.windowManager.open({
-                        id       : 'nbdesiger-tiny-mce-dialog',
+            type: 'menubutton',
+            menu: [{
+                text : 'Gallery',    
+                onclick: function () {
+                    editor.windowManager.open({
+                            id       : 'nbdesiger-tiny-mce-dialog',
+                            title	 : 'Shortcode Creator',
+                            width    : 500,
+                            height   : 'auto',
+                            wpDialog : true
+                    },
+                    {
+                            plugin_url : url // Plugin absolute URL
+                    });
+                }
+            },{
+                text : 'NBDesigner Button',  
+                onclick: function () {
+                    editor.windowManager.open({
                         title	 : 'Shortcode Creator',
-                        width    : 500,
-                        height   : 'auto',
-                        wpDialog : true
-                },
-                {
-                        plugin_url : url // Plugin absolute URL
-                });
-            }
+                        body: [{
+                            type: 'textbox',
+                            name: 'pid',
+                            label: 'Product ID',
+                            value: ''
+                        }],onsubmit: function( e ) {
+                            editor.insertContent( '[nbdesigner_button  id="' +e.data.pid+ '"][/nbdesigner_button]');
+                        }
+                    });
+                }                
+            }]
         });
         nbds_open_editor = editor;
     });
