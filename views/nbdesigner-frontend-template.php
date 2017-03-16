@@ -2,10 +2,9 @@
 <!DOCTYPE html>
 <?php
     $hide_on_mobile = nbdesigner_get_option('nbdesigner_disable_on_smartphones');
-    $hide_on_tablet = nbdesigner_get_option('nbdesigner_disable_on_tablets');
     if(wp_is_mobile() && $hide_on_mobile == 'yes'):                           
 ?>
-<html lang="en" ng-app="app">
+<html lang="<?php echo get_bloginfo('language'); ?>" ng-app="app">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -62,12 +61,12 @@
     </head>
     <body>
         <p><img src="<?php echo NBDESIGNER_PLUGIN_URL . 'assets/images/mobile.png'; ?>" /></p>
-        <p class="announce"><?php _e('Sorry, our design tool is not currently supported on mobile devices.', NBDESIGNER_TEXTDOMAIN); ?></p>
-        <p class="recommend"><a href="javascript:void(0)" onclick="window.parent.hideDesignFrame();"><?php _e('Back to product', NBDESIGNER_TEXTDOMAIN); ?></a></p>
+        <p class="announce"><?php _e('Sorry, our design tool is not currently supported on mobile devices.', 'nbdesigner'); ?></p>
+        <p class="recommend"><a href="javascript:void(0)" onclick="window.parent.hideDesignFrame();"><?php _e('Back to product', 'nbdesigner'); ?></a></p>
     </body>
 </html>
 <?php else: ?>
-<html lang="en" ng-app="app">
+<html lang="<?php echo get_bloginfo('language'); ?>" ng-app="app">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -90,7 +89,7 @@
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/nbdesigner-rtl.css'; ?>" rel="stylesheet" media="all">
         <?php endif; ?>
         <?php 
-            $enableColor = nbdesigner_get_option('nbdesigner_show_all_color '); 
+            $enableColor = nbdesigner_get_option('nbdesigner_show_all_color'); 
             if($enableColor == 'no'):
         ?>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/spectrum.css'; ?>" rel="stylesheet" media="all">
@@ -119,18 +118,23 @@
             NBDESIGNCONFIG['nbdesigner_enable_image_webcam'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_image_webcam'); ?>";
             NBDESIGNCONFIG['nbdesigner_enable_facebook_photo'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_facebook_photo'); ?>";
             NBDESIGNCONFIG['nbdesigner_enable_image_url'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_image_url'); ?>";
-            NBDESIGNCONFIG['default_text_qrcode'] = "<?php echo nbdesigner_get_option('nbdesigner_default_qrcode '); ?>";
-            NBDESIGNCONFIG['enable_text'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_text '); ?>";
-            NBDESIGNCONFIG['enable_clipart'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_clipart '); ?>";
-            NBDESIGNCONFIG['enable_image'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_image '); ?>";
-            NBDESIGNCONFIG['enable_qrcode'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_qrcode '); ?>";
-            NBDESIGNCONFIG['enable_draw'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_draw '); ?>";
-            NBDESIGNCONFIG['enable_all_color'] = "<?php echo nbdesigner_get_option('nbdesigner_show_all_color '); ?>";
-            NBDESIGNCONFIG['_palette'] = "<?php echo nbdesigner_get_option('nbdesigner_hex_names '); ?>";
+            NBDESIGNCONFIG['default_text_qrcode'] = "<?php echo nbdesigner_get_option('nbdesigner_default_qrcode'); ?>";
+            NBDESIGNCONFIG['enable_text'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_text'); ?>";
+            NBDESIGNCONFIG['enable_clipart'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_clipart'); ?>";
+            NBDESIGNCONFIG['enable_image'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_image'); ?>";
+            NBDESIGNCONFIG['enable_qrcode'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_qrcode'); ?>";
+            NBDESIGNCONFIG['enable_draw'] = "<?php echo nbdesigner_get_option('nbdesigner_enable_draw'); ?>";
+            NBDESIGNCONFIG['enable_all_color'] = "<?php echo nbdesigner_get_option('nbdesigner_show_all_color'); ?>";
+            NBDESIGNCONFIG['_palette'] = "<?php echo nbdesigner_get_option('nbdesigner_hex_names'); ?>";
             NBDESIGNCONFIG['nbdesigner_default_color'] = "<?php echo nbdesigner_get_option('nbdesigner_default_color'); ?>";
             NBDESIGNCONFIG['font_url'] = "<?php echo NBDESIGNER_FONT_URL .'/'; ?>";
             NBDESIGNCONFIG['url_style'] = "<?php echo NBDESIGNER_PLUGIN_URL . 'assets/'; ?>";
-            var _colors = NBDESIGNCONFIG['_palette'].split(','),
+            NBDESIGNCONFIG['is_designer'] = 0;
+            NBDESIGNCONFIG['origin_foler_template'] = '';
+            <?php if(current_user_can('edit_nbd_template')): ?>
+            NBDESIGNCONFIG['is_designer'] = 1;   
+            <?php endif; ?>                   
+            ;var _colors = NBDESIGNCONFIG['_palette'].split(','),
             colorPalette = [], row = [];
             for(var i=0; i < _colors.length; ++i) {
                 var color = _colors[i].split(':')[0];
@@ -153,7 +157,12 @@
              <?php endif; ?>  
             <?php if(isset($_GET['adid'])): ?>
                 adid = "<?php echo time(); ?>";
-             <?php endif; ?>  
+             <?php endif; ?>
+            <?php if (isset($_GET['redesign'])): ?>
+                adid = "<?php echo $_GET['temp']; ?>";
+                NBDESIGNCONFIG['origin_foler_template'] = "<?php echo $_GET['temp']; ?>";
+                OD_save_status = 1;
+            <?php endif; ?>                   
             <?php if(isset($_GET['temp'])): ?>
                 OD_temp = "<?php echo $_GET['temp']; ?>";
             <?php endif; ?>          

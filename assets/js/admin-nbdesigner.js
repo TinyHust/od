@@ -703,6 +703,7 @@ var NBDESIGNADMIN = {
     nbdesigner_move: function (e, command) {
         var parent = jQuery(e).parents('.nbdesigner-box-collapse'),
         area = parent.find('.nbdesigner-area-design'),
+        overlay = parent.find('.nbdesigner-image-overlay'),
         left = area.css('left'),
         top = area.css('top'),
         w = area.width(),
@@ -714,24 +715,29 @@ var NBDESIGNADMIN = {
         switch (command) {
             case 'left':
                 area.css('left', parseFloat(left) - 1);
+                overlay.css('left', parseFloat(left) - 1);
                 ip_left.val(parseFloat(left) - 1);
                 break;
             case 'right':
                 area.css('left', parseFloat(left) + 1);
+                overlay.css('left', parseFloat(left) + 1);
                 ip_left.val(parseFloat(left) + 1);
                 break;
             case 'down':
                 area.css('top', parseFloat(top) + 1);
+                overlay.css('top', parseFloat(top) + 1);
                 ip_top.val(parseFloat(top) + 1);
                 break;
             case 'up':
                 area.css('top', parseFloat(top) - 1);
+                overlay.css('top', parseFloat(top) - 1);
                 ip_top.val(parseFloat(top) - 1);
                 break;
             case 'center':
                 left = (NBD_STAGE.width - w) / 2;
                 top = (NBD_STAGE.height - h) / 2;
                 area.css({'top': top + 'px', 'left': left + 'px'});
+                overlay.css({'top': top + 'px', 'left': left + 'px'});
                 ip_left.val(left);
                 ip_top.val(top);
                 break;
@@ -747,6 +753,7 @@ var NBDESIGNADMIN = {
                 left = (NBD_STAGE.width - width) / 2;
                 top = (NBD_STAGE.height - height) / 2;
                 area.css({'top': top + 'px', 'left': left + 'px', 'width': width + 'px',  'height': height + 'px'});
+                overlay.css({'top': top + 'px', 'left': left + 'px', 'width': width + 'px',  'height': height + 'px'});
                 ip_left.val(left);
                 ip_top.val(top);                
                 ip_width.val(width);                
@@ -776,12 +783,20 @@ var NBDESIGNADMIN = {
         if (width) ip_width.val(width);
         if (height) ip_height.val(height);
         parent.find('.nbdesiger-update-area-design').addClass('active');
+        var area = parent.find('.nbdesigner-area-design');
+        parent.find('.nbdesigner-image-overlay').css({
+                'width': area.css('width'),           
+                'height': area.css('height'),           
+                'left': area.css('left'),           
+                'top': area.css('top')           
+            });
     },
     updatePositionDesignArea: function (e) {
         var att = jQuery(e).data('index'),
         value = jQuery(e).val(),
         parent = jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-info-box'),              
         area = jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-area-design'),
+        overlay = jQuery(e).parents('.nbdesigner-box-collapse').find('.nbdesigner-image-overlay'),
         height = parent.find('.area_design_height').val(),
         width = parent.find('.area_design_width').val(),
         left = parent.find('.area_design_left').val(),
@@ -810,6 +825,7 @@ var NBDESIGNADMIN = {
         }
         parent.find('.nbdesiger-update-area-design').addClass('active');
         area.css(att, value + 'px');
+        overlay.css(att, value + 'px');
         sefl.val(value);
     },
     updateSolutionImage: function(){

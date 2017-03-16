@@ -10,7 +10,6 @@ class Product_Template_List_Table extends WP_List_Table {
             'plural' => __('Templates', 'nbdesigner'), 
             'ajax' => false 
         ));
-        $this->textdomain = 'nbdesigner';
     }
     /**
      * Retrieve template's data from the database
@@ -88,7 +87,7 @@ class Product_Template_List_Table extends WP_List_Table {
     }
     /** Text displayed when no template data is available */
     public function no_items() {
-        _e( 'No templates avaliable.', $this->textdomain );
+        _e( 'No templates avaliable.', 'nbdesigner' );
     }
     /**
      * Method for name column
@@ -98,19 +97,30 @@ class Product_Template_List_Table extends WP_List_Table {
      * @return string
      */
     function column_product_id($item) {
+        global $wpdb;
+        $check = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_name='nbdesigner-admindesign-product-x1095'"); 
+        $link_admindesign = get_page_link($check).'?product_id='.$item['product_id'].'&p=extra&adid='.$item['folder'].'&temp='.$item['folder'].'&redesign=1';
+        
         $_nonce = wp_create_nonce('nbdesigner_template_nonce');
-        $title = '<strong>' . $item['product_id'] . '</strong>';
+        $title = '<strong>' . $item['folder'] . '</strong>';
         $paged = 1;       
         $actions = array(
             'delete' => sprintf('<a href="?page=%s&action=%s&template=%s&_wpnonce=%s&pid=%s&paged=%s">Delete</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $_nonce, esc_attr($_REQUEST['pid']), $this->get_pagenum()),
             'primary' => sprintf('<a href="?page=%s&action=%s&template=%s&pid=%s&_wpnonce=%s&paged=%s">Primary</a>', esc_attr($_REQUEST['page']), 'primary', absint($item['id']), esc_attr($_REQUEST['pid']), $_nonce, $this->get_pagenum()),
-            'detail' => sprintf('<a href="#">Detail</a>', esc_attr($_REQUEST['pid']), 'detail', absint($item['id']))
+            'detail' => sprintf('<a href="%s" target="_blank">Detail</a>', $link_admindesign)
         );     
         if($item['priority']){
             unset($actions['delete']);
             unset($actions['primary']);
         }
         return $title . $this->row_actions($actions);
+    }
+    function column_priority($item){
+        if($item['priority']){
+            return '<span class="primary">&#9733;</span>';
+        }else{
+            return '<span>&#9734;</span>';
+        }     
     }
     function column_default($item, $column_name){
         return $item[$column_name];
@@ -155,6 +165,7 @@ class Product_Template_List_Table extends WP_List_Table {
         $columns = array(
             'cb' => '<input type="checkbox" />',            
             'folder' => __('Preview', 'nbdesigner'),
+            'priority' => __('Primary', 'nbdesigner'),
             'product_id' => __('Actions', 'nbdesigner'),
             'user_id' => __('Created By', 'nbdesigner'),
             'created_date' => __('Created', 'nbdesigner')
@@ -166,14 +177,14 @@ class Product_Template_List_Table extends WP_List_Table {
         if ($which == 'top') {
             ?>
             <select id="nbdesigner-admin-template-filter" name="nbdesigner_filter">
-                <option value="-1"><?php _e('Show all design', $this->textdomain); ?></option>
-                <option value="publish"><?php _e('Publish design', $this->textdomain); ?></option>
-                <option value="unpublish"><?php _e('Unpublish design', $this->textdomain); ?></option>
-                <option value="private"><?php _e('Private design', $this->textdomain); ?></option>
-                <option value="priority"><?php _e('Primary design', $this->textdomain); ?></option>
+                <option value="-1"><?php _e('Show all design', 'nbdesigner'); ?></option>
+                <option value="publish"><?php _e('Publish design', 'nbdesigner'); ?></option>
+                <option value="unpublish"><?php _e('Unpublish design', 'nbdesigner'); ?></option>
+                <option value="private"><?php _e('Private design', 'nbdesigner'); ?></option>
+                <option value="priority"><?php _e('Primary design', 'nbdesigner'); ?></option>
             </select>
             <?php wp_nonce_field($this->plugin_id, $this->plugin_id . '_hidden'); ?>	
-            <button class="button-primary" type="submit"><?php _e('Filter', $this->textdomain); ?></button>
+            <button class="button-primary" type="submit"><?php _e('Filter', 'nbdesigner'); ?></button>
             <?php
         }
     }    

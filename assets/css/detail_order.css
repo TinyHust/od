@@ -369,7 +369,8 @@ h2 {
 }
 #create_pdf {
     margin-left: 15px;
-    margin-bottom: 15px;    
+    margin-bottom: 15px;   
+    vertical-align: top;
 }
 .background-transparent {
     background-image: -webkit-linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4), -webkit-linear-gradient(45deg, #c4c4c4 25%, transparent 25%, transparent 75%, #c4c4c4 75%, #c4c4c4);

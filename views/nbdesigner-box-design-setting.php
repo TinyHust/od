@@ -3,33 +3,33 @@
     <?php wp_nonce_field('nbdesigner_setting_box', 'nbdesigner_setting_box_nonce'); ?>		
     <div class="nbdesigner-left">
         <input type="hidden" value="0" name="_nbdesigner_enable"/>
-        <label for="_nbdesigner_enable" class="nbdesigner-setting-box-label"><?php echo _e('Enable Design', $this->textdomain); ?></label>
+        <label for="_nbdesigner_enable" class="nbdesigner-setting-box-label"><?php echo _e('Enable Design', 'nbdesigner'); ?></label>
         <input type="checkbox" value="1" name="_nbdesigner_enable" id="_nbdesigner_enable" <?php checked($enable); ?> class="short" />
     </div>
     <div class="nbdesigner-right add_more" style="display: none;">
-        <a class="button button-primary" onclick="NBDESIGNADMIN.addOrientation('com')"><?php echo __('Add More', $this->textdomain); ?></a>
-        <a class="button button-primary" onclick="NBDESIGNADMIN.collapseAll('com')"><?php echo __('Collapse All', $this->textdomain); ?></a>
+        <a class="button button-primary" onclick="NBDESIGNADMIN.addOrientation('com')"><?php echo __('Add More', 'nbdesigner'); ?></a>
+        <a class="button button-primary" onclick="NBDESIGNADMIN.collapseAll('com')"><?php echo __('Collapse All', 'nbdesigner'); ?></a>
     </div>
     <div class="nbdesigner-clearfix"></div>
     <div id="nbdesigner_dpi_con" class="<?php if (!get_post_meta($post_id, '_nbdesigner_enable', true)) echo 'nbdesigner-disable'; ?>">
-        <label for="nbdesigner_dpi" class="nbdesigner-setting-box-label"><?php echo _e('DPI', $this->textdomain); ?></label>
-        <input name="_nbdesigner_dpi" id="nbdesigner_dpi" value="<?php echo $dpi;?>" type="number"  min="0" max="300" style="width: 60px;" onchange="NBDESIGNADMIN.updateSolutionImage()">&nbsp;<small>(<?php _e('Dots Per Inch', $this->textdomain); ?>)</small>   
+        <label for="nbdesigner_dpi" class="nbdesigner-setting-box-label"><?php echo _e('DPI', 'nbdesigner'); ?></label>
+        <input name="_nbdesigner_dpi" id="nbdesigner_dpi" value="<?php echo $dpi;?>" type="number"  min="0" max="300" style="width: 60px;" onchange="NBDESIGNADMIN.updateSolutionImage()">&nbsp;<small>(<?php _e('Dots Per Inch', 'nbdesigner'); ?>)</small>   
     </div>
     <div id="nbdesigner-boxes" class="<?php if (!$enable) echo 'nbdesigner-disable'; ?>">
         <?php $count = 0;
         foreach ($designer_setting as $k => $v): ?>
             <div class="nbdesigner-box-container">
                 <div class="nbdesigner-box">
-                    <label class="nbdesigner-setting-box-label"><?php _e('Name', $this->textdomain); ?></label>
+                    <label class="nbdesigner-setting-box-label"><?php _e('Name', 'nbdesigner'); ?></label>
                     <div class="nbdesigner-setting-box-value">
                         <input name="_designer_setting[<?php echo $k; ?>][orientation_name]" class="short orientation_name" 
                                value="<?php echo $v['orientation_name']; ?>" type="text" required/>
                         <?php if($k ==0): ?>
-                        <small class="nbd-helper"><?php _e('(Hover', $this->textdomain); ?>  <span class="dashicons dashicons-editor-help"></span><?php _e('to know how to setting product design)', $this->textdomain); ?></small>
+                        <small class="nbd-helper"><?php _e('(Click', 'nbdesigner'); ?>  <span class="dashicons dashicons-editor-help"></span><?php _e('to know how to setting product design)', 'nbdesigner'); ?></small>
                         <?php endif; ?>
                     </div>
                     <div class="nbdesigner-right">
-                        <a class="button nbdesigner-collapse" onclick="NBDESIGNADMIN.collapseBox(this)"><span class="dashicons dashicons-arrow-up"></span><?php _e('Less setting', $this->textdomain); ?></a>
+                        <a class="button nbdesigner-collapse" onclick="NBDESIGNADMIN.collapseBox(this)"><span class="dashicons dashicons-arrow-up"></span><?php _e('Less setting', 'nbdesigner'); ?></a>
                         <a class="button nbdesigner-delete delete_orientation" data-index="<?php echo $k; ?>" data-variation="com" onclick="NBDESIGNADMIN.deleteOrientation(this)">&times;</a>
                     </div>
                 </div>
@@ -96,32 +96,32 @@
                         </div>
                         <div>
                             <p>
-                                <label for="nbdesigner_bg_type" class="nbdesigner-setting-box-label"><?php _e('Background type'); ?>:</label>
-                                <input type="radio" name="_designer_setting[<?php echo $k; ?>][bg_type]" value="image" 
+                                <label for="nbdesigner_bg_type" class="nbdesigner-setting-box-label"><?php _e('Background type'); ?></label>
+                                <label class="nbdesigner-lbl-setting"><input type="radio" name="_designer_setting[<?php echo $k; ?>][bg_type]" value="image" 
                                     <?php checked($v['bg_type'], 'image', true); ?> class="bg_type"
-                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Image', $this->textdomain); ?>
-                                <input type="radio" name="_designer_setting[<?php echo $k; ?>][bg_type]" value="color" 
+                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Image', 'nbdesigner'); ?></label>
+                                <label class="nbdesigner-lbl-setting"><input type="radio" name="_designer_setting[<?php echo $k; ?>][bg_type]" value="color" 
                                     <?php checked($v['bg_type'], 'color', true); ?> class="bg_type"
-                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Color', $this->textdomain); ?>
-                                <input type="radio" name="_designer_setting[<?php echo $k; ?>][bg_type]" value="tran" 
+                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Color', 'nbdesigner'); ?></label>
+                                <label class="nbdesigner-lbl-setting"><input type="radio" name="_designer_setting[<?php echo $k; ?>][bg_type]" value="tran" 
                                     <?php checked($v['bg_type'], 'tran', true); ?> class="bg_type"
-                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Transparent', $this->textdomain); ?>
+                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Transparent', 'nbdesigner'); ?></label>
                             </p>
                         </div> 
                         <div class="nbdesigner_bg_image" <?php if($v['bg_type'] != 'image') echo ' style="display: none;"' ?>>
-                            <a class="button nbdesigner-button nbdesigner-add-image" onclick="NBDESIGNADMIN.loadImage(this)" data-index="<?php echo $k; ?>"><?php echo __('Set image', $this->textdomain); ?></a>     
+                            <a class="button nbdesigner-button nbdesigner-add-image" onclick="NBDESIGNADMIN.loadImage(this)" data-index="<?php echo $k; ?>"><?php echo __('Set image', 'nbdesigner'); ?></a>     
                         </div>
                         <div class="nbdesigner_bg_color" <?php if($v['bg_type'] != 'color') echo ' style="display: none;"' ?>>
                             <input type="text" name="_designer_setting[<?php echo $k; ?>][bg_color_value]" value="<?php echo $v['bg_color_value'] ?>" class="nbd-color-picker" />
                         </div>
                         <div class="nbdesigner_overlay_box">
-                            <label class="nbdesigner-setting-box-label"><?php  _e('Overlay', $this->textdomain); ?></label>
+                            <label class="nbdesigner-setting-box-label"><?php  _e('Overlay', 'nbdesigner'); ?></label>
                             <input type="hidden" value="0" name="_designer_setting[<?php echo $k; ?>][show_overlay]" class="show_overlay"/>                   
                             <input type="checkbox" value="1" 
                                 name="_designer_setting[<?php echo $k; ?>][show_overlay]" id="_designer_setting[<?php echo $k; ?>][bg_type]" <?php checked($v['show_overlay']); ?> 
                                 class="show_overlay" onchange="NBDESIGNADMIN.toggleShowOverlay(this)"/>  
                             <a class="button overlay-toggle" onclick="NBDESIGNADMIN.loadImageOverlay(this)" style="display: <?php if($v['show_overlay']) {echo 'inline-block';} else {echo 'none';} ?>">
-                                <?php echo __('Set image', $this->textdomain); ?>
+                                <?php echo __('Set image', 'nbdesigner'); ?>
                             </a>
                             <img style="display: <?php if($v['show_overlay']) {echo 'inline-block';} else {echo 'none';} ?>"
                                  src="<?php if ($v['img_overlay'] != '') {echo $v['img_overlay'];} else {echo NBDESIGNER_PLUGIN_URL . 'assets/images/overlay.png';} ?>" class="img_overlay"/>                            
@@ -130,19 +130,19 @@
                     <div class="nbdesigner-info-box">
                         <?php if($k ==0): ?>
                         <p>
-                            <span style="background: #b8dce8; width: 15px; height: 15px; display: inline-block;"></span>&nbsp;<?php _e('Product area', $this->textdomain); ?>&nbsp;
-                            <span style="background: #dddacd; width: 15px; height: 15px; display: inline-block;"></span>&nbsp;<?php _e('Design area', $this->textdomain); ?><br />
-                            <span style="border:2px solid #f0c6f6; width: 11px; height: 11px; display: inline-block;"></span>&nbsp;<?php _e('Bounding box', $this->textdomain); ?><small> (<?php _e('product always align vertical/horizontal center bounding box', $this->textdomain); ?>)</small>
+                            <span style="background: #b8dce8; width: 15px; height: 15px; display: inline-block;"></span>&nbsp;<?php _e('Product area', 'nbdesigner'); ?>&nbsp;
+                            <span style="background: #dddacd; width: 15px; height: 15px; display: inline-block;"></span>&nbsp;<?php _e('Design area', 'nbdesigner'); ?><br />
+                            <span style="border:2px solid #f0c6f6; width: 11px; height: 11px; display: inline-block;"></span>&nbsp;<?php _e('Bounding box', 'nbdesigner'); ?><small> (<?php _e('product always align vertical/horizontal center bounding box', 'nbdesigner'); ?>)</small>
                         </p>
                         <?php endif; ?>                        
                         <p class="nbd-setting-section-title">
-                            <?php echo __('Product size:', $this->textdomain); ?>
+                            <?php echo __('Product size', 'nbdesigner'); ?>
                             <?php if($k ==0): ?>
                             <span class="nbdesign-config-size-tooltip dashicons dashicons-editor-help nbd-helper"></span>
                             <?php endif; ?>
                         </p>
                         <div class="nbdesigner-info-box-inner notice-width nbd-has-notice">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Width', $this->textdomain); ?><br /><small>(W<sub>p</sub>)</small></label>
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Width', 'nbdesigner'); ?><br /><small>(W<sub>p</sub>)</small></label>
                             <div>
                                 <input type="number" step="any" min="0" name="_designer_setting[<?php echo $k; ?>][product_width]" 
                                        value="<?php echo $v['product_width']; ?>" class="short product_width" 
@@ -150,7 +150,7 @@
                             </div>
                         </div>
                         <div class="nbdesigner-info-box-inner notice-height nbd-has-notice">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Height', $this->textdomain); ?><br /><small>(H<sub>p</sub>)</small></label>
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Height', 'nbdesigner'); ?><br /><small>(H<sub>p</sub>)</small></label>
                             <div>
                                 <input type="number" step="any" min="0" name="_designer_setting[<?php echo $k; ?>][product_height]" 
                                        value="<?php echo $v['product_height']; ?>" class="short product_height"  
@@ -158,69 +158,68 @@
                             </div>
                         </div> 
                         <p class="nbd-setting-section-title">
-                            <?php echo __('Design area size:', $this->textdomain); ?>
+                            <?php echo __('Design area size', 'nbdesigner'); ?>
                             <?php if($k ==0): ?>
                             <span class="nbdesign-config-realsize-tooltip dashicons dashicons-editor-help nbd-helper"></span>
                             <?php endif; ?>                              
                         </p>
                         <div class="nbdesigner-info-box-inner notice-width nbd-has-notice">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Width', $this->textdomain); ?><br /><small>(W<sub>d</sub>)</small></label>
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Width', 'nbdesigner'); ?><br /><small>(W<sub>d</sub>)</small></label>
                             <div>
                                 <input type="number" step="any" name="_designer_setting[<?php echo $k; ?>][real_width]" value="<?php echo $v['real_width']; ?>" class="short real_width" 
                                        onchange="NBDESIGNADMIN.updateRelativePosition(this, 'width')"> <?php echo $unit; ?> 
                             </div>
                         </div>
                         <div class="nbdesigner-info-box-inner notice-height nbd-has-notice">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Height', $this->textdomain); ?><br /><small>(H<sub>d</sub>)</small></label>
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Height', 'nbdesigner'); ?><br /><small>(H<sub>d</sub>)</small></label>
                             <div>
                                 <input type="number" step="any" min="0" name="_designer_setting[<?php echo $k; ?>][real_height]" value="<?php echo $v['real_height']; ?>" class="short real_height"  
                                        onchange="NBDESIGNADMIN.updateRelativePosition(this, 'height')"> <?php echo $unit; ?> 
                             </div>
                         </div>   
                         <div class="nbdesigner-info-box-inner notice-height nbd-has-notice">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Top', $this->textdomain); ?><br /><small>(T<sub>d</sub>)</small></label>
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Top', 'nbdesigner'); ?><br /><small>(T<sub>d</sub>)</small></label>
                             <div>
                                 <input type="number" step="any" min="0" name="_designer_setting[<?php echo $k; ?>][real_top]" value="<?php echo $v['real_top']; ?>" class="short real_top"  
                                        onchange="NBDESIGNADMIN.updateRelativePosition(this, 'top')"> <?php echo $unit; ?> 
                             </div>
                         </div> 
                         <div class="nbdesigner-info-box-inner">
-                            <label class="nbdesigner-setting-box-label notice-width nbd-has-notice"><?php echo __('Left', $this->textdomain); ?><br /><small>(L<sub>d</sub>)</small></label>
+                            <label class="nbdesigner-setting-box-label notice-width nbd-has-notice"><?php echo __('Left', 'nbdesigner'); ?><br /><small>(L<sub>d</sub>)</small></label>
                             <div>
                                 <input type="number" step="any" min="0" name="_designer_setting[<?php echo $k; ?>][real_left]" value="<?php echo $v['real_left']; ?>" class="short real_left"  
                                        onchange="NBDESIGNADMIN.updateRelativePosition(this, 'left')"> <?php echo $unit; ?> 
                             </div>
                         </div>                         
                         <p class="nbd-setting-section-title">
-                            <?php echo __('Relative position:', $this->textdomain); ?>&nbsp;
+                            <?php echo __('Relative position', 'nbdesigner'); ?>&nbsp;
                             <?php if($k == 0): ?> 
                             <span class="nbdesign-config-tooltip dashicons dashicons-editor-help nbd-helper"></span>
                             <?php endif; ?>
                             <span class="dashicons dashicons-update nbdesiger-update-area-design" onclick="NBDESIGNADMIN.updateDesignAreaSize(this)"></span>
                         </p>
                         <div class="nbdesigner-info-box-inner">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Width', $this->textdomain); ?></label>
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Width', 'nbdesigner'); ?></label>
                             <div>
                                 <input type="number" step="any"  min="0" name="_designer_setting[<?php echo $k; ?>][area_design_width]" 
                                        value="<?php echo $v['area_design_width']; ?>" class="short area_design_dimension area_design_width" data-index="width" 
                                        onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px
-                                <small class="nbd-notice-setup"><?php _e('', $this->textdomain) ?></small>
                             </div>
                         </div>
                         <div class="nbdesigner-info-box-inner">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Height', $this->textdomain); ?></label>
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Height', 'nbdesigner'); ?></label>
                             <div>
                                 <input type="number"  step="any" min="0" name="_designer_setting[<?php echo $k; ?>][area_design_height]" value="<?php echo $v['area_design_height']; ?>" class="short area_design_dimension area_design_height" data-index="height" onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px
                             </div>
                         </div>	
                         <div class="nbdesigner-info-box-inner">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Left', $this->textdomain); ?></label>
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Left', 'nbdesigner'); ?></label>
                             <div>
                                 <input type="number" step="any"  min="0" name="_designer_setting[<?php echo $k; ?>][area_design_left]" value="<?php echo $v['area_design_left']; ?>" class="short area_design_dimension area_design_left" data-index="left" onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px
                             </div>
                         </div>	                        
                         <div class="nbdesigner-info-box-inner">
-                            <label class="nbdesigner-setting-box-label"><?php echo __('Top', $this->textdomain); ?></label>
+                            <label class="nbdesigner-setting-box-label"><?php echo __('Top', 'nbdesigner'); ?></label>
                             <div>
                                 <input type="number" step="any"  min="0" name="_designer_setting[<?php echo $k; ?>][area_design_top]" value="<?php echo $v['area_design_top']; ?>" class="short area_design_dimension area_design_top" data-index="top" onchange="NBDESIGNADMIN.updatePositionDesignArea(this)">&nbsp;px
                                 
@@ -235,22 +234,22 @@ endforeach; ?>
     </div>
     <div id="nbdesigner-option" class="nbdesigner-option <?php if (!$enable) echo 'nbdesigner-disable'; ?>">
         <div class="nbdesigner-opt-inner">
-            <label for="_nbdesigner_admindesign" class="nbdesigner-setting-box-label"><?php echo _e('Admin design template', $this->textdomain); ?></label>
+            <label for="_nbdesigner_admindesign" class="nbdesigner-setting-box-label"><?php echo _e('Admin design template', 'nbdesigner'); ?></label>
             <input type="checkbox" value="1" name="_nbdesigner_option[admindesign]" id="_nbdesigner_admindesign" <?php checked(isset($option['admindesign']) ? $option['admindesign'] : false); ?> class="short"/>
             <?php if($enable && isset($option['admindesign'])): ?>
-            <a href="<?php echo $link_admindesign.'&p=primary'; ?>" target="_blank">
+            <a class="button nbd-admin-tem-link" href="<?php echo $link_admindesign.'&p=primary'; ?>" target="_blank">
                 <?php if($priority):?>
-                <span class="dashicons dashicons-admin-network" style="text-decoration: none;"></span><?php echo _e('Primary Design', $this->textdomain); ?></a>&nbsp;
-                    <span class="dashicons dashicons-plus"></span><a href="<?php echo $link_admindesign.'&p=extra&adid='.time(); ?>" target="_blank"><?php echo _e('Add Design', $this->textdomain); ?></a>
+                <span class="dashicons dashicons-admin-network" style="text-decoration: none;"></span> <?php echo _e('Primary Template', 'nbdesigner'); ?></a>&nbsp;
+                    <a class="button nbd-admin-tem-link" href="<?php echo $link_admindesign.'&p=extra&adid='.time(); ?>" target="_blank"><span class="dashicons dashicons-plus"></span> <?php echo _e('Add Template', 'nbdesigner'); ?></a>
                 <?php else:?>
-                    <span class="dashicons dashicons-art" style="text-decoration: none;"></span><?php echo _e('Start Design', $this->textdomain); ?></a>
+                    <span class="dashicons dashicons-art" style="text-decoration: none;"></span><?php echo _e('Create Template', 'nbdesigner'); ?></a>
                 <?php endif;?>
             <?php else: ?>
-            <small><?php echo _e('After save product, you\'ll see link to start design templates', $this->textdomain); ?></small>
+            <small><?php echo _e('After save product, you\'ll see link to start design templates', 'nbdesigner'); ?></small>
             <?php endif; ?>
         </div>  
         <div class="nbdesigner-opt-inner" style="display: none;">
-            <label for="_nbdesigner_customprice" class="nbdesigner-setting-box-label"><?php echo _e('Custom price', $this->textdomain); ?></label>
+            <label for="_nbdesigner_customprice" class="nbdesigner-setting-box-label"><?php echo _e('Custom price', 'nbdesigner'); ?></label>
             <input type="number" step="any" class="short nbdesigner-short-input" id="_nbdesigner_customprice" name="_nbdesigner_option[customprice]" value="<?php if(isset($option['customprice'])) echo $option['customprice']; ?>"/>
         </div>
     </div>    
@@ -273,7 +272,7 @@ function  add_js_code(){
             }
         });
         $('.nbdesign-config-tooltip').first().pointer( options );
-        $('.nbdesign-config-tooltip').first().on('hover', function(){
+        $('.nbdesign-config-tooltip').first().on('click', function(){
             $(this).pointer("open")
         });
         var size_options = {
@@ -291,7 +290,7 @@ function  add_js_code(){
             "position": {"edge":"left", "align":"center"}
         };
         $('.nbdesign-config-size-tooltip').first().pointer( size_options );
-        $('.nbdesign-config-size-tooltip').first().on('hover', function(){
+        $('.nbdesign-config-size-tooltip').first().on('click', function(){
             $(this).pointer("open")
         });
         var da_option = {
@@ -305,7 +304,7 @@ function  add_js_code(){
             "position": {"edge":"left", "align":"center"}            
         };
         $('.nbdesign-config-realsize-tooltip').first().pointer( da_option );
-        $('.nbdesign-config-realsize-tooltip').first().on('hover', function(){
+        $('.nbdesign-config-realsize-tooltip').first().on('click', function(){
             $(this).pointer("open")
         });        
     });

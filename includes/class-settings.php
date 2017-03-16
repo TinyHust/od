@@ -99,8 +99,8 @@ if( !class_exists('Nbdesigner_Settings') ) {
             ?>
                 <br class="clear" />
                 <p>
-                    <button type="submit" class="button-primary" name="nbdesigner_save_options_<?php echo $this->page_id; ?>"><?php _e('Save Options', NBDESIGNER_TEXTDOMAIN); ?></button>
-                    <button type="submit" class="button-secondary" name="nbdesigner_reset_options_<?php echo $this->page_id; ?>" ><?php _e('Reset', NBDESIGNER_TEXTDOMAIN); ?></button>
+                    <button type="submit" class="button-primary" name="nbdesigner_save_options_<?php echo $this->page_id; ?>"><?php _e('Save Options', 'nbdesigner'); ?></button>
+                    <button type="submit" class="button-secondary" name="nbdesigner_reset_options_<?php echo $this->page_id; ?>" ><?php _e('Reset', 'nbdesigner'); ?></button>
                 </p>
             </form>
             <?php

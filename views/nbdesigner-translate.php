@@ -1,8 +1,8 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
 <div class="wrap nbdesigner ">
-    <h2><?php echo __('Frontend Translate', $this->textdomain); ?></h2>
+    <h2><?php echo __('Frontend Translate', 'nbdesigner'); ?></h2>
     <div>
-        <b><?php echo __('Choose language', $this->textdomain); ?></b>
+        <b><?php echo __('Choose language', 'nbdesigner'); ?></b>
         <?php if(is_array($list) && count($list) > 0): ?>
         <select id="nbdesigner-translate-code" onchange="NBDESIGNADMIN.changeLang()">
             <?php foreach ($list as $key => $l): ?>
@@ -10,14 +10,14 @@
             <?php endforeach; ?>
         </select>
         <?php endif; ?>
-        <a class="button nbutton-primary" onclick="NBDESIGNADMIN.saveLang(this)" data-code="en" id="nbdesigner-trans-code"><?php echo __('Save Language', $this->textdomain); ?></a>
-        <a class="button btn-primary nbdesigner-delete" onclick="NBDESIGNADMIN.deleteLang(this)" ><?php echo __('Delete Language', $this->textdomain); ?></a>       
+        <a class="button nbutton-primary" onclick="NBDESIGNADMIN.saveLang(this)" data-code="en" id="nbdesigner-trans-code"><?php echo __('Save Language', 'nbdesigner'); ?></a>
+        <a class="button btn-primary nbdesigner-delete" onclick="NBDESIGNADMIN.deleteLang(this)" ><?php echo __('Delete Language', 'nbdesigner'); ?></a>       
         <?php add_thickbox(); ?>
         <div id="nbdesigner-new-lang" style="display:none;">
             <div id="nbdesigner-new-lang-con" class="nbdesigner-align-center">
                 <table class="form-table">
                     <tr valign="top">
-                        <th scope="row" class="titledesc"><?php echo __("Choose language", $this->textdomain); ?></th>
+                        <th scope="row" class="titledesc"><?php echo __("Choose language", 'nbdesigner'); ?></th>
                         <td class="forminp-text">
                             <select id="nbdesign-language-option" name="nbdesigner_codelang">
                             <?php foreach ($languages as $language): ?>
@@ -34,7 +34,7 @@
                 </p>                
             </div>
         </div>        
-        <a name="<?php _e('Create new language', $this->textdomain); ?>" href="#TB_inline?width=300&height=160&inlineId=nbdesigner-new-lang" class="thickbox button button-primary" onclick=""><?php echo __('Add New Language', $this->textdomain); ?></a>   
+        <a name="<?php _e('Create new language', 'nbdesigner'); ?>" href="#TB_inline?width=300&height=160&inlineId=nbdesigner-new-lang" class="thickbox button button-primary" onclick=""><?php echo __('Add New Language', 'nbdesigner'); ?></a>   
         <img class="nbdesigner_loaded" id="nbdesigner_translate_loading" src="<?php echo NBDESIGNER_PLUGIN_URL . 'assets/images/loading.gif' ?>" />
     </div>
     <div>

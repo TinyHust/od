@@ -1,0 +1,1951 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Nbdesigner\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-10 18:50+0000\n"
+"PO-Revision-Date: 2017-03-10 18:53+0000\n"
+"Last-Translator: admin <small.hust.lee@gmail.com>\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100 >= 3 "
+"&& n%100<=10 ? 3 : n%100 >= 11 && n%100<=99 ? 4 : 5\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco - https://localise.biz/"
+
+#: includes/settings/frontend.php:221
+msgid "Noise"
+msgstr ""
+
+#: includes/settings/frontend.php:222
+msgid "Pixelate"
+msgstr ""
+
+#: includes/settings/frontend.php:223
+msgid "Multiply"
+msgstr ""
+
+#: includes/settings/frontend.php:224
+msgid "Blur"
+msgstr ""
+
+#: includes/settings/frontend.php:225
+msgid "Sharpen"
+msgstr ""
+
+#: includes/settings/frontend.php:226
+msgid "Emboss"
+msgstr ""
+
+#: includes/settings/frontend.php:227
+msgid "Edge enhance"
+msgstr ""
+
+#: includes/settings/frontend.php:229
+msgid "Crop image"
+msgstr ""
+
+#: includes/settings/frontend.php:230
+msgid "Shape crop"
+msgstr ""
+
+#: includes/settings/frontend.php:237
+msgid "Enable Free Draw"
+msgstr ""
+
+#: includes/settings/frontend.php:254
+msgid "Brush"
+msgstr ""
+
+#: includes/settings/frontend.php:255
+msgid "Geometrical shape"
+msgstr ""
+
+#: includes/settings/frontend.php:262
+msgid "Enable QRCode"
+msgstr ""
+
+#: includes/settings/frontend.php:275
+msgid "Default text for QRCode"
+msgstr ""
+
+#: includes/settings/general.php:9 views/nbdesigner-setting.php:61
+msgid "Label of button design"
+msgstr ""
+
+#: includes/settings/general.php:16 views/nbdesigner-setting.php:67
+msgid "Position of button design"
+msgstr ""
+
+#: includes/settings/general.php:19
+msgid "The position of the product button designer in the product page"
+msgstr ""
+
+#: includes/settings/general.php:22 views/nbdesigner-setting.php:70
+msgid "Before add to cart button and after variantions option"
+msgstr ""
+
+#: includes/settings/general.php:23 views/nbdesigner-setting.php:72
+msgid "Before variantions option"
+msgstr ""
+
+#: includes/settings/general.php:24 views/nbdesigner-setting.php:74
+msgid "After add to cart button"
+msgstr ""
+
+#: includes/settings/general.php:25
+msgid ""
+"Custom Hook, <code>echo do_shortcode( '[nbdesigner_button id=\"Product ID\"]"
+"' );</code>"
+msgstr ""
+
+#: includes/settings/general.php:29
+msgid "Position of button in the catalog"
+msgstr ""
+
+#: includes/settings/general.php:32
+msgid "The position of the button in the catalog listing."
+msgstr ""
+
+#: includes/settings/general.php:35
+msgid "Replace Add-to-Cart button"
+msgstr ""
+
+#: includes/settings/general.php:36
+msgid "End of catalog item"
+msgstr ""
+
+#: includes/settings/general.php:37
+msgid "Don't show"
+msgstr ""
+
+#: includes/settings/general.php:41
+msgid "Preview thumbnail width"
+msgstr ""
+
+#: includes/settings/general.php:49
+msgid "Preview thumbnail height"
+msgstr ""
+
+#: includes/settings/general.php:57 views/nbdesigner-setting.php:94
+msgid "Thumbnail quality"
+msgstr ""
+
+#: includes/settings/general.php:59 views/nbdesigner-setting.php:97
+msgid "Quality of the generated thumbnails between 0 - 100"
+msgstr ""
+
+#: includes/settings/general.php:66
+msgid "Default output DPI"
+msgstr ""
+
+#: includes/settings/general.php:73 views/nbdesigner-setting.php:102
+msgid "Show customer design in cart"
+msgstr ""
+
+#: includes/settings/general.php:75
+msgid "Show the thumbnail of the customized product in the cart."
+msgstr ""
+
+#: includes/settings/general.php:84 views/nbdesigner-setting.php:110
+msgid "Show customer design in order"
+msgstr ""
+
+#: includes/settings/general.php:86
+msgid "Show the thumbnail of the customized product in the order."
+msgstr ""
+
+#: includes/settings/general.php:95
+msgid "Dimensions Unit"
+msgstr ""
+
+#: includes/settings/general.php:97
+msgid "This controls what unit you will define lengths in."
+msgstr ""
+
+#: includes/settings/general.php:101
+msgid "cm"
+msgstr ""
+
+#: includes/settings/general.php:102
+msgid "inch"
+msgstr ""
+
+#: includes/settings/general.php:103
+msgid "mm"
+msgstr ""
+
+#: includes/settings/general.php:107
+msgid "Hide On Smartphones"
+msgstr ""
+
+#: includes/settings/general.php:108
+msgid ""
+"Hide product designer on smartphones and display an information instead."
+msgstr ""
+
+#: includes/settings/general.php:120 views/nbdesigner-setting.php:119
+msgid "Admin notifications"
+msgstr ""
+
+#: includes/settings/general.php:122 views/nbdesigner-setting.php:124
+msgid "Send a message to the admin when customer design saved / changed."
+msgstr ""
+
+#: includes/settings/general.php:131 views/nbdesigner-setting.php:128
+msgid "Recurrence"
+msgstr ""
+
+#: includes/settings/general.php:133 views/nbdesigner-setting.php:135
+msgid "Choose how many times you want to receive an e-mail."
+msgstr ""
+
+#: includes/settings/general.php:137 views/nbdesigner-setting.php:131
+msgid "Hourly"
+msgstr ""
+
+#: includes/settings/general.php:138 views/nbdesigner-setting.php:132
+msgid "Twice a day"
+msgstr ""
+
+#: includes/settings/general.php:139 views/nbdesigner-setting.php:133
+msgid "Daily"
+msgstr ""
+
+#: includes/settings/general.php:143 views/nbdesigner-setting.php:139
+msgid "Recipients"
+msgstr ""
+
+#: includes/settings/general.php:144
+msgid "Enter recipients (comma separated) for this email. Defaults to "
+msgstr ""
+
+#: includes/settings/general.php:154
+msgid "Facebook App-ID"
+msgstr ""
+
+#: includes/settings/general.php:155
+msgid "Enter a Facebook App-ID to allow customer use Facebook photos."
+msgstr ""
+
+#: includes/settings/general.php:155 views/nbdesigner-setting.php:150
+#: views/nbdesigner-setting.php:157
+msgid "Where do I get this info?"
+msgstr ""
+
+#: includes/settings/general.php:162
+msgid "Instagram App-ID"
+msgstr ""
+
+#: includes/settings/general.php:163
+msgid "Enter a Instagram App-ID to allow customer use Instagram photos."
+msgstr ""
+
+#: includes/settings/general.php:170
+msgid "Printful key"
+msgstr ""
+
+#: includes/settings/general.php:171
+msgid "Enter a Printful key to sync with Printful service."
+msgstr ""
+
+#: includes/table/class.product.templates.php:9
+msgid "Template"
+msgstr ""
+
+#: includes/table/class.product.templates.php:10 templates/gallery.php:51
+msgid "Templates"
+msgstr ""
+
+#: includes/table/class.product.templates.php:90
+msgid "No templates avaliable."
+msgstr ""
+
+#: includes/table/class.product.templates.php:156
+#: views/nbdesigner-manager-fonts.php:35 views/nbdesigner-manager-fonts.php:109
+msgid "Preview"
+msgstr ""
+
+#: includes/table/class.product.templates.php:157
+msgid "Actions"
+msgstr ""
+
+#: includes/table/class.product.templates.php:158
+msgid "Created By"
+msgstr ""
+
+#: includes/table/class.product.templates.php:159
+msgid "Created"
+msgstr ""
+
+#: includes/table/class.product.templates.php:168
+msgid "Show all design"
+msgstr ""
+
+#: includes/table/class.product.templates.php:169
+msgid "Publish design"
+msgstr ""
+
+#: includes/table/class.product.templates.php:170
+msgid "Unpublish design"
+msgstr ""
+
+#: includes/table/class.product.templates.php:171
+msgid "Private design"
+msgstr ""
+
+#: includes/table/class.product.templates.php:172
+msgid "Primary design"
+msgstr ""
+
+#: includes/table/class.product.templates.php:175
+msgid "Filter"
+msgstr ""
+
+#: templates/add-to-cart.php:10
+msgid "This product is currently out of stock and unavailable."
+msgstr ""
+
+#: templates/add-to-cart.php:21
+msgid "Clear"
+msgstr ""
+
+#: templates/emails/nbdesigner-admin-notifications.php:3
+msgid "Please review orders below:"
+msgstr ""
+
+#: templates/emails/nbdesigner-admin-notifications.php:7
+msgid "View order"
+msgstr ""
+
+#: templates/emails/nbdesigner-admin-notifications.php:10
+msgid "Login is required to edit orders"
+msgstr ""
+
+#: templates/emails/nbdesigner-admin-notifications.php:12
+msgid "No orders found"
+msgstr ""
+
+#: templates/emails/nbdesigner-approve-order-design.php:7
+#, php-format
+msgid "Your order with order number %s now has the following status: %s"
+msgstr ""
+
+#: templates/emails/nbdesigner-approve-order-design.php:12
+msgid ""
+"Please log into your account and design again. Go to product detail page, "
+"redesign and save your design (haven't to add to cart!)"
+msgstr ""
+
+#: templates/emails/nbdesigner-approve-order-design.php:13
+msgid "Login to design again."
+msgstr ""
+
+#: views/nbdesigner-admin-template.php:2
+msgid "Manager Admin Template"
+msgstr ""
+
+#: views/nbdesigner-admin-template.php:7
+msgid "Templates for"
+msgstr ""
+
+#: views/nbdesigner-admin-template.php:8
+msgid "Back"
+msgstr ""
+
+#: views/nbdesigner-analytics.php:2
+msgid "Analytics"
+msgstr ""
+
+#: views/nbdesigner-analytics.php:3
+msgid "Comming soon :D"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:3
+msgid "Setting Design"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:6
+msgid "Enable Design for this variation"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:10
+#: views/nbdesigner-box-design-setting.php:10
+msgid "Add More"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:11
+#: views/nbdesigner-box-design-setting.php:11
+msgid "Collapse All"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:23
+msgid "More setting"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:90
+#: views/nbdesigner-box-design-setting.php:99
+msgid "Background type"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:93
+#: views/nbdesigner-box-design-setting.php:102
+msgid "Image"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:96
+#: views/nbdesigner-box-design-setting.php:105
+msgid "Color"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:99
+#: views/nbdesigner-box-design-setting.php:108
+#: views/nbdesigner-detail-order.php:264
+msgid "Transparent"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:103
+#: views/nbdesigner-box-design-setting-variation.php:115
+#: views/nbdesigner-box-design-setting.php:112
+#: views/nbdesigner-box-design-setting.php:124
+msgid "Set image"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:109
+#: views/nbdesigner-box-design-setting.php:118
+msgid "Overlay"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:123
+msgid "Product size:"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:125
+#: views/nbdesigner-box-design-setting-variation.php:142
+#: views/nbdesigner-box-design-setting-variation.php:177
+#: views/nbdesigner-box-design-setting.php:145
+#: views/nbdesigner-box-design-setting.php:167
+#: views/nbdesigner-box-design-setting.php:202
+#: views/nbdesigner-detail-order.php:197
+msgid "Width"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:133
+#: views/nbdesigner-box-design-setting-variation.php:150
+#: views/nbdesigner-box-design-setting-variation.php:185
+#: views/nbdesigner-box-design-setting.php:153
+#: views/nbdesigner-box-design-setting.php:174
+#: views/nbdesigner-box-design-setting.php:210
+msgid "Height"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:140
+msgid "Design area size:"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:158
+#: views/nbdesigner-box-design-setting-variation.php:201
+#: views/nbdesigner-box-design-setting.php:181
+#: views/nbdesigner-box-design-setting.php:222
+msgid "Top"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:166
+#: views/nbdesigner-box-design-setting-variation.php:193
+#: views/nbdesigner-box-design-setting.php:188
+#: views/nbdesigner-box-design-setting.php:216
+msgid "Left"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting-variation.php:174
+msgid "Relative position:"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:6
+msgid "Enable Design"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:15
+msgid "DPI"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:16
+msgid "Dots Per Inch"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:28
+msgid "(Hover"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:28
+msgid "to know how to setting product design)"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:32
+msgid "Less setting"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:133
+msgid "Product area"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:134
+msgid "Design area"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:135
+msgid "Bounding box"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:135
+msgid "product always align vertical/horizontal center bounding box"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:139
+#: views/nbdesigner-box-design-setting.php:281
+#: views/nbdesigner-box-design-setting.php:283
+#: views/nbdesigner-box-design-setting.php:286
+#: views/nbdesigner-detail-order.php:194
+msgid "Product size"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:161
+#: views/nbdesigner-box-design-setting.php:284
+#: views/nbdesigner-box-design-setting.php:288
+msgid "Design area size"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:195
+#: views/nbdesigner-box-design-setting.php:285
+#: views/nbdesigner-box-design-setting.php:287
+msgid "Relative position"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:237
+msgid "Admin design template"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:242
+msgid "Primary Design"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:243
+msgid "Add Design"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:248
+msgid "After save product, you'll see link to start design templates"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:252
+msgid "Custom price"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:262
+#: views/nbdesigner-box-design-setting.php:279
+#: views/nbdesigner-box-design-setting.php:297
+#: views/nbdesigner-box-design-setting.php:299
+msgid "Notice"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:263
+msgid "Bellow values must in range from 0 to 500px"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:264
+msgid "There are relative position of design area in bounding box."
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:265
+msgid "See detail"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:280
+msgid "Please upload background image with aspect ratio"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:281
+msgid "Make sure setting"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:281
+msgid "must always be the top priority!"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:282
+msgid "You have two order setting options"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:285
+msgid "will automatic update"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:288
+msgid "click"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:288
+#: views/nbdesigner-box-design-setting.php:303
+msgid "to update"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:298
+msgid "After change bellow"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:298
+#: views/nbdesigner-box-design-setting.php:302
+msgid "values"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:298
+#: views/nbdesigner-box-design-setting.php:303
+msgid "relative position"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:298
+msgid "of design area in bounding box will automatic update."
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:301
+msgid "If color labels change to "
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:301
+msgid "red"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:301
+msgid "check values again."
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:302
+msgid "There"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:302
+msgid "will decide dimensions of output images."
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:303
+msgid "If you modify"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:303
+msgid "click button"
+msgstr ""
+
+#: views/nbdesigner-box-design-setting.php:303
+msgid "Design area."
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:44
+msgid "View detail"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:53
+msgid "Check all"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:57
+#: views/nbdesigner-box-order-metadata.php:59
+msgid "Download all"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:64
+msgid "With selected:"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:68
+msgid "Accept"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:69
+msgid "Decline"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:71
+msgid "GO"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:79
+#: views/nbdesigner-box-order-metadata.php:94
+msgid "Send mail"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:85
+msgid "Reason accepted / declined:"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:91
+msgid "Files accepted"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:92
+msgid "Files rejected"
+msgstr ""
+
+#: views/nbdesigner-box-order-metadata.php:99
+msgid "No design in this order"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:23
+msgid "Detail product design"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:24
+msgid "Back to order"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:27
+msgid "Go to order detail and choose product design you want to view detail!"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:32
+msgid "Customer design"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:33 views/nbdesigner-detail-order.php:368
+msgid "Create PDF"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:118
+msgid "Force all side in the same format"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:125
+msgid ""
+"Create a PDF file contain all page in the same page size. By default, each "
+"page correspond a PDF file."
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:173
+msgid "Paper Size"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:177
+#, php-format
+msgid "As product size %s x %s (exclude margin)"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:198
+msgid "Hight"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:199
+msgid "In mm"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:204
+msgid "Orientation"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:208
+msgid "Portrait"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:209
+msgid "Landscape"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:215
+msgid "Margin"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:222
+msgid "Margin top, right, bottom, left in mm"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:227
+msgid "Show Bleed Line"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:240
+msgid "Margin bleed"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:247
+msgid "Margin bleed top, right, bottom, left in mm"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:252
+msgid "Background"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:256
+msgid "Change image"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:258
+msgid ""
+"Change image with heigh resolution if you want. Support: jpeg, jpg, png, svg"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:271
+msgid "Scale Factor"
+msgstr ""
+
+#: views/nbdesigner-detail-order.php:544
+msgid "Create PDFs"
+msgstr ""
+
+#: views/nbdesigner-frontend-template.php:64
+msgid "Sorry, our design tool is not currently supported on mobile devices."
+msgstr ""
+
+#: views/nbdesigner-frontend-template.php:65
+msgid "Back to product"
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:2
+msgid "Manager Cliparts"
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:12
+msgid "Clipart name"
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:18
+msgid "File upload"
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:21
+msgid "Allow extensions: svg"
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:27 views/nbdesigner-manager-fonts.php:29
+msgid "Save"
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:28 views/nbdesigner-manager-fonts.php:30
+msgid "Add New"
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:34 views/nbdesigner-manager-fonts.php:47
+msgid "Categories"
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:52 views/nbdesigner-manager-fonts.php:65
+msgid "You don't have any category."
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:56
+msgid "+ Add new art category"
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:65
+msgid "List arts "
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:65
+msgid "All arts"
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:73
+msgid "You don't have any art."
+msgstr ""
+
+#: views/nbdesigner-manager-arts.php:78
+msgid "arts"
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:2
+msgid "Manager Fonts"
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:3
+msgid "Custom Fonts"
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:9
+msgid "Add font"
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:14
+msgid "Font name"
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:20
+msgid "Font file"
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:23
+msgid "Allow extensions: woff, ttf"
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:69
+msgid "+ Add new font category"
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:78
+msgid "List fonts: "
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:78
+msgid "All fonts"
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:86
+msgid "You don't have any custom font."
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:92
+msgid "Google Fonts"
+msgstr ""
+
+#: views/nbdesigner-manager-fonts.php:103
+msgid "You don't have any google font"
+msgstr ""
+
+#: views/nbdesigner-manager-product.php:2
+msgid "Manager NBDesigner Product"
+msgstr "Manager NBDesigner Product123"
+
+#: views/nbdesigner-manager-product.php:14
+msgid "products"
+msgstr ""
+
+#: views/nbdesigner-setting.php:3
+msgid "Settings"
+msgstr ""
+
+#: views/nbdesigner-setting.php:5 views/nbdesigner-settings.php:3
+msgid "License"
+msgstr ""
+
+#: views/nbdesigner-setting.php:8 views/nbdesigner-settings.php:6
+msgid "Get free license key"
+msgstr ""
+
+#: views/nbdesigner-setting.php:12 views/nbdesigner-settings.php:10
+msgid "Get key"
+msgstr ""
+
+#: views/nbdesigner-setting.php:15 views/nbdesigner-settings.php:13
+msgid "Please fill correct email. License key will be sent to your email."
+msgstr ""
+
+#: views/nbdesigner-setting.php:25 views/nbdesigner-settings.php:23
+msgid "Active license key"
+msgstr ""
+
+#: views/nbdesigner-setting.php:28 views/nbdesigner-settings.php:26
+msgid "Active"
+msgstr ""
+
+#: views/nbdesigner-setting.php:29 views/nbdesigner-settings.php:27
+msgid "Remove"
+msgstr ""
+
+#: views/nbdesigner-setting.php:42
+msgid "General Info"
+msgstr ""
+
+#: views/nbdesigner-setting.php:47
+msgid "Iframe security key"
+msgstr ""
+
+#: views/nbdesigner-setting.php:50
+msgid "Generate Key"
+msgstr ""
+
+#: views/nbdesigner-setting.php:53
+msgid "Show"
+msgstr ""
+
+#: views/nbdesigner-setting.php:54
+msgid "Hide"
+msgstr ""
+
+#: views/nbdesigner-setting.php:57
+msgid "With security key, your website safer."
+msgstr ""
+
+#: views/nbdesigner-setting.php:85
+msgid "Preview thumbnail size"
+msgstr ""
+
+#: views/nbdesigner-setting.php:87
+msgid "Width:"
+msgstr ""
+
+#: views/nbdesigner-setting.php:89
+msgid "Height:"
+msgstr ""
+
+#: views/nbdesigner-setting.php:106 views/nbdesigner-setting.php:114
+#: views/nbdesigner-setting.php:123
+msgid "Enable"
+msgstr ""
+
+#: views/nbdesigner-setting.php:142
+#, php-format
+msgid "Enter recipients (comma separated) for this email. Defaults to %s"
+msgstr ""
+
+#: views/nbdesigner-setting.php:147
+msgid "Facebook API Key"
+msgstr ""
+
+#: views/nbdesigner-setting.php:154
+msgid "Facebook App Secret"
+msgstr ""
+
+#: views/nbdesigner-setting.php:163
+msgid ""
+"<span style=\"color:#CB4B16;\">Application</span> Key and Secret (also "
+"sometimes referred as <span style=\"color:#CB4B16;\">Consumer</span> key and "
+"secret or <span style=\"color:#CB4B16;\">Client</span> id and secret) are "
+"what we call an application credentials"
+msgstr ""
+
+#: views/nbdesigner-setting.php:164
+#, php-format
+msgid ""
+"This application will link your website <code>%s</code> to <code>%s "
+"API</code> and these credentials are needed in order for <b>%s</b> users to "
+"access your website"
+msgstr ""
+
+#: views/nbdesigner-setting.php:169
+#, php-format
+msgid ""
+"To enable authentication with this provider and to register a new <b>%s API "
+"Application</b>, follow the steps"
+msgstr ""
+
+#: views/nbdesigner-setting.php:172
+msgid "First go to:"
+msgstr ""
+
+#: views/nbdesigner-setting.php:184
+msgid "And that's it!"
+msgstr ""
+
+#: views/nbdesigner-setting.php:185
+#, php-format
+msgid ""
+"If for some reason you still can't manage to create an application for %s, "
+"first try to <a href=\"https://www.google.com/search?q=%s API create "
+"application\" target=\"_blank\">Google it</a>, then check it on <a "
+"href=\"http://www.youtube.com/results?search_query=%s API create application "
+"\" target=\"_blank\">Youtube</a>, and if nothing works <a href=\"https:"
+"//cmsmart.net/support_ticket\">ask for support</a>"
+msgstr ""
+
+#: views/nbdesigner-setting.php:192
+msgid "Instagram API Key"
+msgstr ""
+
+#: views/nbdesigner-setting.php:198
+msgid "Instagram App Secret"
+msgstr ""
+
+#: views/nbdesigner-shortcode-dialog.php:4
+msgid "Number of templates per row"
+msgstr ""
+
+#: views/nbdesigner-shortcode-dialog.php:8
+msgid "Pagination"
+msgstr ""
+
+#: views/nbdesigner-shortcode-dialog.php:12
+msgid "Number of rows per page"
+msgstr ""
+
+#: views/nbdesigner-shortcode-dialog.php:16
+msgid "Create"
+msgstr ""
+
+#: views/nbdesigner-tools.php:3
+msgid "Migrate website domain"
+msgstr ""
+
+#: views/nbdesigner-tools.php:4
+msgid "Update url, path: cliparts, fonts..."
+msgstr ""
+
+#: views/nbdesigner-tools.php:9
+msgid "Old domain"
+msgstr ""
+
+#: views/nbdesigner-tools.php:13
+msgid "Fill your old domain, example: \"http://old-domain.com\"."
+msgstr ""
+
+#: views/nbdesigner-tools.php:18
+msgid "New domain"
+msgstr ""
+
+#: views/nbdesigner-tools.php:22
+msgid "Fill your new domain, example: \"http://new-domain.com\"."
+msgstr ""
+
+#: views/nbdesigner-tools.php:28 views/nbdesigner-tools.php:86
+msgid "Update"
+msgstr ""
+
+#: views/nbdesigner-tools.php:29
+msgid "Restore"
+msgstr ""
+
+#: views/nbdesigner-tools.php:36
+msgid "Theme check"
+msgstr ""
+
+#: views/nbdesigner-tools.php:39
+msgid "Start check"
+msgstr ""
+
+#: views/nbdesigner-tools.php:48
+msgid "Edit custom CSS for NBDesigner frontend"
+msgstr ""
+
+#: views/nbdesigner-tools.php:56
+msgid "Update Custom CSS"
+msgstr ""
+
+#: views/nbdesigner-tools.php:57
+msgid "Using bad CSS code could break the appearance of your plugin"
+msgstr ""
+
+#: views/nbdesigner-tools.php:83
+msgid "Update product design setting data"
+msgstr ""
+
+#: views/nbdesigner-tools.php:88
+msgid "Make sure backup data before update avoid lost data!"
+msgstr ""
+
+#: views/nbdesigner-translate.php:3
+msgid "Frontend Translate"
+msgstr ""
+
+#: views/nbdesigner-translate.php:5 views/nbdesigner-translate.php:20
+msgid "Choose language"
+msgstr ""
+
+#: views/nbdesigner-translate.php:13
+msgid "Save Language"
+msgstr ""
+
+#: views/nbdesigner-translate.php:14
+msgid "Delete Language"
+msgstr ""
+
+#: views/nbdesigner-translate.php:37
+msgid "Create new language"
+msgstr ""
+
+#: views/nbdesigner-translate.php:37
+msgid "Add New Language"
+msgstr ""
+
+#: includes/class-settings.php:92
+msgid "Settings saved."
+msgstr ""
+
+#: includes/class-settings.php:92
+msgid "Settings reseted."
+msgstr ""
+
+#: includes/class-settings.php:256 views/nbdesigner-manager-fonts.php:96
+msgid "Add"
+msgstr ""
+
+#: includes/class-settings.php:270
+msgid "Select"
+msgstr ""
+
+#: includes/class-helper.php:9
+msgid "Backend"
+msgstr "Backend"
+
+#: includes/class-helper.php:11
+msgid "Backend setting"
+msgstr "Backend setting"
+
+#: includes/class-helper.php:16
+msgid "Frontend"
+msgstr "Frontend"
+
+#: includes/class-helper.php:18
+msgid "Frontend setting"
+msgstr "Frontend setting"
+
+#: includes/class-helper.php:23
+msgid "Facebook API"
+msgstr "Facebook API"
+
+#: includes/class-helper.php:25
+msgid "How to get Facebook API ID"
+msgstr "How to get Facebook API ID"
+
+#: includes/class-helper.php:26
+msgid ""
+"<span style=\"color:#CB4B16;\">Application</span> Key and Secret (also "
+"sometimes referred as <span style=\"color:#CB4B16;\">Consumer</span> key and "
+"secret or <span style=\"color:#CB4B16;\">Client</span> id and secret) are "
+"what we call an application credentials."
+msgstr ""
+"<span style=\"color:#CB4B16;\">Application</span> Key and Secret (also "
+"sometimes referred as <span style=\"color:#CB4B16;\">Consumer</span> key and "
+"secret or <span style=\"color:#CB4B16;\">Client</span> id and secret) are "
+"what we call an application credentials."
+
+#: includes/class-helper.php:27
+msgid "This application will link your website "
+msgstr "This application will link your website "
+
+#: includes/class-helper.php:27
+msgid ""
+"to <code>Facebook API</code> and these credentials are needed in order for "
+"<b>NBDesigner</b> users to use they Facebook photos."
+msgstr ""
+"to <code>Facebook API</code> and these credentials are needed in order for "
+"<b>NBDesigner</b> users to use they Facebook photos."
+
+#: includes/class-helper.php:28 views/nbdesigner-setting.php:166
+msgid ""
+"These credentials may also differ in format, name and content depending on "
+"the social network."
+msgstr ""
+"These credentials may also differ in format, name and content depending on "
+"the social network."
+
+#: includes/class-helper.php:29
+msgid ""
+"To enable authentication with this provider and to register a new <b>"
+"Facebook API Application</b>, follow the steps"
+msgstr ""
+"To enable authentication with this provider and to register a new <b>"
+"Facebook API Application</b>, follow the steps"
+
+#: includes/class-helper.php:30
+msgid "First go to: "
+msgstr "First go to: "
+
+#: includes/class-helper.php:31 views/nbdesigner-setting.php:173
+msgid "Select <b>Add a New App</b> from the <b>Apps</b> menu at the top"
+msgstr "Select <b>Add a New App</b> from the <b>Apps</b> menu at the top"
+
+#: includes/class-helper.php:32 views/nbdesigner-setting.php:174
+msgid ""
+"Fill out Display Name, Namespace, choose a category and click <b>Create "
+"App</b>"
+msgstr ""
+"Fill out Display Name, Namespace, choose a category and click <b>Create "
+"App</b>"
+
+#: includes/class-helper.php:33 views/nbdesigner-setting.php:175
+msgid ""
+"Go to Settings page and click on <b>Add Platform</b>. Choose website and "
+"enter in the new screen your website url in <b>App Domains</b> and <b>Site "
+"URL</b> fields"
+msgstr ""
+"Go to Settings page and click on <b>Add Platform</b>. Choose website and "
+"enter in the new screen your website url in <b>App Domains</b> and <b>Site "
+"URL</b> fields"
+
+#: includes/class-helper.php:34 views/nbdesigner-setting.php:175
+msgid "They should match with the current hostname"
+msgstr "They should match with the current hostname"
+
+#: includes/class-helper.php:35 views/nbdesigner-setting.php:176
+msgid ""
+"Go to the <b>App Review</b> page and choose <b>yes</b> where it says <b>Do "
+"you want to make this app and all its live features available to the general "
+"public?</b>"
+msgstr ""
+"Go to the <b>App Review</b> page and choose <b>yes</b> where it says <b>Do "
+"you want to make this app and all its live features available to the general "
+"public?</b>"
+
+#: includes/class-helper.php:36 views/nbdesigner-setting.php:177
+msgid ""
+"In section \"Submit Items for Approval\" click <b>Start a Submission</b>, in "
+"popup check \"user_photos\" and complete all steps"
+msgstr ""
+"In section \"Submit Items for Approval\" click <b>Start a Submission</b>, in "
+"popup check \"user_photos\" and complete all steps"
+
+#: includes/class-helper.php:37 views/nbdesigner-setting.php:179
+msgid ""
+"Go back to the <b>Dashboard</b> page and past the created application "
+"credentials (APP ID and Secret) into the boxes above"
+msgstr ""
+"Go back to the <b>Dashboard</b> page and past the created application "
+"credentials (APP ID and Secret) into the boxes above"
+
+#: includes/class-helper.php:38
+msgid "And that's it! "
+msgstr "And that's it! "
+
+#: includes/class-helper.php:39
+msgid ""
+"If for some reason you still can't manage to create an application for "
+"Facebook, first try to <a href=\"https://www.google.com/search?q=Facebook "
+"API create application\" target=\"_blank\">Google it</a>, then check it on "
+"<a href=\"http://www.youtube.com/results?search_query=Facebook API create "
+"application \" target=\"_blank\">Youtube</a>, and if nothing works <a "
+"href=\"https://cmsmart.net/support_ticket\">ask for support</a>"
+msgstr ""
+"If for some reason you still can't manage to create an application for "
+"Facebook, first try to <a href=\"https://www.google.com/search?q=Facebook "
+"API create application\" target=\"_blank\">Google it</a>, then check it on "
+"<a href=\"http://www.youtube.com/results?search_query=Facebook API create "
+"application \" target=\"_blank\">Youtube</a>, and if nothing works <a "
+"href=\"https://cmsmart.net/support_ticket\">ask for support</a>"
+
+#: includes/class-helper.php:43
+msgid "For more information"
+msgstr "For more information"
+
+#: includes/class-helper.php:44
+msgid ""
+"<a class=\"button\" href=\"https://cmsmart.net/support_ticket\" "
+"target=\"_blank\">Support ticket</a>"
+msgstr ""
+"<a class=\"button\" href=\"https://cmsmart.net/support_ticket\" "
+"target=\"_blank\">Support ticket</a>"
+
+#: includes/class-helper.php:45
+msgid ""
+"<a class=\"button\" href=\"https://cmsmart.net/forum/\" target=\"_blank\">"
+"Forum</a>"
+msgstr ""
+"<a class=\"button\" href=\"https://cmsmart.net/forum/\" target=\"_blank\">"
+"Forum</a>"
+
+#: includes/class-settings.php:102
+msgid "Save Options"
+msgstr "Save Options"
+
+#: includes/class-settings.php:103
+msgid "Reset"
+msgstr "Reset"
+
+#: includes/class-util.php:193 views/nbdesigner-box-design-setting.php:245
+msgid "Start Design"
+msgstr "Start Design"
+
+#: includes/class-util.php:210
+msgid "Text here"
+msgstr "Text here"
+
+#: includes/class-util.php:220
+msgid "Your term"
+msgstr "Your term"
+
+#: includes/class-util.php:223
+msgid "example.com"
+msgstr "example.com"
+
+#: includes/class.nbdesigner.php:248
+#, php-format
+msgid ""
+"<p>Plugin <strong>not compatible</strong> with WordPress %s. Requires "
+"WordPress %s to use this Plugin.</p>"
+msgstr ""
+"<p>Plugin <strong>not compatible</strong> with WordPress %s. Requires "
+"WordPress %s to use this Plugin.</p>"
+
+#: includes/class.nbdesigner.php:252
+#, php-format
+msgid ""
+"<p>Plugin <strong>not compatible</strong> with PHP %s. Requires PHP %s to "
+"use this Plugin.</p>"
+msgstr ""
+"<p>Plugin <strong>not compatible</strong> with PHP %s. Requires PHP %s to "
+"use this Plugin.</p>"
+
+#: includes/class.nbdesigner.php:256
+#, php-format
+msgid "WooCommerce is not active. Please activate WooCommerce before using %s."
+msgstr ""
+"WooCommerce is not active. Please activate WooCommerce before using %s."
+
+#: includes/class.nbdesigner.php:295
+msgid "Once Hourly"
+msgstr "Once Hourly"
+
+#: includes/class.nbdesigner.php:366
+msgid "New / Modified order(s)"
+msgstr "New / Modified order(s)"
+
+#: includes/class.nbdesigner.php:426
+msgid "General"
+msgstr "General"
+
+#: includes/class.nbdesigner.php:427
+msgid "Design Tool"
+msgstr "Design Tool"
+
+#: includes/class.nbdesigner.php:428
+msgid "Colors"
+msgstr "Colors"
+
+#: includes/class.nbdesigner.php:439
+msgid "General Settings"
+msgstr "General Settings"
+
+#: includes/class.nbdesigner.php:440
+msgid "Notifications"
+msgstr "Notifications"
+
+#: includes/class.nbdesigner.php:441
+msgid "Application"
+msgstr "Application"
+
+#: includes/class.nbdesigner.php:444
+msgid "Text Options"
+msgstr "Text Options"
+
+#: includes/class.nbdesigner.php:445
+msgid "Clipart Options"
+msgstr "Clipart Options"
+
+#: includes/class.nbdesigner.php:446
+msgid "Image Options"
+msgstr "Image Options"
+
+#: includes/class.nbdesigner.php:447
+msgid "Free draw Options"
+msgstr "Free draw Options"
+
+#: includes/class.nbdesigner.php:448
+msgid "Qr Code Options"
+msgstr "Qr Code Options"
+
+#: includes/class.nbdesigner.php:451
+msgid "Setting color"
+msgstr "Setting color"
+
+#: includes/class.nbdesigner.php:487
+#, php-format
+msgid ""
+"If you like <strong>NBDesigner</strong> please leave us a %s&#9733;&#9733;"
+"&#9733;&#9733;&#9733;%s rating. A huge thanks in advance!"
+msgstr ""
+"If you like <strong>NBDesigner</strong> please leave us a %s&#9733;&#9733;"
+"&#9733;&#9733;&#9733;%s rating. A huge thanks in advance!"
+
+#: includes/class.nbdesigner.php:751
+msgid "Failed to copy."
+msgstr "Failed to copy."
+
+#: includes/class.nbdesigner.php:761 includes/class.nbdesigner.php:772
+msgid "Your font has been saved."
+msgstr "Your font has been saved."
+
+#: includes/class.nbdesigner.php:763
+msgid "Error while upload font, please try again!"
+msgstr "Error while upload font, please try again!"
+
+#: includes/class.nbdesigner.php:766 includes/class.nbdesigner.php:1034
+msgid "Incorrect file extensions."
+msgstr "Incorrect file extensions."
+
+#: includes/class.nbdesigner.php:774
+msgid "Please choose font file or font name."
+msgstr "Please choose font file or font name."
+
+#: includes/class.nbdesigner.php:945 includes/class.nbdesigner.php:1100
+msgid "Your settings have been saved."
+msgstr "Your settings have been saved."
+
+#: includes/class.nbdesigner.php:955 includes/class.nbdesigner.php:965
+msgid "Irks! An error has occurred."
+msgstr "Irks! An error has occurred."
+
+#: includes/class.nbdesigner.php:972
+msgid "Warning."
+msgstr "Warning."
+
+#: includes/class.nbdesigner.php:1029 includes/class.nbdesigner.php:1040
+msgid "Your art has been saved."
+msgstr "Your art has been saved."
+
+#: includes/class.nbdesigner.php:1031
+msgid "Error while upload art, please try again!"
+msgstr "Error while upload art, please try again!"
+
+#: includes/class.nbdesigner.php:1042
+msgid "Please choose art file or art name."
+msgstr "Please choose art file or art name."
+
+#: includes/class.nbdesigner.php:1108
+msgid "Setting NBDesigner"
+msgstr "Setting NBDesigner"
+
+#: includes/class.nbdesigner.php:1109
+msgid "Customer Design"
+msgstr "Customer Design"
+
+#: includes/class.nbdesigner.php:1353
+msgid "Missing necessary information!"
+msgstr "Missing necessary information!"
+
+#: includes/class.nbdesigner.php:1357
+msgid "Incorrect information, check again license key"
+msgstr "Incorrect information, check again license key"
+
+#: includes/class.nbdesigner.php:1361 includes/class.nbdesigner.php:1436
+msgid "Incorrect License key"
+msgstr "Incorrect License key"
+
+#: includes/class.nbdesigner.php:1365
+msgid "License key is locked "
+msgstr "License key is locked "
+
+#: includes/class.nbdesigner.php:1369
+msgid "License key have expired"
+msgstr "License key have expired"
+
+#: includes/class.nbdesigner.php:1373
+msgid "Link your website incorrect"
+msgstr "Link your website incorrect"
+
+#: includes/class.nbdesigner.php:1377
+msgid "License key can using"
+msgstr "License key can using"
+
+#: includes/class.nbdesigner.php:1381
+msgid "Domain has been added successfully"
+msgstr "Domain has been added successfully"
+
+#: includes/class.nbdesigner.php:1385
+msgid "Exceed your number of domain license"
+msgstr "Exceed your number of domain license"
+
+#: includes/class.nbdesigner.php:1389
+msgid "Unsuccessfully active license key"
+msgstr "Unsuccessfully active license key"
+
+#: includes/class.nbdesigner.php:1400
+msgid "Try again later!"
+msgstr "Try again later!"
+
+#: includes/class.nbdesigner.php:1403
+msgid "Please fill your license!"
+msgstr "Please fill your license!"
+
+#: includes/class.nbdesigner.php:1421
+msgid "You haven't any license!"
+msgstr "You haven't any license!"
+
+#: includes/class.nbdesigner.php:1430
+msgid "Missing necessary information"
+msgstr "Missing necessary information"
+
+#: includes/class.nbdesigner.php:1433
+msgid "Incorrect information"
+msgstr "Incorrect information"
+
+#: includes/class.nbdesigner.php:1440
+msgid "Error, try again later!"
+msgstr "Error, try again later!"
+
+#: includes/class.nbdesigner.php:1444
+msgid "Remove license key Successfully"
+msgstr "Remove license key Successfully"
+
+#: includes/class.nbdesigner.php:1449
+msgid "Remove license key Unsuccessfully!"
+msgstr "Remove license key Unsuccessfully!"
+
+#: includes/class.nbdesigner.php:1775 includes/class.nbdesigner.php:1778
+#: includes/class.nbdesigner.php:2165 includes/class.nbdesigner.php:2168
+#: includes/class.nbdesigner.php:2217 includes/class.nbdesigner.php:2220
+msgid "Your server not allow creat folder"
+msgstr "Your server not allow creat folder"
+
+#: includes/class.nbdesigner.php:1803 includes/class.nbdesigner.php:2195
+#: includes/class.nbdesigner.php:2244
+msgid "Your server not allow writable file"
+msgstr "Your server not allow writable file"
+
+#: includes/class.nbdesigner.php:1908 includes/class.nbdesigner.php:2017
+msgid "Your design has been saved success! Please wait response email!"
+msgstr "Your design has been saved success! Please wait response email!"
+
+#: includes/class.nbdesigner.php:1913 includes/class.nbdesigner.php:2022
+msgid "Your design has been approved or pendding to review!"
+msgstr "Your design has been approved or pendding to review!"
+
+#: includes/class.nbdesigner.php:2510
+msgid "Design"
+msgstr "Design"
+
+#: includes/class.nbdesigner.php:2621
+msgid ""
+"You don't change anything? Or an error occured saving the data, please "
+"refresh this page and check if changes took place."
+msgstr ""
+"You don't change anything? Or an error occured saving the data, please "
+"refresh this page and check if changes took place."
+
+#: includes/class.nbdesigner.php:2624
+msgid "You haven't chosen a item."
+msgstr "You haven't chosen a item."
+
+#: includes/class.nbdesigner.php:2633
+msgid "The reason cannot be empty"
+msgstr "The reason cannot be empty"
+
+#: includes/class.nbdesigner.php:2635 includes/class.nbdesigner.php:2645
+msgid "Error while sending mail"
+msgstr "Error while sending mail"
+
+#: includes/class.nbdesigner.php:2640
+msgid "Your design accepted"
+msgstr "Your design accepted"
+
+#: includes/class.nbdesigner.php:2715
+msgid "(Rejected! Click "
+msgstr "(Rejected! Click "
+
+#: includes/class.nbdesigner.php:2715
+msgid "here "
+msgstr "here "
+
+#: includes/class.nbdesigner.php:2715
+msgid " to design again"
+msgstr " to design again"
+
+#: includes/class.nbdesigner.php:2718
+msgid "<small> (Approved!)</small>"
+msgstr "<small> (Approved!)</small>"
+
+#: includes/class.nbdesigner.php:2787 includes/class.nbdesigner.php:2804
+msgid "Error occurred with file upload!"
+msgstr "Error occurred with file upload!"
+
+#: includes/class.nbdesigner.php:2791
+msgid "Too large file !"
+msgstr "Too large file !"
+
+#: includes/class.nbdesigner.php:2796
+msgid "Invalid file format!"
+msgstr "Invalid file format!"
+
+#: includes/class.nbdesigner.php:2801
+msgid "Upload success !"
+msgstr "Upload success !"
+
+#: includes/class.nbdesigner.php:3012 includes/class.nbdesigner.php:3051
+msgid "Preview your design"
+msgstr "Preview your designs"
+
+#: includes/class.nbdesigner.php:3022
+msgid "Design again"
+msgstr "Design again"
+
+#: includes/class.nbdesigner.php:3121
+msgid "Update language success!"
+msgstr "Update language success!"
+
+#: includes/class.nbdesigner.php:3176
+msgid "Oops! Try again!"
+msgstr "Oops! Try again!"
+
+#: includes/class.nbdesigner.php:3187
+msgid "Delete language success!"
+msgstr "Delete language success!"
+
+#: includes/class.nbdesigner.php:3192
+msgid "Oops! Can't delete primary language!"
+msgstr "Oops! Can't delete primary language!"
+
+#: includes/class.nbdesigner.php:3463
+msgid "Oops! Try again later!"
+msgstr "Oops! Try again later!"
+
+#: includes/class.nbdesigner.php:3524
+msgid "Missing product!"
+msgstr "Missing product!"
+
+#: includes/class.nbdesigner.php:3528
+msgid "Missing information!"
+msgstr "Missing information!"
+
+#: includes/settings/colors.php:9
+msgid "Show all color"
+msgstr "Show all color"
+
+#: includes/settings/colors.php:11
+msgid ""
+"Choose \"Yes\" that will show all color or \"No\" that will show color "
+"palette with list predefined colors."
+msgstr ""
+"Choose \"Yes\" that will show all color or \"No\" that will show color "
+"palette with list predefined colors."
+
+#: includes/settings/colors.php:15 includes/settings/frontend.php:14
+#: includes/settings/frontend.php:39 includes/settings/frontend.php:49
+#: includes/settings/frontend.php:89 includes/settings/frontend.php:115
+#: includes/settings/frontend.php:125 includes/settings/frontend.php:158
+#: includes/settings/frontend.php:168 includes/settings/frontend.php:178
+#: includes/settings/frontend.php:189 includes/settings/frontend.php:242
+#: includes/settings/frontend.php:267 includes/settings/general.php:79
+#: includes/settings/general.php:90 includes/settings/general.php:113
+#: includes/settings/general.php:126 views/nbdesigner-detail-order.php:231
+msgid "Yes"
+msgstr "Yes"
+
+#: includes/settings/colors.php:16 includes/settings/frontend.php:15
+#: includes/settings/frontend.php:40 includes/settings/frontend.php:50
+#: includes/settings/frontend.php:90 includes/settings/frontend.php:116
+#: includes/settings/frontend.php:126 includes/settings/frontend.php:159
+#: includes/settings/frontend.php:169 includes/settings/frontend.php:179
+#: includes/settings/frontend.php:190 includes/settings/frontend.php:243
+#: includes/settings/frontend.php:268 includes/settings/general.php:80
+#: includes/settings/general.php:91 includes/settings/general.php:114
+#: includes/settings/general.php:127 views/nbdesigner-detail-order.php:234
+msgid "No"
+msgstr "No"
+
+#: includes/settings/colors.php:20
+msgid "Hexadecimal Color Names"
+msgstr "Hexadecimal Color Names"
+
+#: includes/settings/colors.php:21
+msgid ""
+"Color palette, <a href=\"https://www.w3schools.com/colors/colors_names.asp\" "
+"target=\"_blank\">color name reference</a>."
+msgstr ""
+"Color palette, <a href=\"https://www.w3schools.com/colors/colors_names.asp\" "
+"target=\"_blank\">color name reference</a>."
+
+#: includes/settings/colors.php:27
+msgid "Hexadecimal Color"
+msgstr "Hexadecimal Color"
+
+#: includes/settings/colors.php:28
+#: views/nbdesigner-box-design-setting-variation.php:18
+#: views/nbdesigner-box-design-setting.php:23
+#: views/nbdesigner-detail-order.php:165
+msgid "Name"
+msgstr "Name"
+
+#: includes/settings/frontend.php:9
+msgid "Enable tool Add Text"
+msgstr "Enable tool Add Text"
+
+#: includes/settings/frontend.php:19 includes/settings/frontend.php:272
+msgid "Default text"
+msgstr "Default text"
+
+#: includes/settings/frontend.php:22
+msgid "Default text when user add text"
+msgstr "Default text when user add text"
+
+#: includes/settings/frontend.php:27
+msgid "Default color"
+msgstr "Default color"
+
+#: includes/settings/frontend.php:30
+#, php-format
+msgid ""
+"Default color text when user add text. If you're using limited color palette,"
+" make sure <a href=\"%s\">this color</a> has been defined"
+msgstr ""
+"Default color text when user add text. If you're using limited color palette,"
+" make sure <a href=\"%s\">this color</a> has been defined"
+
+#: includes/settings/frontend.php:34
+msgid "Enable Curved Text"
+msgstr "Enable Curved Text"
+
+#: includes/settings/frontend.php:44
+msgid "Enable Text pattern"
+msgstr "Enable Text pattern"
+
+#: includes/settings/frontend.php:54 includes/settings/frontend.php:94
+#: includes/settings/frontend.php:202 includes/settings/frontend.php:247
+msgid "Show/hide features"
+msgstr "Show/hide features"
+
+#: includes/settings/frontend.php:57 includes/settings/frontend.php:97
+#: includes/settings/frontend.php:205 includes/settings/frontend.php:250
+msgid "Show/hide features in frontend"
+msgstr "Show/hide features in frontend"
+
+#: includes/settings/frontend.php:61
+msgid "Change font"
+msgstr "Change font"
+
+#: includes/settings/frontend.php:62
+msgid "Italic"
+msgstr "Italic"
+
+#: includes/settings/frontend.php:63
+msgid "Bold"
+msgstr "Bold"
+
+#: includes/settings/frontend.php:64
+msgid "Underline"
+msgstr "Underline"
+
+#: includes/settings/frontend.php:65
+msgid "Line-through"
+msgstr "Line-through"
+
+#: includes/settings/frontend.php:66
+msgid "Overline"
+msgstr "Overline"
+
+#: includes/settings/frontend.php:67
+msgid "Align left"
+msgstr "Align left"
+
+#: includes/settings/frontend.php:68
+msgid "Align right"
+msgstr "Align right"
+
+#: includes/settings/frontend.php:69
+msgid "Align center"
+msgstr "Align center"
+
+#: includes/settings/frontend.php:70
+msgid "Text color"
+msgstr "Text color"
+
+#: includes/settings/frontend.php:71
+msgid "Text background"
+msgstr "Text background"
+
+#: includes/settings/frontend.php:72
+msgid "Text shadow"
+msgstr "Text shadow"
+
+#: includes/settings/frontend.php:73
+msgid "Line height"
+msgstr "Line height"
+
+#: includes/settings/frontend.php:74
+msgid "Font size"
+msgstr "Font size"
+
+#: includes/settings/frontend.php:75 includes/settings/frontend.php:103
+#: includes/settings/frontend.php:211
+msgid "Opacity"
+msgstr "Opacity"
+
+#: includes/settings/frontend.php:76
+msgid "Outline"
+msgstr "Outline"
+
+#: includes/settings/frontend.php:77 includes/settings/frontend.php:102
+#: includes/settings/frontend.php:228
+msgid "Rotate"
+msgstr "Rotate"
+
+#: includes/settings/frontend.php:84
+msgid "Enable tool Add Clipart"
+msgstr "Enable tool Add Clipart"
+
+#: includes/settings/frontend.php:101
+msgid "Change color path"
+msgstr "Change color path"
+
+#: includes/settings/frontend.php:110
+msgid "Enable tool Add Image"
+msgstr "Enable tool Add Image"
+
+#: includes/settings/frontend.php:120
+msgid "Enable upload image"
+msgstr "Enable upload image"
+
+#: includes/settings/frontend.php:130
+msgid "Login Required"
+msgstr "Login Required"
+
+#: includes/settings/frontend.php:131
+msgid ""
+"Users must create an account in your Wordpress site and need to be logged-in "
+"to upload images."
+msgstr ""
+"Users must create an account in your Wordpress site and need to be logged-in "
+"to upload images."
+
+#: includes/settings/frontend.php:137 views/nbdesigner-setting.php:79
+msgid "Max size upload"
+msgstr "Max size upload"
+
+#: includes/settings/frontend.php:145
+msgid "Min size upload"
+msgstr "Min size upload"
+
+#: includes/settings/frontend.php:153
+msgid "Enable images from url"
+msgstr "Enable images from url"
+
+#: includes/settings/frontend.php:163
+msgid "Enable capture images by webcam"
+msgstr "Enable capture images by webcam"
+
+#: includes/settings/frontend.php:173
+msgid "Enable Facebook photos"
+msgstr "Enable Facebook photos"
+
+#: includes/settings/frontend.php:183
+msgid "Show terms and conditions"
+msgstr "Show terms and conditions"
+
+#: includes/settings/frontend.php:184
+msgid "Show term and conditions upload image."
+msgstr "Show term and conditions upload image."
+
+#: includes/settings/frontend.php:194
+msgid "Terms and conditions upload image"
+msgstr "Terms and conditions upload image"
+
+#: includes/settings/frontend.php:198
+msgid "HTML Tags Supported"
+msgstr "HTML Tags Supported"
+
+#: includes/settings/frontend.php:209
+msgid "Unlock proportion"
+msgstr "Unlock proportion"
+
+#: includes/settings/frontend.php:210
+msgid "Shadow"
+msgstr "Shadow"
+
+#: includes/settings/frontend.php:212
+msgid "Grayscale"
+msgstr "Grayscale"
+
+#: includes/settings/frontend.php:213
+msgid "Invert"
+msgstr "Invert"
+
+#: includes/settings/frontend.php:214
+msgid "Sepia"
+msgstr "Sepia"
+
+#: includes/settings/frontend.php:215
+msgid "Sepia 2"
+msgstr "Sepia 2"
+
+#: includes/settings/frontend.php:216
+msgid "Remove white"
+msgstr "Remove white"
+
+#: includes/settings/frontend.php:217
+msgid "Transparency"
+msgstr "Transparency"
+
+#: includes/settings/frontend.php:218
+msgid "Tint"
+msgstr "Tint"
+
+#: includes/settings/frontend.php:219
+msgid "Blend mode"
+msgstr "Blend mode"
+
+#: includes/settings/frontend.php:220
+msgid "Brightness"
+msgstr "Brightness"

@@ -113,14 +113,20 @@ if (!defined('NBDESIGNER_PRODUCT_TEMPLATES')) {
 if (!defined('NBDESIGNER_CATEGORY_TEMPLATES')) {   
     define('NBDESIGNER_CATEGORY_TEMPLATES', 'nbdesigner_category_templates');
 }
-if (!defined('NBDESIGNER_TEXTDOMAIN')) {   
-    define('NBDESIGNER_TEXTDOMAIN', 'nbdesigner');
-}
 if (!defined('NBDESIGNER_AUTHOR_SITE')) {   
     define('NBDESIGNER_AUTHOR_SITE', 'https://cmsmart.net/');
 }
 if (!defined('NBDESIGNER_SKU')) {   
     define('NBDESIGNER_SKU', 'WPP1074');
+}
+if (!defined('NBDESIGNER_PAGE_REDESIGN')) {   
+    define('NBDESIGNER_PAGE_REDESIGN', 'customer-redesign');
+}
+if (!defined('NBDESIGNER_PAGE_CREATE_TEMPLATE')) {   
+    define('NBDESIGNER_PAGE_CREATE_TEMPLATE', 'designer-create-template');
+}
+if (!defined('NBDESIGNER_PAGE_STUDIO')) {   
+    define('NBDESIGNER_PAGE_STUDIO', 'designer-studio');
 }
 
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-util.php');

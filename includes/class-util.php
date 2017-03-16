@@ -17,7 +17,7 @@ class Nbdesigner_IO {
      * @param int $level level scan dir
      * @return array Array path images in folder
      */
-    public static function get_list_thumbs($path, $level){
+    public static function get_list_thumbs($path, $level = 100){
         $list = array();
         $_list = self::get_list_files($path, $level);
         $list = preg_grep('/\.(jpg|jpeg|png|gif)(?:[\?\#].*)?$/i', $_list);
@@ -109,6 +109,7 @@ class Nbdesigner_IO {
         $basedir = $upload_dir['basedir'];
         $arr = explode('/', $basedir);
         $upload = $arr[count($arr) - 1];
+        if(is_multisite()) $upload = $arr[count($arr) - 3].'/'.$arr[count($arr) - 2].'/'.$arr[count($arr) - 1];
         return content_url( substr($path, strrpos($path, '/' . $upload . '/nbdesigner')) );
     }
     public static function convert_url_to_path($url){
@@ -116,6 +117,7 @@ class Nbdesigner_IO {
         $basedir = $upload_dir['basedir'];
         $arr = explode('/', $basedir);
         $upload = $arr[count($arr) - 1];
+        if(is_multisite()) $upload = $arr[count($arr) - 3].'/'.$arr[count($arr) - 2].'/'.$arr[count($arr) - 1];
         $arr_url = explode('/'.$upload, $url);
         return $basedir.$arr_url[1];
     }
@@ -154,7 +156,14 @@ function nbd_file_get_contents($url){
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $result = curl_exec($ch);
-        curl_close($ch);                          
+        curl_close($ch);          
+        if(false === $result){
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url); 
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+            $result = curl_exec($ch);
+            curl_close($ch);          
+        }
     }	        
     return $result;    
 }
@@ -190,7 +199,7 @@ function nbdesigner_get_all_frontend_setting(){
 function nbdesigner_get_default_setting($key = false){
     $frontend = default_frontend_setting();
     $nbd_setting = apply_filters('nbdesigner_default_settings', array_merge(array(
-        'nbdesigner_button_label' => __('Start Design', NBDESIGNER_TEXTDOMAIN),
+        'nbdesigner_button_label' => __('Start Design', 'nbdesigner'),
         'nbdesigner_position_button_in_catalog' => 1,
         'nbdesigner_position_button_product_detail' => 1,
         'nbdesigner_thumbnail_width' => 100,
@@ -207,7 +216,7 @@ function nbdesigner_get_default_setting($key = false){
         'nbdesigner_notifications_emails' => '',
         'nbdesigner_facebook_app_id' => '',
         'nbdesigner_enable_text' => 'yes',
-        'nbdesigner_default_text' => __('Text here', NBDESIGNER_TEXTDOMAIN),
+        'nbdesigner_default_text' => __('Text here', 'nbdesigner'),
         'nbdesigner_enable_curvedtext' => 'yes',
         'nbdesigner_enable_textpattern' => 'yes',
         'nbdesigner_enable_clipart' => 'yes',
@@ -217,14 +226,17 @@ function nbdesigner_get_default_setting($key = false){
         'nbdesigner_enable_facebook_photo' => 'yes',
         'nbdesigner_upload_show_term' => 'no',
         'nbdesigner_enable_image_url' => 'yes',
-        'nbdesigner_upload_term' => __('Your term', NBDESIGNER_TEXTDOMAIN),
+        'nbdesigner_upload_term' => __('Your term', 'nbdesigner'),
         'nbdesigner_enable_draw' => 'yes',
         'nbdesigner_enable_qrcode' => 'yes',
-        'nbdesigner_default_qrcode' => __('example.com', NBDESIGNER_TEXTDOMAIN),
+        'nbdesigner_default_qrcode' => __('example.com', 'nbdesigner'),
         'nbdesigner_show_all_color' => 'yes',
         'nbdesigner_maxsize_upload' => 5,
         'nbdesigner_minsize_upload' => 0,    
-        'nbdesigner_default_color' => '#cc324b'  
+        'nbdesigner_default_color' => '#cc324b',
+        'nbdesigner_hex_names' => '',
+        'nbdesigner_instagram_app_id' => '',
+        'nbdesigner_printful_key' => ''
     ), $frontend));
     if(!$key) return $nbd_setting;
     return $nbd_setting[$key];

@@ -8,8 +8,9 @@
     text-align: center;
 }
 #nbdesigner_frontend_area .img-con img{
-    width: 100%;
-    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
 }
 .nbdesigner_pp_close {
     position: absolute;

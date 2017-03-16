@@ -3,11 +3,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class NBDesigner_Widget extends WP_Widget {
     public $textdomain;
     function __construct() {
-        $this->textdomain = 'nbdesigner';
         parent::__construct(
                 'nbdesigner_widget', 
-                esc_html__('Product design', $this->textdomain),
-                array('description' => esc_html__('Product design suggest', $this->textdomain)) 
+                esc_html__('Product design', 'nbdesigner'),
+                array('description' => esc_html__('Product design suggest', 'nbdesigner')) 
         );        
     }
     public function widget($args, $instance) {
@@ -15,17 +14,17 @@ class NBDesigner_Widget extends WP_Widget {
         if (!empty($instance['title'])) {
             echo $args['before_title'] . apply_filters('widget_title', $instance['title']) . $args['after_title'];
         }
-        if (!empty($instance['number'])){
+        if (empty($instance['number'])){
             $number = 3;
         } else {
             $number = $instance['number'];
-        }
+        }      
         $args_query = array(
             'post_type' => 'product',
             'post_status' => 'publish',
             'meta_key' => '_nbdesigner_enable',
             'orderby' => 'date',
-            'order' => 'DESC',
+            'orderby' => 'rand',
             'posts_per_page'=>$number,
             'meta_query' => array(
                 array(
@@ -45,15 +44,15 @@ class NBDesigner_Widget extends WP_Widget {
     }
 
     public function form($instance) {
-        $title = !empty($instance['title']) ? $instance['title'] : esc_html__('Related product design', $this->textdomain);
+        $title = !empty($instance['title']) ? $instance['title'] : esc_html__('Related product design', 'nbdesigner');
         $number = !empty($instance['number']) ? $instance['number'] : 3;
         ?>
             <p>
-            <label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_attr_e('Title:', $this->textdomain); ?></label> 
+            <label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_attr_e('Title:', 'nbdesigner'); ?></label> 
             <input class="widefat" id="<?php echo esc_attr($this->get_field_id('title')); ?>" name="<?php echo esc_attr($this->get_field_name('title')); ?>" type="text" value="<?php echo esc_attr($title); ?>">
             </p>
             <p>
-            <label for="<?php echo esc_attr($this->get_field_id('number')); ?>"><?php esc_attr_e('Number of products to show', $this->textdomain); ?></label> 
+            <label for="<?php echo esc_attr($this->get_field_id('number')); ?>"><?php esc_attr_e('Number of products to show', 'nbdesigner'); ?></label> 
             <input class="widefat" id="<?php echo esc_attr($this->get_field_id('number')); ?>" name="<?php echo esc_attr($this->get_field_name('number')); ?>" type="text" value="<?php echo esc_attr($number); ?>">
             </p>            
         <?php

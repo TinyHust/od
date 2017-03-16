@@ -83,6 +83,7 @@
 .nbdesigner-area-design {	
     border: 1px dashed #000;
     cursor: move;
+    position: absolute !important;
 }
 .nbdesigner-area-design.selected {
     background: rgba(0,0,0,0.3);
@@ -110,8 +111,12 @@
 .nbdesigner-product {
     display: inline-block;
     text-align: center;
-    width: 145px;
+    width: 170px;
     margin: 0 10px 10px 0;
+    -webkit-box-shadow: 0 1px 4px 0 rgba(0,0,0,0.14);
+    -moz-box-shadow: 0 1px 4px 0 rgba(0,0,0,0.14);
+    -ms-box-shadow: 0 1px 4px 0 rgba(0,0,0,0.14);
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.14);    
 }
 .nbdesigner-product a {
     display: block;
@@ -124,22 +129,25 @@
     height: initial;
     width: initial;	
 }
-.nbdesigner-product a:last-child{
+.nbdesigner-product a.nbdesigner-product-title{
     white-space: nowrap;
-    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;	
     display: block;
-    margin-top: 5px;
-    height: 20px;
+    height: 30px;
+    line-height: 30px;
+    margin: 8px;
 }
 .nbdesigner-product a:hover {
-    color: #cc324b;
+    color: #000;
 }
 .nbdesigner-product a.nbdesigner-product-link {
-    padding: 3px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
+    margin: 0;
+    height: 100%;
+    padding: 0;    
+}
+.nbdesigner-product a.nbdesigner-product-link:focus {
+    outline: none;
 }
 .nbdesigner-disable {
     display: none;
@@ -586,4 +594,49 @@ input.area_design_width, input.area_design_height, input.area_design_top, input.
 }
 .nbdesiger-update-area-design.active {
     color: #cb2154;
+}
+.nbdesigner-lbl-setting {
+    display: inline-block;
+}
+.nbd-helper {
+    cursor: pointer;
+}
+.nbd-admin-tem-link span {
+    margin-top: 4px;
+}
+.nbdesigner-product-inner {
+    width: 170px;
+    height: 170px;
+}
+.nbdesigner-product-link {
+    height: 40px;
+    text-align: center;
+    margin: 0;
+    margin: 16px 8px;
+}
+.nbdesigner-product-link a {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50%;
+    background: #eee;
+    margin-top: 3px;
+    text-align: center;
+    margin-right: 3px;
+    line-height: 36px;
+}
+.nbdesigner-product-link a:hover {
+    background: #f5f5f5;
+    -webkit-box-shadow: 0 1px 3px 0 rgba(0,0,0,0.26);
+    -moz-box-shadow: 0 1px 3px 0 rgba(0,0,0,0.26);
+    -ms-box-shadow: 0 1px 3px 0 rgba(0,0,0,0.26);
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.26);    
+}
+.nbdesigner-product-link a span {
+    color: #757575;
+    height: 100%;       
+    width: 100%;
+    margin-top: 7px;
 }

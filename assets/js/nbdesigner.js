@@ -4,14 +4,17 @@ jQuery(document).ready(function () {
     var height = jQuery(window).height();
     var w = -width;
     var h = -height;
-    jQuery('#container-online-designer').css({'width': width, 'height': height, 'top': h, 'opacity': 0, 'bottom': 0});
-    jQuery('#triggerDesign').on('click', function () {
+    var showDesignFrame = function(){
         jQuery('#container-online-designer').addClass('show');
         jQuery('#container-online-designer').stop().animate({
             top: 0,
             opacity: 1,
             bottom: 0
-        }, 500);
+        }, 500);        
+    };
+    jQuery('#container-online-designer').css({'width': width, 'height': height, 'top': h, 'opacity': 0, 'bottom': 0});
+    jQuery('#triggerDesign').on('click', function () {
+        showDesignFrame();
     });
     jQuery('#closeFrameDesign').on('click', function () {
         hideDesignFrame();
@@ -28,6 +31,9 @@ jQuery(document).ready(function () {
             }, 700);
         }
     };
+    jQuery('#nbdesign-new-template').on('click', function(){
+        showDesignFrame();
+    });
 });
 jQuery(window).on('resize', function () {
     var width = jQuery(window).width(),
@@ -48,7 +54,10 @@ var NBDESIGNERPRODUCT = {
         }, 500);
     },
     show_design_thumbnail: function (arr) {
-        var html = '<h4>Preview your design</h4>';
+        jQuery('#nbdesigner-preview-title').show();
+        jQuery('#nbdesign-new-template').show();
+        jQuery('#triggerDesign').text('Edit Template');
+        var html = '';
         jQuery.each(arr, function (key, val) {
             html += '<div class="img-con"><img src="' + val + '" /></div>'
         });
