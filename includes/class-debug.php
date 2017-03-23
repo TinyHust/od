@@ -106,10 +106,14 @@ class Nbdesigner_DebugTool {
         wp_die();   
     }
     public static function update_data_migrate_domain(){
-        if (!wp_verify_nonce($_POST['_nbdesigner_migrate_nonce'], 'nbdesigner-migrate-key') || !current_user_can('administrator')) {
-            die('Security error');
+        $result = array(
+                'mes'   =>  __('You do not have permission to update data!', 'nbdesigner'),
+                'flag'  => 0
+            );	        
+        if (!wp_verify_nonce($_POST['_nbdesigner_migrate_nonce'], 'nbdesigner-migrate-key') || !current_user_can('update_nbd_data')) {
+            echo json_encode($data);
+            wp_die();
         } 
-        $result = array();
         if(isset($_POST['old_domain']) && $_POST['old_domain'] != '' && isset($_POST['new_domain']) && $_POST['new_domain'] != ''){
             $old_domain = rtrim($_POST['old_domain'], '/');
             $new_domain = rtrim($_POST['new_domain'], '/');
@@ -123,7 +127,7 @@ class Nbdesigner_DebugTool {
               if(is_file($file)) unlink($file); 
             }   
             $result['flag'] = 1;
-            $result['mes'] = "Success!";             
+            $result['mes'] = __("Success!", 'nbdesigner');             
             foreach ($files as $file){
                 $fullname = $path . $file . '.json';    
                 if (file_exists($fullname)) {
@@ -139,28 +143,33 @@ class Nbdesigner_DebugTool {
                         }
                         if(!file_put_contents($fullname, json_encode($list))){
                             $result['flag'] = 0;
-                            $result['mes'] = "Erorr write data!";                             
+                            $result['mes'] = __("Erorr write data!", 'nbdesigner');                             
                         }
                     }else{
                         $result['flag'] = 0;
-                        $result['mes'] = "Erorr backup!";                        
+                        $result['mes'] = __("Erorr backup!", 'nbdesigner');                        
                     }
                 }
             }           
         }else{
             $result['flag'] = 0;
-            $result['mes'] = "Invalid info!";
+            $result['mes'] = __("Invalid info!", 'nbdesigner');   
         }
         echo json_encode($result);
         wp_die();
     }
     public static function restore_data_migrate_domain(){
-        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
-            die('Security error');
+        $result = array(
+                'mes'   =>  __('You do not have permission to update data!', 'nbdesigner'),
+                'flag'  => 0
+            );	         
+        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('update_nbd_data')) {
+            echo json_encode($result);
+            wp_die();
         } 
         $result = array();
         $result['flag'] = 1;
-        $result['mes'] = "Success!";     
+        $result['mes'] = "Restore success!";    
         $upload_dir = wp_upload_dir();
         $path = $upload_dir['basedir'] . '/nbdesigner/';          
         $files = array("arts", "fonts");
@@ -180,11 +189,14 @@ class Nbdesigner_DebugTool {
         wp_die();        
     }
     public static function save_custom_css(){
+        $result = array(
+                'mes'   =>  __('You do not have permission to update data!', 'nbdesigner'),
+                'flag'  => 0
+            );	        
         if (!wp_verify_nonce($_POST['_nbdesigner_custom_css'], 'nbdesigner-custom-css') || !current_user_can('administrator')) {
-            die('Security error');
+            echo json_encode($result);
+            wp_die();   
         } 
-        $result = array();
-        $result['flag'] = 0;
         $custom_css = '';
         $path = NBDESIGNER_PLUGIN_DIR . 'assets/css/custom.css';
         if(isset($_POST['content'])){
@@ -193,6 +205,7 @@ class Nbdesigner_DebugTool {
             fwrite($fp, $custom_css);
             fclose($fp);
             $result['flag'] = 1;
+            $result['mes'] = __('Your CSS has been saved!', 'nbdesigner');
         }
         echo json_encode($result);
         wp_die();           

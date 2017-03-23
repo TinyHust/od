@@ -49,12 +49,14 @@ class Product_Template_List_Table extends WP_List_Table {
      * @param int $id template ID
      */
     public static function delete_template($id) {
-        global $wpdb;
-        $item = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}nbdesigner_templates WHERE id = $id");
-        if($item->folder == 'primary') return;
-        $path = NBDESIGNER_ADMINDESIGN_DIR. '/' .$item->product_id. '/' .$item->folder;
-        if (Nbdesigner_IO::delete_folder($path)) {
-            $wpdb->delete("{$wpdb->prefix}nbdesigner_templates", array('id' => $id), array('%d'));
+        if(current_user_can('delete_nbd_template')){
+            global $wpdb;
+            $item = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}nbdesigner_templates WHERE id = $id");
+            if($item->folder == 'primary') return;
+            $path = NBDESIGNER_ADMINDESIGN_DIR. '/' .$item->product_id. '/' .$item->folder;
+            if (Nbdesigner_IO::delete_folder($path)) {
+                $wpdb->delete("{$wpdb->prefix}nbdesigner_templates", array('id' => $id), array('%d'));
+            }            
         }
     }
     public static function make_primary_template($id, $pid){
@@ -111,8 +113,8 @@ class Product_Template_List_Table extends WP_List_Table {
         $_nonce = wp_create_nonce('nbdesigner_template_nonce');
         $title = '<strong>' . $item['folder'] . '</strong>';     
         $actions = array(
-            'delete' => sprintf('<a href="?page=%s&action=%s&template=%s&_wpnonce=%s&pid=%s&paged=%s">'.__('Delete', 'nbdesigner').'</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $_nonce, esc_attr($_REQUEST['pid']), $this->get_pagenum()),
-            'primary' => sprintf('<a href="?page=%s&action=%s&template=%s&pid=%s&_wpnonce=%s&paged=%s">'.__('Primary', 'nbdesigner').'</a>', esc_attr($_REQUEST['page']), 'primary', absint($item['id']), esc_attr($_REQUEST['pid']), $_nonce, $this->get_pagenum()),
+            'delete' => sprintf('<a href="?page=%s&action=%s&template=%s&_wpnonce=%s&pid=%s&paged=%s&view=templates">'.__('Delete', 'nbdesigner').'</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $_nonce, esc_attr($_REQUEST['pid']), $this->get_pagenum()),
+            'primary' => sprintf('<a href="?page=%s&action=%s&template=%s&pid=%s&_wpnonce=%s&paged=%s&view=templates">'.__('Primary', 'nbdesigner').'</a>', esc_attr($_REQUEST['page']), 'primary', absint($item['id']), esc_attr($_REQUEST['pid']), $_nonce, $this->get_pagenum()),
             'edit' => sprintf('<a href="%s" target="_blank">'.__('Edit', 'nbdesigner').'</a>', $link_admindesign)
         );     
         if($item['priority']){
@@ -246,7 +248,7 @@ class Product_Template_List_Table extends WP_List_Table {
                 die('Go get a life script kiddies');
             }            
             self::delete_template(absint($_GET['template']));
-            wp_redirect(esc_url_raw(add_query_arg(array('pid' => $_REQUEST['pid'], 'paged' => $this->get_pagenum()), admin_url('admin.php?page=nbdesigner_admin_template'))));
+            wp_redirect(esc_url_raw(add_query_arg(array('pid' => $_REQUEST['pid'], 'paged' => $this->get_pagenum(), 'view'  => 'templates'), admin_url('admin.php?page=nbdesigner_manager_product'))));
             exit;
         }      
         if ('primary' === $this->current_action()) {    
@@ -255,7 +257,7 @@ class Product_Template_List_Table extends WP_List_Table {
                 die('Go get a life script kiddies');
             }            
             self::make_primary_template(absint($_GET['template']), absint($_GET['pid']));
-            wp_redirect(esc_url_raw(add_query_arg(array('pid' => $_REQUEST['pid'], 'paged' => $this->get_pagenum()), admin_url('admin.php?page=nbdesigner_admin_template'))));
+            wp_redirect(esc_url_raw(add_query_arg(array('pid' => $_REQUEST['pid'], 'paged' => $this->get_pagenum(), 'view'  => 'templates'), admin_url('admin.php?page=nbdesigner_manager_product'))));
             exit;
         }          
         if (( isset($_POST['action']) && $_POST['action'] == 'bulk-delete' ) || ( isset($_POST['action2']) && $_POST['action2'] == 'bulk-delete' )) {

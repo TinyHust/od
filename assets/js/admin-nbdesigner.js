@@ -184,35 +184,49 @@ jQuery(document).ready(function ($) {
         var formdata = $('#nbdesigner-migrate-info').find('textarea, select, input').serialize();
         formdata = formdata + '&action=nbdesigner_migrate_domain';
         $('#nbdesigner_migrate_loading').removeClass('nbdesigner_loaded');
-        $.post(admin_nbds.url, formdata, function(data){
+        $.post(admin_nbds.url, formdata, function(_data){
             $('#nbdesigner_migrate_loading').addClass('nbdesigner_loaded');
-            data = JSON.parse(data);
-            if(data.flag == 1){
-                alert('Update success!');
+            var data = JSON.parse(_data);
+            if (data.flag == 1) {
+                swal(admin_nbds.nbds_lang.complete, data.mes, "success");
             }else{
-                alert('Oops! Try again!');
-            }                  
+                swal({
+                    title: "Oops!",
+                    text: data.mes,
+                    imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                });
+            }                
         });
     });    
     $('#nbdesigner_resote_data_migrate').on('click', function(e){
         e.preventDefault();
-        var con = confirm('Are you sure restore data');
-        if(con){
+        swal({
+            title: admin_nbds.nbds_lang.are_you_sure,
+            text: admin_nbds.nbds_lang.warning_mes_backup_data,
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+        }, function(){
             $('#nbdesigner_migrate_loading').removeClass('nbdesigner_loaded');
             $.ajax({
                 url : admin_nbds.url,
                 method : 'POST',
                 data : {'action' : 'nbdesigner_restore_data_migrate_domain', 'nonce': admin_nbds.nonce}
-            }).done(function(data){
+            }).done(function(_data){
                 $('#nbdesigner_migrate_loading').addClass('nbdesigner_loaded');
-                data = JSON.parse(data);
-                if(data.flag == 1){
-                    alert('Restore success!');
+                var data = JSON.parse(_data);
+                if (data.flag == 1) {
+                    swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                 }else{
-                    alert('Oops! Try again!');
+                    swal({
+                        title: "Oops!",
+                        text: data.mes,
+                        imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                    });
                 }                   
-            });
-        }
+            })
+        })
     });  
     $('#nbdesigner_check_theme').on('click', function(e){
         e.preventDefault();
@@ -340,7 +354,7 @@ var NBDESIGNADMIN = {
         var cat_name = jQuery(e).parent().find('.nbdesigner_font_name').val(),
                 cat_id = jQuery('#nbdesigner_current_font_cat_id').val();
         if(cat_name == "") {
-            alert('Please fill category name!');
+            alert(admin_nbds.nbds_lang.warning_mes_fill_category_name);
             return;
         };        
         jQuery.ajax({
@@ -353,8 +367,10 @@ var NBDESIGNADMIN = {
             complete: function () {
                 jQuery('#nbdesigner_img_loading').addClass('nbdesigner_loaded');
             }
-        }).done(function (data) {
-            if (data == 'success') {
+        }).done(function (_data) {
+            var data = JSON.parse(_data);
+            if (data.flag == 1) {
+                swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                 var html = '<li id="nbdesigner_cat_font_' + cat_id + '" class="nbdesigner_action_delete_cf"><label>';
                 html += '<input value="' + cat_id + '" type="checkbox" name="nbdesigner_font_cat[]" /></label>';
                 //html += '<span class="nbdesigner-right nbdesigner-delete-item" onclick="NBDESIGNADMIN.delete_cat_font(this)">&times;</span>'+cat_name+'</li>';
@@ -369,7 +385,11 @@ var NBDESIGNADMIN = {
                 jQuery('#nbdesigner_current_font_cat_id').val(parseInt(cat_id) + 1);
                 jQuery('#nbdesigner_font_newcat').html('');
             } else if(data){
-                alert(data);
+                swal({
+                    title: "Oops!",
+                    text: data.mes,
+                    imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                });
                 jQuery('#nbdesigner_font_newcat').html('');
             }
             jQuery('#nbdesigner_add_font_cat').show();
@@ -387,7 +407,7 @@ var NBDESIGNADMIN = {
         var cat_name = jQuery(e).parent().find('.nbdesigner_art_name').val(),
                 cat_id = jQuery('#nbdesigner_current_art_cat_id').val();
         if(cat_name == "") {
-            alert('Please fill category name!');
+            alert(admin_nbds.nbds_lang.warning_mes_fill_category_name);
             return;
         };
         jQuery.ajax({
@@ -400,11 +420,12 @@ var NBDESIGNADMIN = {
             complete: function () {
                 jQuery('#nbdesigner_img_loading').addClass('nbdesigner_loaded');
             }
-        }).done(function (data) {
-            if (data == 'success') {
+        }).done(function (_data) {
+            var data = JSON.parse(_data);
+            if (data.flag == 1) {
+                swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                 var html = '<li id="nbdesigner_cat_art_' + cat_id + '" class="nbdesigner_action_delete_art_cat"><label>';
                 html += '<input value="' + cat_id + '" type="checkbox" name="nbdesigner_art_cat[]" /></label>';
-                //html += '<span class="nbdesigner-right nbdesigner-delete-item dashicons dashicons-no-alt" onclick="NBDESIGNADMIN.delete_cat_art(this)"></span>'+cat_name+'</li>';
                 html += '<span class="nbdesigner-right nbdesigner-delete-item dashicons dashicons-no-alt" onclick="NBDESIGNADMIN.delete_cat_art(this)"></span>';
                 html += '<span class="dashicons dashicons-edit nbdesigner-right nbdesigner-delete-item" onclick="NBDESIGNADMIN.edit_cat_art(this)"></span>';
                 html += '<a href="?page=nbdesigner_manager_arts&cat_id='+cat_id+'" class="nbdesigner-cat-link">'+cat_name+'</a>';
@@ -416,7 +437,11 @@ var NBDESIGNADMIN = {
                 jQuery('#nbdesigner_current_art_cat_id').val(parseInt(cat_id) + 1);
                 jQuery('#nbdesigner_art_newcat').html('');
             } else if(data){
-                alert(data);
+                swal({
+                    title: "Oops!",
+                    text: data.mes,
+                    imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                });
                 jQuery('#nbdesigner_art_newcat').html('');
             }
             jQuery('#nbdesigner_add_art_cat').show();
@@ -424,9 +449,15 @@ var NBDESIGNADMIN = {
     },
     delete_cat_font: function (e) {
         var index = jQuery(e).parent().find('input').val();
-        var con = confirm("Do your want delete this category?"),
-                cat_id = jQuery('#nbdesigner_current_font_cat_id').val();
-        if (con) {
+        var cat_id = jQuery('#nbdesigner_current_font_cat_id').val();
+        swal({
+            title: admin_nbds.nbds_lang.are_you_sure,
+            text: admin_nbds.nbds_lang.warning_mes_delete_category,
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+        }, function(){  
             var data = {'action': 'nbdesigner_delete_font_cat', 'id': index, 'nonce': admin_nbds.nonce};
             jQuery.ajax({
                 url: admin_nbds.url,
@@ -438,8 +469,10 @@ var NBDESIGNADMIN = {
                 complete: function () {
                     jQuery('#nbdesigner_img_loading').addClass('nbdesigner_loaded');
                 }
-            }).done(function (data) {
-                if (data == 'success') {
+            }).done(function (_data) {
+                data = JSON.parse(_data);
+                if (data.flag == 1) {
+                    swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                     jQuery('#nbdesigner_list_cats').find('#nbdesigner_cat_font_' + index).remove();
                     jQuery.each(jQuery('#nbdesigner_list_cats li label input'), function (key, val) {
                         jQuery(this).val(key);
@@ -448,17 +481,27 @@ var NBDESIGNADMIN = {
                     jQuery.each(jQuery('.nbdesigner_action_delete_cf'), function (key, val) {
                         jQuery(this).attr('id', 'nbdesigner_cat_font_' + key);
                     });
+                }else{
+                    swal({
+                        title: "Oops!",
+                        text: data.mes,
+                        imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                    });                    
                 }
-                ;
-            });
-            ;
-        }
+            })
+        });
     },
     delete_cat_art: function (e) {
         var index = jQuery(e).parent().find('input').val();
-        var con = confirm("Do your want delete this category?"),
-                cat_id = jQuery('#nbdesigner_current_art_cat_id').val();
-        if (con) {
+        var cat_id = jQuery('#nbdesigner_current_art_cat_id').val();
+        swal({
+            title: admin_nbds.nbds_lang.are_you_sure,
+            text: admin_nbds.nbds_lang.warning_mes_delete_category,
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+        }, function(){
             var data = {'action': 'nbdesigner_delete_art_cat', 'id': index, 'nonce': admin_nbds.nonce};
             jQuery.ajax({
                 url: admin_nbds.url,
@@ -470,8 +513,10 @@ var NBDESIGNADMIN = {
                 complete: function () {
                     jQuery('#nbdesigner_img_loading').addClass('nbdesigner_loaded');
                 }
-            }).done(function (data) {
-                if (data == 'success') {
+            }).done(function (_data) {
+                data = JSON.parse(_data);
+                if (data.flag == 1) {
+                    swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                     jQuery('#nbdesigner_list_art_cats').find('#nbdesigner_cat_art_' + index).remove();
                     jQuery.each(jQuery('#nbdesigner_list_art_cats li label input'), function (key, val) {
                         jQuery(this).val(key);
@@ -480,24 +525,36 @@ var NBDESIGNADMIN = {
                     jQuery.each(jQuery('.nbdesigner_action_delete_art_cat'), function (key, val) {
                         jQuery(this).attr('id', 'nbdesigner_cat_art_' + key);
                     });
+                }else{
+                    swal({
+                        title: "Oops!",
+                        text: data.mes,
+                        imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                    });
                 }
-                ;
             });
-            ;
-        }
+        });
     },
     delete_font: function (type, e) {
-        var index = jQuery(e).data('index'),
-                con = confirm("do you want delete this font?");
+        var index = jQuery(e).data('index');
         var total = jQuery('#nbdesigner_current_index_google_font').val();
-        if (con) {
+        swal({
+            title: admin_nbds.nbds_lang.are_you_sure,
+            text: admin_nbds.nbds_lang.warning_mes_delete_file,
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+        }, function(){
             var data = {'action': 'nbdesigner_delete_font', 'id': index, 'nonce': admin_nbds.nonce, 'type': type};
             jQuery.ajax({
                 url: admin_nbds.url,
                 method: "POST",
                 data: data
-            }).done(function (data) {
-                if (data == 'success') {
+            }).done(function (_data) {
+                data = JSON.parse(_data);
+                if (data.flag == 1) {
+                    swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                     jQuery(e).parent().remove();
                     if (type == 'google') {
                         jQuery('#nbdesigner_current_index_google_font').val(parseInt(total) - 1);
@@ -509,30 +566,49 @@ var NBDESIGNADMIN = {
                             jQuery(this).attr('data-index', key);
                         });
                     }
+                }else{
+                    swal({
+                        title: "Oops!",
+                        text: data.mes,
+                        imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                    });
                 }
-                ;
             });
-        }
+        });
     },
     delete_art: function (e) {
-        var index = jQuery(e).data('index'),
-                con = confirm("Do you want delete this art?");
-        if (con) {
+        var index = jQuery(e).data('index');
+        swal({
+            title: admin_nbds.nbds_lang.are_you_sure,
+            text: admin_nbds.nbds_lang.warning_mes_delete_file,
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+        }, function(){
             var data = {'action': 'nbdesigner_delete_art', 'id': index, 'nonce': admin_nbds.nonce};
             jQuery.ajax({
                 url: admin_nbds.url,
                 method: "POST",
                 data: data
-            }).done(function (data) {
-                if (data == 'success') {
+            }).done(function (_data) {
+                data = JSON.parse(_data);
+                if (data.flag == 1) {
+                    swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                     jQuery(e).parent().remove();
                     jQuery.each(jQuery('.nbdesigner_action_delete_art'), function (key, val) {
                         jQuery(this).attr('data-index', key);
                     });
+                }else{
+                    swal({
+                        title: "Oops!",
+                        text: data.mes,
+                        imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                    });
                 }
                 ;
             });
-        }
+        });
     },
     add_google_font: function (e) {
         var name = jQuery(e).prev('input').val(),
@@ -1057,12 +1133,22 @@ var NBDESIGNADMIN = {
             complete: function () {
                 jQuery('.nbdesigner_editcat_loading').addClass('nbdesigner_loaded');
             }
-        }).done(function (data) {
-            if (data == 'success') {
+        }).done(function (_data) {
+            data = JSON.parse(_data);
+            if (data.flag == 1) {
+                swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                 sefl.parent().find('.nbdesigner-cat-link').html(name).show();
                 sefl.parent().find('input.nbdesigner-editcat-name').val(name); 
                 sefl.parent().find('.nbdesigner-editcat-name').val(name).hide(); 
-            };
+            }else{
+                swal({
+                    title: "Oops!",
+                    text: data.mes,
+                    imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                });
+                sefl.parent().find('.nbdesigner-cat-link').show();
+                sefl.parent().find('.nbdesigner-editcat-name').val(name).hide(); 
+            }
         }); 
         jQuery(e).parents('#nbdesigner_list_art_cats').find('li').removeClass('active');
     },
@@ -1095,12 +1181,22 @@ var NBDESIGNADMIN = {
             complete: function () {
                 jQuery('.nbdesigner_editcat_loading').addClass('nbdesigner_loaded');
             }
-        }).done(function (data) {
-            if (data == 'success') {
+        }).done(function (_data) {
+            data = JSON.parse(_data);
+            if (data.flag == 1) {
+                swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                 sefl.parent().find('.nbdesigner-cat-link').html(name).show();
                 sefl.parent().find('input.nbdesigner-editcat-name').val(name); 
                 sefl.parent().find('.nbdesigner-editcat-name').val(name).hide(); 
-            };
+            }else{
+                swal({
+                    title: "Oops!",
+                    text: data.mes,
+                    imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                });
+                sefl.parent().find('.nbdesigner-cat-link').show();
+                sefl.parent().find('.nbdesigner-editcat-name').val(name).hide(); 
+            }
         }); 
         jQuery(e).parents('#nbdesigner_list_cats').find('li').removeClass('active');
     },

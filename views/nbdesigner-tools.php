@@ -25,8 +25,8 @@
             </tr>
         </table>
         <p class="submit">
-            <button class="button-primary" id="nbdesigner_update_data_migrate"><?php echo __("Update", 'nbdesigner'); ?></button>
-            <button class="button-primary" id="nbdesigner_resote_data_migrate"><?php echo __("Restore", 'nbdesigner'); ?></button>
+            <button class="button-primary" id="nbdesigner_update_data_migrate" <?php if(!current_user_can('update_nbd_data')) echo "disabled"; ?>><?php echo __("Update", 'nbdesigner'); ?></button>
+            <button class="button-primary" id="nbdesigner_resote_data_migrate" <?php if(!current_user_can('update_nbd_data')) echo "disabled"; ?>><?php echo __("Restore", 'nbdesigner'); ?></button>
             <img src="<?php echo NBDESIGNER_PLUGIN_URL.'assets/images/loading.gif' ?>" class="nbdesigner_loaded" id="nbdesigner_migrate_loading" style="margin-left: 15px;"/>
         </p>	        
     </div>
@@ -53,7 +53,7 @@
         <textarea cols="70" rows="30" name="nbdsigner_custom_css" id="nbdsigner_custom_css" ><?php echo esc_html( $custom_css ); ?></textarea>
     </div>
     <div style="margin-top: 15px;">
-        <button class="button-primary" id="nbdesigner_custom_css"><?php _e('Update Custom CSS', 'nbdesigner') ?></button>
+        <button class="button-primary" id="nbdesigner_custom_css" <?php if(!current_user_can('update_nbd_data')) echo "disabled"; ?>><?php _e('Update Custom CSS', 'nbdesigner') ?></button>
         <small><?php _e('Using bad CSS code could break the appearance of your plugin', 'nbdesigner') ?></small>
     </div>
     <script language="javascript">
@@ -64,14 +64,18 @@
                     var content = editorCodeMirror.getValue();
                     formdata = formdata + '&action=nbdesigner_custom_css&content=' + content;
                     jQuery('#nbdesigner_custom_css_loading').removeClass('nbdesigner_loaded');
-                    jQuery.post(admin_nbds.url, formdata, function(data){
+                    jQuery.post(admin_nbds.url, formdata, function(_data){
                         jQuery('#nbdesigner_custom_css_loading').addClass('nbdesigner_loaded');
-                        data = JSON.parse(data);
-                        if(data.flag){
-                            alert('Update success!');
+                        var data = JSON.parse(_data);
+                        if (data.flag == 1) {
+                            swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                         }else{
-                            alert('Oops! Try again!');
-                        }                  
+                            swal({
+                                title: "Oops!",
+                                text: data.mes,
+                                imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                            });
+                        }              
                     });                
                 });   
             });
@@ -83,7 +87,7 @@
     <h2><?php echo __('Update product design setting data', 'nbdesigner'); ?></h2>
     <div>
         <?php wp_nonce_field('nbdesigner-update-product', '_nbdesigner_cupdate_product'); ?>
-        <button class="button nbdesigner-delete" id="nbdesigner_update_product"><?php echo __("Update", 'nbdesigner'); ?></button>
+        <button class="button nbdesigner-delete" id="nbdesigner_update_product" <?php if(!current_user_can('update_nbd_data')) echo "disabled"; ?>><?php echo __("Update", 'nbdesigner'); ?></button>
         <img src="<?php echo NBDESIGNER_PLUGIN_URL.'assets/images/loading.gif' ?>" class="nbdesigner_loaded" id="nbdesigner_update_product_loading" style="margin-left: 15px;"/>        
         <p><small><?php _e('Make sure backup data before update avoid lost data!') ?></small></p>
     </div>

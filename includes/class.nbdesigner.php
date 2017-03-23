@@ -177,9 +177,6 @@ class Nbdesigner_Plugin {
         add_action('admin_enqueue_scripts', function($hook) {   
             wp_register_style('nbd-general', NBDESIGNER_CSS_URL . 'nbd-general.css', array('dashicons'), NBDESIGNER_VERSION);
             wp_enqueue_style(array('nbd-general'));     
-            ob_start();
-            var_dump($hook);
-            error_log(ob_get_clean());
             if (($hook == 'post.php') || ($hook == 'post-new.php') || ($hook == 'toplevel_page_nbdesigner') ||
                     ($hook == 'nbdesigner_page_nbdesigner_manager_product' ) || ($hook == 'toplevel_page_nbdesigner_shoper') || ($hook == 'nbdesigner_page_nbdesigner_frontend_translate') ||
                     ($hook == 'nbdesigner_page_nbdesigner_manager_fonts') || ($hook == 'nbdesigner_page_nbdesigner_manager_arts') 
@@ -193,6 +190,7 @@ class Nbdesigner_Plugin {
                     'url_check' => NBDESIGNER_AUTHOR_SITE,
                     'sku' => NBDESIGNER_SKU,       
                     'url_gif' => NBDESIGNER_PLUGIN_URL . 'assets/images/loading.gif',
+                    'assets_images'  =>  NBDESIGNER_PLUGIN_URL . 'assets/images/',
                     'nbds_lang' => Nbdesigner_Plugin::nbdesigner_get_javascript_multilanguage() ));                
                 wp_enqueue_style(array('wp-pointer', 'wp-jquery-ui-dialog', 'admin_nbdesigner'));
                 wp_enqueue_script(array('wp-pointer', 'wpdialogs', 'admin_nbdesigner'));                            
@@ -229,7 +227,8 @@ class Nbdesigner_Plugin {
                 wp_enqueue_script( 'nbdesigner_codemirror_css_js', NBDESIGNER_PLUGIN_URL . 'assets/codemirror/css.js' , array());
             }
             if($hook == 'nbdesigner_page_nbdesigner_admin_template' || $hook == 'nbdesigner_page_nbdesigner_manager_arts'
-                || $hook == 'admin_page_nbdesigner_detail_order' || $hook == 'nbdesigner_page_nbdesigner_manager_fonts'   ){
+                || $hook == 'admin_page_nbdesigner_detail_order' || $hook == 'nbdesigner_page_nbdesigner_manager_fonts'   
+                || $hook == 'nbdesigner_page_nbdesigner_tools'    ){
                 wp_enqueue_style('nbdesigner_sweetalert_css', NBDESIGNER_CSS_URL . 'sweetalert.css');
                 wp_enqueue_script( 'nbdesigner_sweetalert_js', NBDESIGNER_JS_URL . 'sweetalert.min.js' , array('jquery'));
             }
@@ -679,56 +678,82 @@ class Nbdesigner_Plugin {
         }
     }
     public function nbdesigner_add_font_cat() {
-        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
-            die('Security error');
+        $data = array(
+                'mes'   =>  __('You do not have permission to add/edit font category!', 'nbdesigner'),
+                'flag'  => 0
+            );	        
+        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_font')) {
+            echo json_encode($data);
+            wp_die();
         }
-        $path = $this->plugin_path_data . 'font_cat.json';
+        $path = NBDESIGNER_DATA_DIR . '/font_cat.json';
         $list = $this->nbdesigner_read_json_setting($path);
         $cat = array(
             'name' => $_POST['name'],
             'id' => $_POST['id']
         );
         $this->nbdesigner_update_json_setting($path, $cat, $cat['id']);
-        echo 'success';
+        $data['mes'] = __('Category has been added/edited successfully!', 'nbdesigner');
+        $data['flag'] = 1;        
+        echo json_encode($data);
         wp_die();
     }
-    public function nbdesigner_add_art_cat() {
-        $uid = get_current_user_id();       
-        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
-            die('Security error');
+    public function nbdesigner_add_art_cat() {    
+        $data = array(
+                'mes'   =>  __('You do not have permission to add/edit clipart category!', 'nbdesigner'),
+                'flag'  => 0
+            );	        
+        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_art')) {
+            echo json_encode($data);
+            wp_die();
         }
-        $path = $this->plugin_path_data . 'art_cat.json';
-        $list = $this->nbdesigner_read_json_setting($path);
+        $path = NBDESIGNER_DATA_DIR . '/art_cat.json';
         $cat = array(
             'name' => sanitize_text_field($_POST['name']),
             'id' => $_POST['id']
         );
         $this->nbdesigner_update_json_setting($path, $cat, $cat['id']);
-        echo 'success';
+        $data['mes'] = __('Category has been added/edited successfully!', 'nbdesigner');
+        $data['flag'] = 1;        
+        echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_delete_font_cat() {
-        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
-            die('Security error');
+        $data = array(
+                'mes'   =>  __('You do not have permission to delete font category!', 'nbdesigner'),
+                'flag'  => 0
+            );        
+        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_font')) {
+            echo json_encode($data);
+            wp_die();
         }
-        $path = $this->plugin_path_data . 'font_cat.json';
+        $path = NBDESIGNER_DATA_DIR . '/font_cat.json';
         $id = $_POST['id'];
         $this->nbdesigner_delete_json_setting($path, $id, true);
-        $font_path = $this->plugin_path_data . 'fonts.json';
+        $font_path = NBDESIGNER_DATA_DIR . '/fonts.json';
         $this->nbdesigner_update_json_setting_depend($font_path, $id);
-        echo 'success';
+        $data['mes'] = __('Category has been delete successfully!', 'nbdesigner');
+        $data['flag'] = 1;        
+        echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_delete_art_cat() {
+        $data = array(
+                'mes'   =>  __('You do not have permission to delete clipart category!', 'nbdesigner'),
+                'flag'  => 0
+            );          
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('delete_nbd_art')) {
-            die('Security error');
+            echo json_encode($data);
+            wp_die();
         }
-        $path = $this->plugin_path_data . 'art_cat.json';
+        $path = NBDESIGNER_DATA_DIR . '/art_cat.json';
         $id = $_POST['id'];
         $this->nbdesigner_delete_json_setting($path, $id, true);
-        $art_path = $this->plugin_path_data . 'arts.json';
+        $art_path = NBDESIGNER_DATA_DIR . '/arts.json';
         $this->nbdesigner_update_json_setting_depend($art_path, $id);
-        echo 'success';
+        $data['mes'] = __('Category has been delete successfully!', 'nbdesigner');
+        $data['flag'] = 1;        
+        echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_get_list_google_font() {
@@ -737,15 +762,21 @@ class Nbdesigner_Plugin {
         return json_encode($data);
     }
     public function nbdesigner_add_google_font() {
-        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
+        $data = array(
+                'mes'   =>  __('You do not have permission to add font!', 'nbdesigner'),
+                'flag'  => 0
+            );        
+        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_font')) {
             die('Security error');
         }
         $name = $_POST['name'];
         $id = $_POST['id'];
-        $path_font = $this->plugin_path_data . 'googlefonts.json';
+        $path_font = NBDESIGNER_DATA_DIR . '/googlefonts.json';
         $data = array("name" => $name, "id" => $id);
         $this->nbdesigner_update_json_setting($path_font, $data, $id);
-        echo 'success';
+        $data['mes'] = __('The font has been added successfully!', 'nbdesigner');
+        $data['flag'] = 1;        
+        echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_manager_fonts() {
@@ -769,7 +800,7 @@ class Nbdesigner_Plugin {
                 $cats = $font_data->cat;
             }
         }
-        if (isset($_POST[$this->plugin_id . '_hidden']) && wp_verify_nonce($_POST[$this->plugin_id . '_hidden'], $this->plugin_id) && current_user_can('administrator')) {
+        if (isset($_POST[$this->plugin_id . '_hidden']) && wp_verify_nonce($_POST[$this->plugin_id . '_hidden'], $this->plugin_id) && current_user_can('edit_nbd_font')) {
             $font = array();
             $font['name'] = esc_html($_POST['nbdesigner_font_name']);
             $font['alias'] = 'nbfont' . substr(md5(rand(0, 999999)), 0, 10);
@@ -943,37 +974,51 @@ class Nbdesigner_Plugin {
         file_put_contents($fullname, $res);
     }
     public function nbdesigner_delete_font() {
-        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
-            die('Security error');
+        $data = array(
+                'mes'   =>  __('You do not have permission to delete font!', 'nbdesigner'),
+                'flag'  => 0
+            );        
+        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('delete_nbd_font')) {
+            echo json_encode($data);
+            wp_die();
         }
         $id = $_POST['id'];
         $type = $_POST['type'];
         if ($type == 'custom') {
-            $path = $this->plugin_path_data . 'fonts.json';
+            $path = NBDESIGNER_DATA_DIR . '/fonts.json';
             $list = $this->nbdesigner_read_json_setting($path);
             $file_font = $list[$id]->file;
             unlink($file_font);
         } else
-            $path = $this->plugin_path_data . 'googlefonts.json';
+            $path = NBDESIGNER_DATA_DIR . '/googlefonts.json';
         $this->nbdesigner_delete_json_setting($path, $id);
-        echo 'success';
+        $data['mes'] = __('Clipart has been deleted successfully!', 'nbdesigner');
+        $data['flag'] = 1;
+        echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_delete_art() {
+        $data = array(
+                'mes'   =>  __('You do not have permission to delete clipart!', 'nbdesigner'),
+                'flag'  => 0
+            );
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('delete_nbd_art')) {
-            die('Security error');
+            echo json_encode($data);
+            wp_die();
         }
         $id = $_POST['id'];
-        $path = $this->plugin_path_data . 'arts.json';
+        $path = NBDESIGNER_DATA_DIR . '/arts.json';
         $list = $this->nbdesigner_read_json_setting($path);
         $file_art = $list[$id]->file;
         unlink($file_art);
         $this->nbdesigner_delete_json_setting($path, $id);
-        echo 'success';
+        $data['mes'] = __('Clipart has been deleted successfully!', 'nbdesigner');
+        $data['flag'] = 1;
+        echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_update_font($font, $id) {
-        $path = $this->plugin_path_data . 'fonts.json';
+        $path = NBDESIGNER_DATA_DIR . '/fonts.json';
         $this->nbdesigner_update_json_setting($path, $font, $id);
     }
     public function nbdesigner_notices($value = '') {
@@ -1046,7 +1091,7 @@ class Nbdesigner_Plugin {
         $page = filter_input(INPUT_GET, "p", FILTER_VALIDATE_INT);
         $current_cat = filter_input(INPUT_GET, "cat_id", FILTER_VALIDATE_INT);
 
-        if (isset($_POST[$this->plugin_id . '_hidden']) && wp_verify_nonce($_POST[$this->plugin_id . '_hidden'], $this->plugin_id) && current_user_can('administrator')) {
+        if (isset($_POST[$this->plugin_id . '_hidden']) && wp_verify_nonce($_POST[$this->plugin_id . '_hidden'], $this->plugin_id) && current_user_can('edit_nbd_art')) {
             $art = array();
             $art['name'] = esc_html($_POST['nbdesigner_art_name']);
             $art['id'] = $_POST['nbdesigner_art_id'];
@@ -1169,9 +1214,9 @@ class Nbdesigner_Plugin {
                     if($has_design == 'has_design'){
                         $folder_design = wc_get_order_item_meta($order_item_id, '_nbdesigner_folder_design');
                         if($folder_design){
-                            $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$folder_design;
+                            $path = NBDESIGNER_CUSTOMER_DIR . '/' . $user_id . '/' . $order_id .'/' .$folder_design;
                         }else{
-                            $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$product["product_id"];
+                            $path = NBDESIGNER_CUSTOMER_DIR . '/' . $user_id . '/' . $order_id .'/' .$product["product_id"];
                         }                        
                         $list_images = $this->nbdesigner_list_thumb($path, 1);
                         if(count($list_images) > 0){
@@ -1181,36 +1226,28 @@ class Nbdesigner_Plugin {
                         }
                     }              
                 }
-                $pathZip = $this->plugin_path_data.'download/customer-design-'.$_GET['order_id'].'.zip';
+                $pathZip = NBDESIGNER_DATA_DIR.'/download/customer-design-'.$_GET['order_id'].'.zip';
                 $nameZip = 'customer-design-'.$_GET['order_id'].'.zip';
                 $this->zip_files_and_download($zip_files, $pathZip, $nameZip);
             }
             if(isset($_GET['product_id'])){
                 $license = $this->nbdesigner_check_license();
                 $product_id = $_GET['product_id'];
-                $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$product_id;  
+                $path = NBDESIGNER_CUSTOMER_DIR . '/' . $user_id . '/' . $order_id .'/' .$product_id;  
                 if(isset($_GET['order_item_id'])){
                     $order_item_id = $_GET['order_item_id'];
                     $folder_design = wc_get_order_item_meta($order_item_id, '_nbdesigner_folder_design');     
-                    $path = $this->plugin_path_data . 'designs/' . $user_id . '/' . $order_id .'/' .$folder_design;  
+                    $path = NBDESIGNER_CUSTOMER_DIR . '/' . $user_id . '/' . $order_id .'/' .$folder_design;  
                 }
                 $datas = unserialize(get_post_meta($product_id, '_designer_setting', true)); 
                 $list_design = array();
-                $list_images = $this->nbdesigner_list_thumb($path, 1);
-                $up = wp_upload_dir();
-                $base_path = $up['baseurl'];
-                if(isset($folder_design)){
-                    $mid_path = 'nbdesigner/designs/' . $user_id . '/' . $order_id .'/' .$folder_design.'/';  
-                }else{
-                    $mid_path = 'nbdesigner/designs/' . $user_id . '/' . $order_id .'/' .$product_id.'/';  
-                }
+                $list_images = Nbdesigner_IO::get_list_thumbs($path, 1);
                 foreach ($list_images as $img){
                     $name = basename($img);
-                    $url = $base_path.'/'.$mid_path.$name;
                     $arr = explode('.', $name);
                     $_frame = explode('_', $arr[0]);
                     $frame = $_frame[1];
-                    $list_design[$frame] = $url;
+                    $list_design[$frame] = Nbdesigner_IO::convert_path_to_url($img);
                 }
             }
         }
@@ -1499,7 +1536,7 @@ class Nbdesigner_Plugin {
         file_put_contents($path_data, $license);
     }
     private function nbdesigner_check_license(){
-        $path_data = $this->plugin_path_data . 'data/license.json';
+        $path_data = NBDESIGNER_DATA_CONFIG_DIR . '/license.json';
         $path = NBDESIGNER_PLUGIN_DIR . 'data/license.json';
         if(file_exists($path_data)) $path = $path_data;
         $result = array();
@@ -1785,9 +1822,6 @@ class Nbdesigner_Plugin {
         if (!count($data_after_save_image['mes'])) {              
             $result['image'] = $data_after_save_image['link'];
             $result['flag'] = 'success';     
-            //$this->nbdesigner_create_thumbnail_design($path, $path.'/preview', $product_id, 100, 100);  
-            //$result['list_preview'] = Nbdesigner_IO::get_list_thumbs($path.'/preview');
-
             if(($task == 'create_template' || $task == 'edit_template')){
                 $this->nbdesigner_create_thumbnail_design($path, $path.'/preview', $product_id, 500, 500);     
                 if(!$save_status){
@@ -1985,7 +2019,8 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             22   =>    'delete_nbd_art',
             23   =>    'delete_nbd_language',
             24   =>    'delete_nbd_template',
-            25   =>    'sell_nbd_design'
+            25   =>    'sell_nbd_design',
+            26   =>    'update_nbd_data'
         );
         $admin_role = get_role('administrator');
         if (null != $admin_role) {
@@ -2016,6 +2051,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $shop_capabilities['delete_nbd_art'] = false;
         $shop_capabilities['delete_nbd_language'] = false;
         $shop_capabilities['delete_nbd_template'] = false;          
+        $shop_capabilities['update_nbd_data'] = false;          
         $nbd_viewer = add_role('nbdesigner_viewer', 'NBDesigner Viewer', $shop_manager_role->capabilities);
         if (null === $nbd_viewer) {
             $nbd_viewer = get_role('nbdesigner_viewer');           
@@ -2035,6 +2071,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             $nbd_viewer->remove_cap('delete_nbd_art');
             $nbd_viewer->remove_cap('delete_nbd_language');
             $nbd_viewer->remove_cap('delete_nbd_template');
+            $nbd_viewer->remove_cap('update_nbd_data');
         }      
     }
     /**
@@ -3353,6 +3390,12 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
     protected static function nbdesigner_get_javascript_multilanguage(){
         $lang = array(
             'error' => __('Oops! Try again later!', 'nbdesigner'),
+            'complete' => __('Complete!', 'nbdesigner'),
+            'are_you_sure' => __('Are you sure?', 'nbdesigner'),
+            'warning_mes_delete_file' => __('You will not be able to recover this file!', 'nbdesigner'),
+            'warning_mes_delete_category' => __('You will not be able to recover this category!', 'nbdesigner'),
+            'warning_mes_fill_category_name' => __('Please fill category name!', 'nbdesigner'),
+            'warning_mes_backup_data' => __('Restore your last data!', 'nbdesigner')
         );
         return $lang;
     }
