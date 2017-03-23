@@ -237,13 +237,28 @@ endforeach; ?>
             <label for="_nbdesigner_admindesign" class="nbdesigner-setting-box-label"><?php echo _e('Admin design template', 'nbdesigner'); ?></label>
             <input type="checkbox" value="1" name="_nbdesigner_option[admindesign]" id="_nbdesigner_admindesign" <?php checked(isset($option['admindesign']) ? $option['admindesign'] : false); ?> class="short"/>
             <?php if($enable && isset($option['admindesign'])): ?>
-            <a class="button nbd-admin-tem-link" href="<?php echo $link_admindesign.'&p=primary'; ?>" target="_blank">
                 <?php if($priority):?>
-                <span class="dashicons dashicons-admin-network" style="text-decoration: none;"></span> <?php echo _e('Primary Template', 'nbdesigner'); ?></a>&nbsp;
-                    <a class="button nbd-admin-tem-link" href="<?php echo $link_admindesign.'&p=extra&adid='.time(); ?>" target="_blank"><span class="dashicons dashicons-plus"></span> <?php echo _e('Add Template', 'nbdesigner'); ?></a>
+                <a class="button nbd-admin-tem-link" href="<?php echo $link_admindesign.'&priority=primary&task=edit_template'; ?>" target="_blank">
+                    <span class="dashicons dashicons-admin-network"></span> 
+                    <?php echo _e('Edit Primary Template', 'nbdesigner'); ?>
+                </a>
+                <a class="button nbd-admin-tem-link" href="<?php echo $link_admindesign.'&priority=extra&task=create_template'; ?>" target="_blank">
+                    <span class="dashicons dashicons-plus"></span> 
+                    <?php echo _e('Add Template', 'nbdesigner'); ?>
+                </a>
                 <?php else:?>
-                    <span class="dashicons dashicons-art" style="text-decoration: none;"></span><?php echo _e('Create Template', 'nbdesigner'); ?></a>
-                <?php endif;?>
+                <a class="button nbd-admin-tem-link" href="<?php echo $link_admindesign.'&priority=primary&task=create_template'; ?>" target="_blank">
+                    <span class="dashicons dashicons-art"></span>
+                    <?php echo _e('Create Template', 'nbdesigner'); ?>
+                </a>
+                <?php 
+                    endif;
+                    $link_manager_template = add_query_arg(array('pid' => $post_id), admin_url('admin.php?page=nbdesigner_admin_template'));
+                ?>
+                <a href="<?php echo $link_manager_template; ?>" class="button nbd-admin-tem-link">
+                    <span class="dashicons dashicons-images-alt"></span>
+                    <?php echo _e('Manager Templates', 'nbdesigner'); ?>
+                </a>
             <?php else: ?>
             <small><?php echo _e('After save product, you\'ll see link to start design templates', 'nbdesigner'); ?></small>
             <?php endif; ?>
@@ -258,12 +273,13 @@ endforeach; ?>
 function  add_js_code(){
 ?><script>
     jQuery(document).ready( function($) {
+        var direction = "<?php if(is_rtl()) echo 'right'; else echo 'left'; ?>";
         var options = {
             "content":"<h3>" + "<?php _e('Notice', 'nbdesigner'); ?>" + "<\/h3>" +
                        "<p>" + "<?php _e('Bellow values must in range from 0 to 500px', 'nbdesigner'); ?>" + "<\/p>" + 
                        "<p>" + "<?php _e('There are relative position of design area in bounding box.', 'nbdesigner'); ?>" + "<\/p>" +
                        "<p><img style='max-width: 100%;' src='"+"<?php echo NBDESIGNER_PLUGIN_URL .'assets/images/bounding-box.png'; ?>"+"' /><br /><a href='"+"<?php echo NBDESIGNER_PLUGIN_URL .'assets/images/bounding-box.png'; ?>"+"' target='_blank'>" + "<?php  _e('See detail', 'nbdesigner'); ?>" + "</a></p>",
-            "position": {"edge":"left", "align":"center"}
+            "position": {"edge":direction, "align":"center"}
         };
         if ( ! options ) return;
         options = $.extend( options, {
@@ -287,7 +303,7 @@ function  add_js_code(){
                         " <span style='font-weight: bold; background: #f0c6f6;'>" + "<?php _e('Relative position', 'nbdesigner'); ?>" + "</span> → "+  
                         "<?php _e('click', 'nbdesigner'); ?>" + "<span class='dashicons dashicons-update'></span> "+"<?php _e('to update', 'nbdesigner'); ?>"+" <span style='font-weight: bold; background: #f0c6f6;'>" + "<?php _e('Design area size', 'nbdesigner'); ?>" + "</span>"+ 
                         "</p>",
-            "position": {"edge":"left", "align":"center"}
+            "position": {"edge":direction, "align":"center"}
         };
         $('.nbdesign-config-size-tooltip').first().pointer( size_options );
         $('.nbdesign-config-size-tooltip').first().on('click', function(){
@@ -301,7 +317,7 @@ function  add_js_code(){
                         "<br />"+"<?php _e('If color labels change to ', 'nbdesigner'); ?>"+"<span style='color: red'>"+"<?php _e('red', 'nbdesigner'); ?>"+"</span>, "+"<?php _e('check values again.', 'nbdesigner'); ?>"+"</p>" +                       
                         "<p>"+"<?php _e('There', 'nbdesigner'); ?>"+" <span style='background: #dddacd; font-weight: bold;'>"+"<?php _e('values', 'nbdesigner'); ?>"+"</span> "+"<?php _e('will decide dimensions of output images.', 'nbdesigner'); ?>"+"</p>" +
                         "<p>"+"<?php _e('If you modify', 'nbdesigner'); ?>"+" <span style='background: #f0c6f6; font-weight: bold;'>"+"<?php _e('relative position', 'nbdesigner'); ?>"+"</span>, "+"<?php _e('click button', 'nbdesigner'); ?>"+" <span class='dashicons dashicons-update'></span> "+"<?php _e('to update', 'nbdesigner'); ?>"+"<span style='background: #dddacd; font-weight: bold;'> "+"<?php _e('Design area.', 'nbdesigner'); ?>"+"</span>"+"</p>" ,
-            "position": {"edge":"left", "align":"center"}            
+            "position": {"edge":direction, "align":"center"}            
         };
         $('.nbdesign-config-realsize-tooltip').first().pointer( da_option );
         $('.nbdesign-config-realsize-tooltip').first().on('click', function(){

@@ -5,7 +5,7 @@
         <li><a href="#draw_shape" ng-click="disableDrawMode()"><span class="fa fa-star" aria-hidden="true"></span></a></li>                       
     </ul>
     <div class="list-indicator"></div>
-    <div id="draw_shape" class="nbdesigner_config_content content" ng-show="uiLayout['nbdesigner_draw_shape'] == 1">
+    <div id="draw_shape" class="nbdesigner_config_content content" ng-show="settings['nbdesigner_draw_shape'] == 1">
         <div class="nb-col-2">
             <p class="label-config">{{(langs['GEOMETRICAL']) ? langs['GEOMETRICAL'] : "Geometrical"}}</p>
             <div class="btn-group dropup">
@@ -44,7 +44,7 @@
             <div class="container-dg-slider"><div class="dg-slider" id="opacity_shape"></div></div>					
         </div>         
     </div>
-    <div id="free_draw" class="nbdesigner_config_content content" ng-show="uiLayout['nbdesigner_draw_brush'] == 1">
+    <div id="free_draw" class="nbdesigner_config_content content" ng-show="settings['nbdesigner_draw_brush'] == 1">
         <div class="nb-col-2 has-popover-option">
             <p class="label-config">{{(langs['MODE']) ? langs['MODE'] : "Mode"}}</p>
             <div class="btn-group dropup">

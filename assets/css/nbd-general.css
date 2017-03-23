@@ -24,3 +24,11 @@
     height: 2em!important;
     width: 2em;    
 }
+.nbdesigner-right {
+    float: right;
+}
+h1.nbd-title {
+    background: #fff;
+    padding: 16px;
+    border: 1px solid #ddd;    
+}

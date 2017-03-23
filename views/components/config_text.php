@@ -13,7 +13,7 @@
         <div class="nb-col-6">
             <textarea class="form-control" ng-model="editable.text" ng-change="ChangeText()"></textarea>
         </div>
-        <div class="nb-col-6" ng-show="uiLayout['nbdesigner_text_change_font'] == 1">
+        <div class="nb-col-6" ng-show="settings['nbdesigner_text_change_font'] == 1">
             <fieldset class="shadow" ng-click="loadFont()" data-target="#dg-fonts" data-toggle="modal">
                 <legend>{{(langs['FONT']) ? langs['FONT'] : "Fonts"}}:</legend>
                 <a ng-style="{'font-family': (editable.fontFamily) ? editable.fontFamily + ', sans-serif' : 'Arial, sans-serif'}">{{currentFont.name}}</a>
@@ -22,17 +22,17 @@
         </div>
     </div>
     <div id="text-style" class="content">
-        <span class="fa fa-italic shadow item-config hover-shadow" ng-click="toggleItalic()" ng-show="uiLayout['nbdesigner_text_italic'] == 1"></span>
-        <span class="fa fa-bold shadow item-config hover-shadow" ng-click="toggleBold()" ng-show="uiLayout['nbdesigner_text_bold'] == 1"></span>
-        <span class="fa fa-underline shadow item-config hover-shadow" ng-click="toggleTextDecoration('underline')" ng-show="uiLayout['nbdesigner_text_underline'] == 1"></span>
-        <span class="fa fa-strikethrough shadow item-config hover-shadow" ng-click="toggleTextDecoration('line-through')" ng-show="uiLayout['nbdesigner_text_through'] == 1"></span>
-        <span class="fa fa-font shadow item-config hover-shadow" ng-click="toggleTextDecoration('overline')" style="text-decoration: overline;" ng-show="uiLayout['nbdesigner_text_overline'] == 1"></span>
-        <span class="fa fa-align-left shadow item-config hover-shadow" ng-click="align('left')" ng-show="uiLayout['nbdesigner_text_align_left'] == 1"></span>
-        <span class="fa fa-align-center shadow item-config hover-shadow" ng-click="align('center')" ng-show="uiLayout['nbdesigner_text_align_right'] == 1"></span>
-        <span class="fa fa-align-right shadow item-config hover-shadow" ng-click="align('right')" ng-show="uiLayout['nbdesigner_text_align_center'] == 1"></span>
+        <span class="fa fa-italic shadow item-config hover-shadow" ng-click="toggleItalic()" ng-show="settings['nbdesigner_text_italic'] == 1"></span>
+        <span class="fa fa-bold shadow item-config hover-shadow" ng-click="toggleBold()" ng-show="settings['nbdesigner_text_bold'] == 1"></span>
+        <span class="fa fa-underline shadow item-config hover-shadow" ng-click="toggleTextDecoration('underline')" ng-show="settings['nbdesigner_text_underline'] == 1"></span>
+        <span class="fa fa-strikethrough shadow item-config hover-shadow" ng-click="toggleTextDecoration('line-through')" ng-show="settings['nbdesigner_text_through'] == 1"></span>
+        <span class="fa fa-font shadow item-config hover-shadow" ng-click="toggleTextDecoration('overline')" style="text-decoration: overline;" ng-show="settings['nbdesigner_text_overline'] == 1"></span>
+        <span class="fa fa-align-left shadow item-config hover-shadow" ng-click="align('left')" ng-show="settings['nbdesigner_text_align_left'] == 1"></span>
+        <span class="fa fa-align-center shadow item-config hover-shadow" ng-click="align('center')" ng-show="settings['nbdesigner_text_align_right'] == 1"></span>
+        <span class="fa fa-align-right shadow item-config hover-shadow" ng-click="align('right')" ng-show="settings['nbdesigner_text_align_center'] == 1"></span>
     </div>
     <div id="text-decoration" class="content">
-        <div class="nb-col-2" ng-show="uiLayout['nbdesigner_text_color'] == 1">
+        <div class="nb-col-2" ng-show="settings['nbdesigner_text_color'] == 1">
             <p class="label-config">{{(langs['TEXT_COLOR']) ? langs['TEXT_COLOR'] : "Text color"}}</p>
             <?php  if($enableColor == 'yes'): ?>
             <input readonly="true" disabled class="jscolor shadow hover-shadow" value="cc324b" ng-model="colorOptional" ng-change="changeColor(colorOptional)">
@@ -48,7 +48,7 @@
             </spectrum-colorpicker>
             <?php endif; ?>
         </div>
-        <div class="nb-col-30" ng-show="uiLayout['nbdesigner_text_background'] == 1">
+        <div class="nb-col-30" ng-show="settings['nbdesigner_text_background'] == 1">
             <p class="label-config">{{(langs['BACKGROUND']) ? langs['BACKGROUND'] : "Background"}}</p>
             <?php  if($enableColor == 'yes'): ?>
             <input readonly="true" disabled class="jscolor shadow hover-shadow" value="f98332" ng-model="background" ng-change="setBackground()">
@@ -79,7 +79,7 @@
                 <div class="after"></div>
             </div>
         </div>
-        <div class="nb-col-30 has-popover-option" ng-show="uiLayout['nbdesigner_text_shadow'] == 1">
+        <div class="nb-col-30 has-popover-option" ng-show="settings['nbdesigner_text_shadow'] == 1">
             <p class="label-config">{{(langs['SHADOW']) ? langs['SHADOW'] : "Shadow"}}</p>
             <?php  if($enableColor == 'yes'): ?>
             <input readonly="true" disabled class="jscolor shadow hover-shadow" value="394264" ng-model="shadow.color" ng-change="changeShadow()">
@@ -119,21 +119,21 @@
         </div>		
     </div>
     <div id="text-decoration1" class="content">
-        <div class="nb-col-2" ng-show="uiLayout['nbdesigner_text_line_height'] == 1">
+        <div class="nb-col-2" ng-show="settings['nbdesigner_text_line_height'] == 1">
             <p class="label-config">{{(langs['LINE_HEIGHT']) ? langs['LINE_HEIGHT'] : "Line height"}}</p>
             <input type="text" ng-model="lineHeight" ng-change="setLineHeight()" class="input-config shadow hover-shadow" 
                    data-toggle="tooltip" data-original-title="{{(langs['LINE_HEIGHT_TOOLTIP']) ? langs['LINE_HEIGHT_TOOLTIP'] : 'Line heightChange vertical spacing between text lines'}}"
                    />
         </div>
-        <div class="nb-col-2" ng-show="uiLayout['nbdesigner_text_font_size'] == 1">
+        <div class="nb-col-2" ng-show="settings['nbdesigner_text_font_size'] == 1">
             <p class="label-config">{{(langs['FONT_SIZE']) ? langs['FONT_SIZE'] : "Font size"}}</p>
             <input type="text" ng-model="fontSize" ng-change="setFontSize()" class="input-config shadow hover-shadow" />
         </div>		
-        <div class="nb-col-30" ng-show="uiLayout['nbdesigner_text_opacity'] == 1">
+        <div class="nb-col-30" ng-show="settings['nbdesigner_text_opacity'] == 1">
             <p class="label-config">{{(langs['OPACITY']) ? langs['OPACITY'] : "Opacity"}}</p>
             <div class="container-dg-slider"><div class="opacity-slider dg-slider" id="opacity-text"></div></div>
         </div>
-        <div class="nb-col-30 has-popover-option" ng-show="uiLayout['nbdesigner_text_outline'] == 1">
+        <div class="nb-col-30 has-popover-option" ng-show="settings['nbdesigner_text_outline'] == 1">
             <p class="label-config">{{(langs['OUTLINE']) ? langs['OUTLINE'] : "Outline"}}</p>
             <?php  if($enableColor == 'yes'): ?>
             <input readonly="true" disabled class="jscolor shadow hover-shadow" value="394264" ng-model="colorStrokeOptional" ng-change="changeStroke(colorStrokeOptional, null)">
@@ -175,7 +175,7 @@
         </div>			
     </div>
     <div id="rotate-curved" class="content">
-        <div class="nb-col-30" ng-show="uiLayout['nbdesigner_text_rotate'] == 1">
+        <div class="nb-col-30" ng-show="settings['nbdesigner_text_rotate'] == 1">
             <p class="label-config label-rotate">{{(langs['ROTATE']) ? langs['ROTATE'] : "Rotate"}}</p>
             <div class="rotation-text"><input type="text" id="rotation-text" data-min="0" data-max="359"></div>
         </div>

@@ -88,15 +88,15 @@
                         <div>
                             <p>
                                 <label class="nbdesigner-setting-box-label"><?php _e('Background type'); ?>:</label>
-                                <input type="radio" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_type]" value="image" 
+                                <label class="nbdesigner-lbl-setting"><input type="radio" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_type]" value="image" 
                                     <?php checked($v['bg_type'], 'image', true); ?> class="bg_type"
-                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Image', 'nbdesigner'); ?>
-                                <input type="radio" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_type]" value="color" 
+                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Image', 'nbdesigner'); ?></label>
+                                <label class="nbdesigner-lbl-setting"><input type="radio" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_type]" value="color" 
                                     <?php checked($v['bg_type'], 'color', true); ?> class="bg_type"
-                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Color', 'nbdesigner'); ?>
-                                <input type="radio" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_type]" value="tran" 
+                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Color', 'nbdesigner'); ?></label>
+                                <label class="nbdesigner-lbl-setting"><input type="radio" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][bg_type]" value="tran" 
                                     <?php checked($v['bg_type'], 'tran', true); ?> class="bg_type"
-                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Transparent', 'nbdesigner'); ?>
+                                    onclick="NBDESIGNADMIN.change_background_type(this)"   /><?php _e('Transparent', 'nbdesigner'); ?></label>
                             </p>
                         </div>   
                         <div class="nbdesigner_bg_image" <?php if($v['bg_type'] != 'image') echo ' style="display: none;"' ?>>

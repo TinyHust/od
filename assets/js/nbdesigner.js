@@ -53,10 +53,12 @@ var NBDESIGNERPRODUCT = {
             opacity: 0
         }, 500);
     },
-    show_design_thumbnail: function (arr) {
+    show_design_thumbnail: function (arr, task) {
         jQuery('#nbdesigner-preview-title').show();
         jQuery('#nbdesign-new-template').show();
-        jQuery('#triggerDesign').text('Edit Template');
+        if(task == 'create_template' || task == 'edit_template'){
+            jQuery('#triggerDesign').text('Edit Template');
+        }
         var html = '';
         jQuery.each(arr, function (key, val) {
             html += '<div class="img-con"><img src="' + val + '" /></div>'
@@ -141,15 +143,3 @@ function addParameter(url, parameterName, parameterValue, atStart/*Add param bef
     }
     return urlParts[0] + newQueryString + urlhash;
 };
-(function ( $, window, document, undefined ) {
- 
-    $variation_form = $( '.variations_form');
- 
-    $variation_form.on( 'show_variation', function( event, variation ){
-        console.log(123);
-    })
-    .on( 'reset_image', function () {
-        console.log(456);
-    });
- 
-})( jQuery, window, document );

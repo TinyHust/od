@@ -41,8 +41,8 @@
     <span class="toolbar-menu fa fa-arrows nbd-tooltip nbd-tooltip-i18n" aria-hidden="true" data-tooltip-content="#tooltip_group_align" data-lang="ALIGN" data-placement="bottom" ng-show="showAlignToolbar"></span>
     <span class="toolbar-menu fa fa-cloud-download nbd-tooltip nbd-tooltip-i18n" aria-hidden="true" data-tooltip-content="#tooltip_download_preview" data-lang="DOWNLOAD" data-placement="bottom" ng-show="state == 'dev'"></span>
     <span class="toolbar-menu fa fa-th nbd-tooltip-i18n" aria-hidden="true"  data-lang="SNAP_GRID" data-placement="bottom" ng-click="snapGrid()"></span>
-    <span class="toolbar-menu fa fa-lock nbd-tooltip nbd-tooltip-i18n" aria-hidden="true" data-tooltip-content="#tooltip_lock_param"  data-lang="LOCK" data-placement="bottom" ng-click="getStatusItem()" ng-show="canvas.getActiveObject() && task === 'admindesign'"></span>
-    <span class="toolbar-menu fa fa-cloud-upload nbd-tooltip-i18n" aria-hidden="true"  data-lang="ELEMENT_UPLOAD" data-placement="bottom" ng-show="editableItem !== null && (editable.type === 'image' || editable.type === 'custom-image') && task === 'admindesign'" ng-click="setElementUpload()"></span>
+    <span class="toolbar-menu fa fa-lock nbd-tooltip nbd-tooltip-i18n" aria-hidden="true" data-tooltip-content="#tooltip_lock_param"  data-lang="LOCK" data-placement="bottom" ng-click="getStatusItem()" ng-show="canvas.getActiveObject() && (task === 'create_template' || task === 'edit_template')"></span>
+    <span class="toolbar-menu fa fa-cloud-upload nbd-tooltip-i18n" aria-hidden="true"  data-lang="ELEMENT_UPLOAD" data-placement="bottom" ng-show="editableItem !== null && (editable.type === 'image' || editable.type === 'custom-image') && t(task === 'create_template' || task === 'edit_template')" ng-click="setElementUpload()"></span>
     
     <div style="display: none;">
         <div id="tooltip_group_align">

@@ -10,14 +10,14 @@
     </ul>    
     <div class="list-indicator"></div>
     <div id="image_dimension" class="nbdesigner_config_content content">
-        <div class="nb-col-30" ng-show="uiLayout['nbdesigner_image_unlock_proportion'] == 1">
+        <div class="nb-col-30" ng-show="settings['nbdesigner_image_unlock_proportion'] == 1">
             <p class="label-config">{{(langs['UNLOCK_PROPORTION']) ? langs['UNLOCK_PROPORTION'] : "Unlock proportion"}}</p>
             <div class="switch">
                 <input id="text-lock" class="cmn-toggle cmn-toggle-round" type="checkbox" ng-model="lockProportion"  ng-change="unlockProportion()">
                 <label for="text-lock"></label>
             </div>  
         </div>	        
-        <div class="nb-col-40 has-popover-option" style="padding-left: 15px;" ng-show="uiLayout['nbdesigner_image_shadow'] == 1">
+        <div class="nb-col-40 has-popover-option" style="padding-left: 15px;" ng-show="settings['nbdesigner_image_shadow'] == 1">
             <p class="label-config">{{(langs['SHADOW']) ? langs['SHADOW'] : "Shadow"}}</p>
                 <?php  if($enableColor == 'yes'): ?>
                 <input readonly="true" disabled class="jscolor shadow hover-shadow" ng-model="shadow.color" ng-change="changeShadow()">
@@ -55,21 +55,21 @@
                     <div class="after"></div>
                 </div>            
         </div>
-        <div class="nb-col-30" ng-show="uiLayout['nbdesigner_image_opacity'] == 1">
+        <div class="nb-col-30" ng-show="settings['nbdesigner_image_opacity'] == 1">
             <p class="label-config">{{(langs['OPACITY']) ? langs['OPACITY'] : "Opacity"}}</p>
             <div class="container-dg-slider"><div class="dg-slider" id="image_opacity"></div></div>						
         </div>
     </div>
     <div id="image_general" class="content">
-        <div class="nb-col-4" ng-show="uiLayout['nbdesigner_image_rotate'] == 1">
+        <div class="nb-col-4" ng-show="settings['nbdesigner_image_rotate'] == 1">
             <p class="label-config">{{(langs['ROTATE']) ? langs['ROTATE'] : "Rotate"}}</p>
             <div class="rotation-text"><input type="text" id="rotation-image" data-min="0" data-max="359"></div>
         </div> 
         <div class="nb-col-8">
             <p class="label-config">{{(langs['GENERAL_SETTING']) ? langs['GENERAL_SETTING'] : "General Setting"}}</p>
             <div>
-                <span ng-show="uiLayout['nbdesigner_image_crop'] == 1" class="text-update btn btn-default btn-xs fa fa-crop" data-target="#dg-crop-image" data-toggle="modal" title="{{(langs['CROP_IMAGE']) ? langs['CROP_IMAGE'] : 'Crop Image'}}" ng-click="initCropCanvas('crop')">&nbsp;{{(langs['CROP_IMAGE']) ? langs['CROP_IMAGE'] : "Crop Image"}}</span>  
-                <span ng-show="uiLayout['nbdesigner_image_shapecrop'] == 1" class="text-update btn btn-default btn-xs fa fa-star" data-target="#dg-crop-image" data-toggle="modal" title="{{(langs['SHAPE_IMAGE']) ? langs['SHAPE_IMAGE'] : 'Shape Image'}}" ng-click="initCropCanvas('shape')">&nbsp;{{(langs['SHAPE_IMAGE']) ? langs['SHAPE_IMAGE'] : "Shape Image"}}</span>  
+                <span ng-show="settings['nbdesigner_image_crop'] == 1" class="text-update btn btn-default btn-xs fa fa-crop" data-target="#dg-crop-image" data-toggle="modal" title="{{(langs['CROP_IMAGE']) ? langs['CROP_IMAGE'] : 'Crop Image'}}" ng-click="initCropCanvas('crop')">&nbsp;{{(langs['CROP_IMAGE']) ? langs['CROP_IMAGE'] : "Crop Image"}}</span>  
+                <span ng-show="settings['nbdesigner_image_shapecrop'] == 1" class="text-update btn btn-default btn-xs fa fa-star" data-target="#dg-crop-image" data-toggle="modal" title="{{(langs['SHAPE_IMAGE']) ? langs['SHAPE_IMAGE'] : 'Shape Image'}}" ng-click="initCropCanvas('shape')">&nbsp;{{(langs['SHAPE_IMAGE']) ? langs['SHAPE_IMAGE'] : "Shape Image"}}</span>  
                 <span class="text-update btn btn-default btn-xs  fa fa-eraser" data-toggle="tooltip" title="Back to original image" ng-click="resetImage()">&nbsp;{{(langs['RESET_IMAGE']) ? langs['RESET_IMAGE'] : "Reset Image"}}</span>                
             </div>
 <!--            <div class="switch">
@@ -79,28 +79,28 @@
         </div>         
     </div>
     <div id="image_filter1" class="content">
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_grayscale'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_grayscale'] == 1">
             <p class="label-config">{{(langs['GRAYSCALE']) ? langs['GRAYSCALE'] : "Grayscale"}}</p>
             <div class="switch">
                 <input id="grayscale-filter" data-filter="Grayscale" class="cmn-toggle cmn-toggle-round" type="checkbox">
                 <label for="grayscale-filter"></label>                  
             </div>
         </div>  
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_invert'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_invert'] == 1">
             <p class="label-config">{{(langs['INVERT']) ? langs['INVERT'] : "Invert"}}</p>
             <div class="switch">
                 <input id="invert-filter" data-filter="Invert" class="cmn-toggle cmn-toggle-round" type="checkbox">
                 <label for="invert-filter"></label>                
             </div>
         </div>  
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_sepia'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_sepia'] == 1">
             <p class="label-config">{{(langs['SEPIA']) ? langs['SEPIA'] : "Sepia"}}</p>
             <div class="switch">
                 <input id="sepia-filter" data-filter="Sepia" class="cmn-toggle cmn-toggle-round" type="checkbox">
                 <label for="sepia-filter"></label>                 
             </div>
         </div>  
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_sepia2'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_sepia2'] == 1">
             <p class="label-config">{{(langs['SEPIA']) ? langs['SEPIA'] : "Sepia"}} 2</p>
             <div class="switch">
                 <input id="sepia2-filter" data-filter="Sepia 2" class="cmn-toggle cmn-toggle-round" type="checkbox">
@@ -109,7 +109,7 @@
         </div> 
     </div>
     <div id="image_filter2" class="content">
-        <div class="nb-col-3 has-popover-option" ng-show="uiLayout['nbdesigner_image_remove_white'] == 1">
+        <div class="nb-col-3 has-popover-option" ng-show="settings['nbdesigner_image_remove_white'] == 1">
             <p class="label-config">{{(langs['REMOVE_WHITE']) ? langs['REMOVE_WHITE'] : "Remove white"}}</p>
             <div class="switch nb-col-6 nbdesigner_mg5">
                 <input id="remove-white-filter" data-filter="Remove white" class="cmn-toggle cmn-toggle-round" type="checkbox">
@@ -132,7 +132,7 @@
                 <div class="after"></div>
             </div>            
         </div> 
-        <div class="nb-col-3 has-popover-option" ng-show="uiLayout['nbdesigner_image_transparency'] == 1">
+        <div class="nb-col-3 has-popover-option" ng-show="settings['nbdesigner_image_transparency'] == 1">
             <p class="label-config">{{(langs['TRANSPARENCY']) ? langs['TRANSPARENCY'] : "Transparency"}}</p>
             <div class="switch nb-col-6 nbdesigner_mg5">
                 <input id="gradient-transparency-filter" data-filter="Gradient Transparency" class="cmn-toggle cmn-toggle-round" type="checkbox">
@@ -149,7 +149,7 @@
                 </div>
             </div>          
         </div>
-        <div class="nb-col-3 has-popover-option" ng-show="uiLayout['nbdesigner_image_tint'] == 1">
+        <div class="nb-col-3 has-popover-option" ng-show="settings['nbdesigner_image_tint'] == 1">
             <p class="label-config">{{(langs['TINT']) ? langs['TINT'] : "Tint"}}</p>
             <div class="switch nb-col-6 nbdesigner_mg5">
                 <input id="tint-filter" data-filter="Tint" class="cmn-toggle cmn-toggle-round" type="checkbox">
@@ -173,7 +173,7 @@
                 <div class="after"></div>
             </div>             
         </div>
-        <div class="nb-col-3 has-popover-option" ng-show="uiLayout['nbdesigner_image_blend'] == 1">
+        <div class="nb-col-3 has-popover-option" ng-show="settings['nbdesigner_image_blend'] == 1">
             <p class="label-config">{{(langs['BLEND']) ? langs['BLEND'] : "Blend"}}</p>
             <div class="switch nb-col-6 nbdesigner_mg5">
                 <input id="blend-filter" data-filter="Blend" class="cmn-toggle cmn-toggle-round" type="checkbox">
@@ -208,7 +208,7 @@
         </div>
     </div>
     <div id="image_filter3" class="content">
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_brightness'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_brightness'] == 1">
             <p class="label-config">{{(langs['BRIGHTNESS']) ? langs['BRIGHTNESS'] : "Brightness"}}</p>
             <div class="switch">
                 <input id="brightness-filter" data-filter="Brightness" class="cmn-toggle cmn-toggle-round" type="checkbox">
@@ -218,7 +218,7 @@
             <div class="filter_slider dg-slider brightness-value"></div>
             <input type="hidden" data-parent="brightness"  data-type="brightness" id="brightness-value" value="0">            
         </div> 
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_noise'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_noise'] == 1">
             <p class="label-config">{{(langs['NOISE']) ? langs['NOISE'] : "Noise"}}</p>
             <div class="switch">
                 <input id="noise-filter" data-filter="Noise" class="cmn-toggle cmn-toggle-round" type="checkbox">
@@ -228,7 +228,7 @@
             <div class="filter_slider dg-slider noise-value"></div>
             <input type="hidden"  data-parent="noise"  data-type="noise" id="noise-value" value="0">           
         </div> 
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_pixelate'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_pixelate'] == 1">
             <p class="label-config">{{(langs['PIXELATE']) ? langs['PIXELATE'] : "Pixelate"}}</p>
             <div class="switch">
                 <input id="pixelate-filter" data-filter="Pixelate" class="cmn-toggle cmn-toggle-round" type="checkbox">
@@ -238,7 +238,7 @@
             <div class="filter_slider dg-slider pixelate-value"></div>
             <input type="hidden"  data-parent="pixelate"  data-type="blocksize" id="pixelate-value" value="0">          
         </div> 
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_multiply'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_multiply'] == 1">
             <p class="label-config">{{(langs['MULTIPLY']) ? langs['MULTIPLY'] : "Multiply"}}</p>
             <div class="switch">
                 <input id="multiply-filter" data-filter="Multiply" class="cmn-toggle cmn-toggle-round" type="checkbox">
@@ -251,28 +251,28 @@
     <div id="image_filter4" class="content">
         <p style="color: red; font-size: 11px">
             <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;{{(langs['FILTER_WARNING']) ? langs['FILTER_WARNING'] : "Filters bellow need more time to process! Happy wait"}}!</p>
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_blur'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_blur'] == 1">
             <p class="label-config">{{(langs['BLUR']) ? langs['BLUR'] : "Blur"}}</p>
             <div class="switch">
                 <input id="blur-filter" data-filter="Blur" class="cmn-toggle cmn-toggle-round" type="checkbox">
                 <label for="blur-filter"></label>       
             </div>            
         </div> 
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_sharpen'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_sharpen'] == 1">
             <p class="label-config">{{(langs['SHARPEN']) ? langs['SHARPEN'] : "Sharpen"}}</p>
             <div class="switch">
                 <input id="sharpen-filter" data-filter="Sharpen" class="cmn-toggle cmn-toggle-round" type="checkbox">
                 <label for="sharpen-filter"></label>      
             </div>            
         </div>         
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_emboss'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_emboss'] == 1">
             <p class="label-config">{{(langs['EMBROSS']) ? langs['EMBROSS'] : "Emboss"}}</p>
             <div class="switch">
                 <input id="emboss-filter" data-filter="Emboss" class="cmn-toggle cmn-toggle-round" type="checkbox">
                 <label for="emboss-filter"></label>        
             </div>            
         </div> 
-        <div class="nb-col-3" ng-show="uiLayout['nbdesigner_image_edge_enhance'] == 1">
+        <div class="nb-col-3" ng-show="settings['nbdesigner_image_edge_enhance'] == 1">
             <p class="label-config">{{(langs['EDGE_ENHANCE']) ? langs['EDGE_ENHANCE'] : "Edge enhance"}}</p>
             <div class="switch">
                 <input id="edge-enhance-filter" data-filter="Edge enhance" class="cmn-toggle cmn-toggle-round" type="checkbox">

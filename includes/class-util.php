@@ -259,6 +259,7 @@ function default_frontend_setting(){
         'nbdesigner_text_font_size' => 1,
         'nbdesigner_text_opacity' => 1,
         'nbdesigner_text_outline' => 1,
+        'nbdesigner_text_proportion' => 1,
         'nbdesigner_text_rotate' => 1,
         'nbdesigner_clipart_change_path_color' => 1,           
         'nbdesigner_clipart_rotate' => 1,           
@@ -317,4 +318,68 @@ function nbd_default_product_setting(){
                 'show_overlay' => 0,
                 'version' => NBDESIGNER_NUMBER_VERSION
             )); 
+}
+function getUrlPageNBD($page){
+    global $wpdb;
+    switch ($page) {
+        case 'template':
+            $post_name = NBDESIGNER_PAGE_CREATE_TEMPLATE; 
+            break;     
+        case 'redesign':
+            $post_name = NBDESIGNER_PAGE_REDESIGN; 
+            break; 
+        case 'studio':
+            $post_name = NBDESIGNER_PAGE_STUDIO; 
+            break;             
+    }
+    $post = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_name='".$post_name."'"); 
+    if($post) return get_page_link($post);
+    return '#';
+}
+function nbd_get_product_info($user_id, $product_id, $variation_id = 0, $task = '', $reference_product = '', $template_folder = '', $order_id = '', $order_item_folder = '' ){
+    $path = '';
+    $data = array();
+    $data['product'] = unserialize(get_post_meta($product_id, '_designer_setting', true));
+    $data['dpi'] = (get_post_meta($product_id, '_nbdesigner_dpi', true) != '') ?  get_post_meta($product_id, '_nbdesigner_dpi', true) : 96;
+    if($variation_id > 0){
+        $variation_enable = get_post_meta($variation_id, '_nbdesigner_enable'.$variation_id, true);
+        if($variation_enable){
+            $data['product'] = unserialize(get_post_meta($variation_id, '_designer_setting'.$variation_id, true));
+        }
+    }
+    if($task == 'redesign'){
+        $path = NBDESIGNER_CUSTOMER_DIR . '/' .$user_id. '/' .$order_id. '/' .$order_item_folder ;
+    }
+    else if($task == 'create_template' || $task == 'edit_template'){
+        if($template_folder != ''){
+            $path = NBDESIGNER_ADMINDESIGN_DIR . '/' . $product_id . '/' . $template_folder;
+        }    
+    }else {
+        if($reference_product != ''){
+            $path = NBDESIGNER_CUSTOMER_DIR. '/' .$user_id. '/nb_order/' .$reference_product;
+            $data['ref'] = unserialize(get_post_meta($reference_product, '_designer_setting', true));
+        }else{
+            $option = unserialize(get_post_meta($product_id, '_nbdesigner_option', true));   
+            if($option['admindesign']){
+                if($template_folder != ''){
+                    $path = NBDESIGNER_ADMINDESIGN_DIR . '/' . $product_id . '/' . $template_folder;
+                }else {
+                    $path = NBDESIGNER_ADMINDESIGN_DIR . '/' . $product_id . '/primary';
+                }              
+            }            
+        }
+    }  
+    $data['design'] = nbd_get_data_from_json($path . '/design.json');
+    $data['fonts'] = nbd_get_data_from_json($path . '/used_font.json');
+    $data['config'] = nbd_get_data_from_json($path . '/config.json');
+    return $data;
+}
+function nbd_get_data_from_json($path = ''){
+    if ($path != '' && file_exists($path)) {
+        return json_decode(file_get_contents($path));           
+    }    
+    return '';
+}
+function nbd_update_config_product_160($settings){
+    return $settings;
 }

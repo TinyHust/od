@@ -74,6 +74,7 @@ if(!class_exists('Nbdesigner_Settings_Frontend')){
                             'nbdesigner_text_font_size' => __('Font size', 'nbdesigner'),
                             'nbdesigner_text_opacity' => __('Opacity', 'nbdesigner'),
                             'nbdesigner_text_outline' => __('Outline', 'nbdesigner'),
+                            'nbdesigner_text_proportion' => __('Unlock proportion', 'nbdesigner'),
                             'nbdesigner_text_rotate' => __('Rotate', 'nbdesigner')
                         ),
                         'css' => 'margin: 0 15px 10px 5px;'

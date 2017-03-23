@@ -1,23 +1,15 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  
-$row = absint($row);
-$per_row = absint($per_row);
+$limit = $row * $per_row;
 $k = 0;
-$total = 0;
-$limit = $per_row * $row;
 echo "<p>".$des."</p>";
-if(is_array($templates)):
+if(count($templates)):
     echo '<ul class="nbdesigner-gallery">';
-    $total = count($templates);
-    $temps = $templates;
-    if(($total > $limit) && $pagination){
-        $temps = array_slice($templates, ($page-1)*$limit, $limit);    
-    }
-    foreach ($temps as $temp): ?>
+    foreach ($templates as $temp): ?>
     <?php if($k % $per_row == 0) echo '<li class="nbdesigner-container">';?>
     <div class="nbdesigner-item">
         <div class="nbdesigner-con">
             <div class="nbdesigner-top">
-                <img src="<?php echo $temp['design'][0]; ?>" class="nbdesigner-img"/>
+                <img src="<?php echo $temp['image']; ?>" class="nbdesigner-img"/>
             </div>
             <div class="nbdesigner-hover">
                 <div class="nbdesigner-inner">
@@ -30,8 +22,10 @@ if(is_array($templates)):
     <?php 
     $k ++;
     endforeach;
-    echo '</ul>';
-endif; ?>
+    echo '</ul>'; ?>
+<?php else: ?>    
+    <?php _e('No template', 'nbdesigner'); ?>
+<?php endif; ?>
 <?php if(($total > $limit) && $pagination): ?>
 <?php  
     require_once NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.pagination.php';
@@ -48,7 +42,7 @@ endif; ?>
 ?>
     <div class="tablenav top nbdesigner-pagination-con">
         <div class="tablenav-pages">
-            <span class="displaying-num"><?php echo $total.' '. __('Templates', 'nbdesigner'); ?></span>
+            <span class="displaying-num"><?php printf( _n( '%s Template', '%s Templates', $total, 'nbdesigner' ), number_format_i18n( $total ) ); ?>
             <?php echo $paging->html();  ?>
         </div>
     </div>  

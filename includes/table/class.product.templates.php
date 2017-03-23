@@ -35,7 +35,9 @@ class Product_Template_List_Table extends WP_List_Table {
         if (!empty($_REQUEST['orderby'])) {
             $sql .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
             $sql .=!empty($_REQUEST['order']) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
-        }        
+        } else {
+            $sql .= ' ORDER BY created_date DESC';
+        }       
         $sql .= " LIMIT $per_page";
         $sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;
         $result = $wpdb->get_results($sql, 'ARRAY_A');    
@@ -82,6 +84,13 @@ class Product_Template_List_Table extends WP_List_Table {
         $sql = "SELECT COUNT(*) FROM {$wpdb->prefix}nbdesigner_templates";
         if (!empty($_REQUEST['pid'])) {
             $sql .= " WHERE product_id = " . esc_sql($_REQUEST['pid']);
+        }      
+        if (!empty($_REQUEST['nbdesigner_filter']) && -1 != $_REQUEST['nbdesigner_filter']) {
+            if($_REQUEST['nbdesigner_filter'] == 'unpublish'){
+                $sql .= " AND publish = 0";
+            }else {
+                $sql .= " AND ".esc_sql($_REQUEST['nbdesigner_filter'])." = 1";
+            }            
         }         
         return $wpdb->get_var($sql);
     }
@@ -97,17 +106,14 @@ class Product_Template_List_Table extends WP_List_Table {
      * @return string
      */
     function column_product_id($item) {
-        global $wpdb;
-        $check = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_name='nbdesigner-admindesign-product-x1095'"); 
-        $link_admindesign = get_page_link($check).'?product_id='.$item['product_id'].'&p=extra&adid='.$item['folder'].'&temp='.$item['folder'].'&redesign=1';
-        
+        $priority = $item['folder'] == 'primary' ? 'primary' : 'extra';
+        $link_admindesign = getUrlPageNBD('template').'?product_id='.$item['product_id'].'&priority='.$priority.'&template_folder='.$item['folder'].'&task=edit_template';
         $_nonce = wp_create_nonce('nbdesigner_template_nonce');
-        $title = '<strong>' . $item['folder'] . '</strong>';
-        $paged = 1;       
+        $title = '<strong>' . $item['folder'] . '</strong>';     
         $actions = array(
-            'delete' => sprintf('<a href="?page=%s&action=%s&template=%s&_wpnonce=%s&pid=%s&paged=%s">Delete</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $_nonce, esc_attr($_REQUEST['pid']), $this->get_pagenum()),
-            'primary' => sprintf('<a href="?page=%s&action=%s&template=%s&pid=%s&_wpnonce=%s&paged=%s">Primary</a>', esc_attr($_REQUEST['page']), 'primary', absint($item['id']), esc_attr($_REQUEST['pid']), $_nonce, $this->get_pagenum()),
-            'detail' => sprintf('<a href="%s" target="_blank">Detail</a>', $link_admindesign)
+            'delete' => sprintf('<a href="?page=%s&action=%s&template=%s&_wpnonce=%s&pid=%s&paged=%s">'.__('Delete', 'nbdesigner').'</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $_nonce, esc_attr($_REQUEST['pid']), $this->get_pagenum()),
+            'primary' => sprintf('<a href="?page=%s&action=%s&template=%s&pid=%s&_wpnonce=%s&paged=%s">'.__('Primary', 'nbdesigner').'</a>', esc_attr($_REQUEST['page']), 'primary', absint($item['id']), esc_attr($_REQUEST['pid']), $_nonce, $this->get_pagenum()),
+            'edit' => sprintf('<a href="%s" target="_blank">'.__('Edit', 'nbdesigner').'</a>', $link_admindesign)
         );     
         if($item['priority']){
             unset($actions['delete']);
@@ -166,7 +172,7 @@ class Product_Template_List_Table extends WP_List_Table {
             'cb' => '<input type="checkbox" />',            
             'folder' => __('Preview', 'nbdesigner'),
             'priority' => __('Primary', 'nbdesigner'),
-            'product_id' => __('Actions', 'nbdesigner'),
+            'product_id' => __('Folder', 'nbdesigner'),
             'user_id' => __('Created By', 'nbdesigner'),
             'created_date' => __('Created', 'nbdesigner')
         );
@@ -195,7 +201,6 @@ class Product_Template_List_Table extends WP_List_Table {
      */
     public function get_sortable_columns() {
         $sortable_columns = array(
-            'product_id' => array('product_id', true),
             'user_id' => array('user_id', true),
             'created_date' => array('created_date', true)
         );

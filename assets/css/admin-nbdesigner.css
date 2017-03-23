@@ -111,7 +111,7 @@
 .nbdesigner-product {
     display: inline-block;
     text-align: center;
-    width: 170px;
+    width: 200px;
     margin: 0 10px 10px 0;
     -webkit-box-shadow: 0 1px 4px 0 rgba(0,0,0,0.14);
     -moz-box-shadow: 0 1px 4px 0 rgba(0,0,0,0.14);
@@ -127,7 +127,7 @@
     max-width: 100%;
     max-height: 100%;
     height: initial;
-    width: initial;	
+    width: 100%;	
 }
 .nbdesigner-product a.nbdesigner-product-title{
     white-space: nowrap;
@@ -605,8 +605,8 @@ input.area_design_width, input.area_design_height, input.area_design_top, input.
     margin-top: 4px;
 }
 .nbdesigner-product-inner {
-    width: 170px;
-    height: 170px;
+    width: 200px;
+    height: 200px;
 }
 .nbdesigner-product-link {
     height: 40px;
@@ -639,4 +639,7 @@ input.area_design_width, input.area_design_height, input.area_design_top, input.
     height: 100%;       
     width: 100%;
     margin-top: 7px;
+}
+.nbdesigner-product-link a:focus {
+    outline: none;
 }
