@@ -1,6 +1,8 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
 <div class="wrap nbdesigner ">
     <h2><?php echo __('Frontend Translate', 'nbdesigner'); ?></h2>
+    <p><b><?php _e('Allow customer change language without reload page.', 'nbdesigner'); ?></b></p>
+    <p><small><?php _e('(Click the phrase to edit)') ?></small></p>
     <div>
         <b><?php echo __('Choose language', 'nbdesigner'); ?></b>
         <?php if(is_array($list) && count($list) > 0): ?>

@@ -1029,16 +1029,31 @@ var NBDESIGNADMIN = {
             complete: function () {
                 jQuery('#nbdesigner_translate_loading').addClass('nbdesigner_loaded');
             }
-        }).done(function (data) {
-            alert(data);
+        }).done(function (_data) {
+            var data = JSON.parse(_data);
+            if(parseInt(data.flag) == 1){
+                swal(admin_nbds.nbds_lang.complete, data.mes, "success");
+            }else{
+                swal({
+                    title: "Oops!",
+                    text: data.mes,
+                    imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                });
+            }
         });        
     },
     deleteLang : function(e){
         var code = jQuery("#nbdesigner-translate-code").val(),
             index =  jQuery("#nbdesigner-translate-code").find(":selected").data('index'),   
-            self = this,
-            con = confirm("Do your want delete this language?");    
-        if(con){    
+            self = this;   
+        swal({
+            title: admin_nbds.nbds_lang.are_you_sure,
+            text: admin_nbds.nbds_lang.warning_mes_delete_lang,
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+        }, function(){
             jQuery.ajax({
                 url: admin_nbds.url,
                 method: "POST",
@@ -1049,14 +1064,13 @@ var NBDESIGNADMIN = {
                 complete: function () {
                     jQuery('#nbdesigner_translate_loading').addClass('nbdesigner_loaded');
                 }           
-            }).done(function (data) {
-                data = JSON.parse(data);
-                alert(data.mes);
+            }).done(function (_data) {
+                var data = JSON.parse(_data);
                 if(parseInt(data.flag) == 1){
+                    swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                     jQuery('#nbdesigner-translate-code option[data-index="'+index+'"]').remove();
                     self.resetIndexLang();
                     var html = "";
-                    console.log(data.langs);
                     jQuery.each(data.langs, function(key, value ){
                         html += '<li><p class="click_edit" data-label="'+key+'">'+value+'</p></li>';
                     });
@@ -1067,9 +1081,15 @@ var NBDESIGNADMIN = {
                         submit : 'OK',
                         tooltip : 'Click to edit...'
                     });                     
+                }else{
+                    swal({
+                        title: "Oops!",
+                        text: data.mes,
+                        imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                    });
                 }
-            });     
-        }
+            })     
+        });
     },
     resetIndexLang : function(){
         jQuery.each(jQuery('#nbdesigner-translate-code option'), function(key, value ){
@@ -1085,7 +1105,8 @@ var NBDESIGNADMIN = {
         jQuery.post(admin_nbds.url, formdata, function(result){
             jQuery('#nbdesigner_new_translate_loading').addClass('nbdesigner_loaded');     
             var data = JSON.parse(result);
-            if(data.mes == "success"){
+            if (data.flag == 1) {
+                swal(admin_nbds.nbds_lang.complete, data.mes, "success");
                 var html = "";
                 jQuery.each(data.langs, function(key, value ){
                     html += '<li><p class="click_edit" data-label="'+key+'">'+value+'</p></li>';
@@ -1101,7 +1122,14 @@ var NBDESIGNADMIN = {
                 jQuery("#nbdesigner-trans-code").attr('data-code', data.code);
                 self.resetIndexLang();
                 tb_remove();
-            };
+            }else{
+                tb_remove();
+                swal({
+                    title: "Oops!",
+                    text: data.mes,
+                    imageUrl: admin_nbds.assets_images + "dinosaur.png"
+                });
+            }
         });        
     },
     edit_cat_art: function(e){   

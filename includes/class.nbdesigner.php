@@ -228,7 +228,7 @@ class Nbdesigner_Plugin {
             }
             if($hook == 'nbdesigner_page_nbdesigner_admin_template' || $hook == 'nbdesigner_page_nbdesigner_manager_arts'
                 || $hook == 'admin_page_nbdesigner_detail_order' || $hook == 'nbdesigner_page_nbdesigner_manager_fonts'   
-                || $hook == 'nbdesigner_page_nbdesigner_tools'    ){
+                || $hook == 'nbdesigner_page_nbdesigner_tools' || $hook == 'nbdesigner_page_nbdesigner_frontend_translate'   ){
                 wp_enqueue_style('nbdesigner_sweetalert_css', NBDESIGNER_CSS_URL . 'sweetalert.css');
                 wp_enqueue_script( 'nbdesigner_sweetalert_js', NBDESIGNER_JS_URL . 'sweetalert.min.js' , array('jquery'));
             }
@@ -3062,8 +3062,8 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $path = NBDESIGNER_PLUGIN_DIR . 'data/language.json';  
         $path_data = $this->plugin_path_data . 'data/language.json';
         if(file_exists($path_data)) $path = $path_data;  
-        $path_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en.json';
-        $path_data_lang = $this->plugin_path_data . 'data/language/en.json';
+        $path_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en-US.json';
+        $path_data_lang = $this->plugin_path_data . 'data/language/en-US.json';
         if(file_exists($path_data_lang)) $path_lang = $path_data_lang;  
         $list = json_decode(file_get_contents($path));     
         $lang = json_decode(file_get_contents($path_lang)); 
@@ -3073,8 +3073,13 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         require(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-translate.php');
     }
     public function nbdesigner_save_language(){
-        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
-            die('Security error');
+        $data = array(
+            'mes'   =>  __('You do not have permission to edit language!', 'nbdesigner'),
+            'flag'  => 0
+        );	        
+        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_language')) {
+            echo json_encode($data);
+            wp_die();
         }        
         if(isset($_POST['langs'])){
             $langs = array();
@@ -3092,10 +3097,12 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             }           
             $res = json_encode($langs);
             file_put_contents($path_lang, $res);   
-            echo __('Update language success!', 'nbdesigner');
+            $data['mes'] =  __('Update language success!', 'nbdesigner');
+            $data['flag'] = 1;
         }else{
-            echo 'Oops! Update language failed!';
+            $data['mes'] = __('Update language failed!', 'nbdesigner');
         }
+        echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_get_language($code){
@@ -3116,7 +3123,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $path_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/'.$code.'.json';
         $path_data_lang = $this->plugin_path_data . 'data/language/'.$code.'.json';
         if(file_exists($path_data_lang)) $path_lang = $path_data_lang;
-        $path_original_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en.json';
+        $path_original_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en-US.json';
         if(!file_exists($path_lang)) $path_lang = $path_original_lang;
         $lang_original = json_decode(file_get_contents($path_original_lang)); 
         $lang = json_decode(file_get_contents($path_lang)); 
@@ -3140,20 +3147,24 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         wp_die();
     }    
     public function nbdesigner_delete_language(){
-        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('administrator')) {
-            die('Security error');
+        $data = array(
+            'mes'   =>  __('You do not have permission to delete language!', 'nbdesigner'),
+            'flag'  => 0
+        );	        
+        if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_language')) {
+            echo json_encode($data);
+            wp_die();
         } 
         $code = $_POST['code'];
         $index = $_POST['index'];
-        $data = array(
-            'flag' => 0,
-            'mes'   => __('Oops! Try again!', 'nbdesigner')
-        ); 
         $path_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language/'.$code.'.json';
         $path_data_cat_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language.json';         
         $cats = json_decode(file_get_contents($path_data_cat_lang)); 
         $primary_lang_code = $cats[0]->code;
         $path_primary_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language/'.$primary_lang_code.'.json';
+        if(!file_exists($path_primary_lang)){
+            $path_primary_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/'.$primary_lang_code.'.json';
+        }
         if($index != 0){
             if(unlink($path_lang)) {
                 $data['flag'] = 1;
@@ -3163,24 +3174,28 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                 $data['langs'] = (array)$langs[0];
             }            
         }else {
-            $data['mes'] = __('Oops! Can\'t delete primary language!', 'nbdesigner');
+            $data['mes'] = __('Oops! Can not delete primary language!', 'nbdesigner');
         }
         echo json_encode($data);
         wp_die();
     }
-    public function nbdesigner_create_language(){       
-        if (!wp_verify_nonce($_POST['nbdesigner_newlang_hidden'], 'nbdesigner-new-lang') || !current_user_can('administrator')) {
-            die('Security error');
+    public function nbdesigner_create_language(){    
+        $data = array(
+            'mes'   =>  __('You do not have permission to create language!', 'nbdesigner'),
+            'flag'  => 0
+        );        
+        if (!wp_verify_nonce($_POST['nbdesigner_newlang_hidden'], 'nbdesigner-new-lang') || !current_user_can('edit_nbd_language')) {
+            echo json_encode($data);
+            wp_die();
         } 
-        $data = array(); $data['mes'] = 'success';
         if(isset($_POST['nbdesigner_codelang']) && isset($_POST['nbdesigner_namelang'])){           
             $code = sanitize_text_field($_POST['nbdesigner_codelang']);
-            $path_lang = $this->plugin_path_data . 'data/language/'.$code.'.json';
-            $path_original_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en.json';
-            $path_original_data_lang = $this->plugin_path_data . 'data/language/en.json';
+            $path_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language/'.$code.'.json';
+            $path_original_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en-US.json';
+            $path_original_data_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language/en-US.json';
             if(file_exists($path_original_data_lang)) $path_original_lang = $path_original_data_lang;
             $path_cat_lang = NBDESIGNER_PLUGIN_DIR . 'data/language.json';
-            $path_data_cat_lang = $this->plugin_path_data . 'data/language.json';
+            $path_data_cat_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language.json';
             if(file_exists($path_data_cat_lang)) $path_cat_lang = $path_data_cat_lang;            
             $cats = json_decode(file_get_contents($path_cat_lang)); 
             $lang = json_decode(file_get_contents($path_original_lang)); 
@@ -3212,6 +3227,8 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                     file_put_contents($path_cat_lang, json_encode($cats));   
                     file_put_contents($path_data_cat_lang, json_encode($cats));   
                 }
+                $data['mes'] = 'Your language has been created successfully!';
+                $data['flag'] = 1;
             }else{
                 $data['mes'] = 'error';
             }            
@@ -3395,7 +3412,8 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             'warning_mes_delete_file' => __('You will not be able to recover this file!', 'nbdesigner'),
             'warning_mes_delete_category' => __('You will not be able to recover this category!', 'nbdesigner'),
             'warning_mes_fill_category_name' => __('Please fill category name!', 'nbdesigner'),
-            'warning_mes_backup_data' => __('Restore your last data!', 'nbdesigner')
+            'warning_mes_backup_data' => __('Restore your last data!', 'nbdesigner'),
+            'warning_mes_delete_lang' => __('You will not be able to recover this language!', 'nbdesigner')
         );
         return $lang;
     }

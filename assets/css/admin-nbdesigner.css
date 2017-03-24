@@ -339,11 +339,13 @@ h4.nbdesigner_order_product_name {
     display: none;
 }
 .nbdesigner-translate li {
-    min-height: 32px; 
-    width: 48%; 
+    min-height: 32px;
+    width: calc(50% - 21px);
     float: left;
-    margin-right: 2%;
+    margin-right: 6px;
     border-bottom: 1px solid #ddd;
+    background: #fff;
+    padding: 3px 0px 0px 15px;
 }
 .nbdesigner-translate li p {
     line-height: 28px; margin: 0;
