@@ -12,7 +12,7 @@
             <?php endforeach; ?>
         </select>
         <?php endif; ?>
-        <a class="button nbutton-primary" onclick="NBDESIGNADMIN.saveLang(this)" data-code="en" id="nbdesigner-trans-code"><?php echo __('Save Language', 'nbdesigner'); ?></a>
+        <a class="button nbutton-primary" onclick="NBDESIGNADMIN.saveLang(this)" data-code="en_US" id="nbdesigner-trans-code"><?php echo __('Save Language', 'nbdesigner'); ?></a>
         <a class="button btn-primary nbdesigner-delete" onclick="NBDESIGNADMIN.deleteLang(this)" ><?php echo __('Delete Language', 'nbdesigner'); ?></a>       
         <?php add_thickbox(); ?>
         <div id="nbdesigner-new-lang" style="display:none;">

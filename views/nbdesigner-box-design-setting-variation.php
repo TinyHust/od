@@ -172,6 +172,7 @@
                         </div> 	
                         <p class="nbd-setting-section-title">
                             <?php echo __('Relative position:', 'nbdesigner'); ?>
+                            <span class="dashicons dashicons-update nbdesiger-update-area-design" onclick="NBDESIGNADMIN.updateDesignAreaSize(this)"></span>
                         </p>
                         <div class="nbdesigner-info-box-inner">
                             <label class="nbdesigner-setting-box-label"><?php echo __('Width', 'nbdesigner'); ?></label>

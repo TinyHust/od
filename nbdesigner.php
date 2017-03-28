@@ -44,8 +44,11 @@ if (!defined('NBDESIGNER_PLUGIN_DIR')) {
 if (!defined('NBDESIGNER_PLUGIN_BASENAME')) {
     define('NBDESIGNER_PLUGIN_BASENAME', plugin_basename(__FILE__));
 }
+if (!defined('NBDESIGNER_MODE_DEV')) {
+    define('NBDESIGNER_MODE_DEV', TRUE);
+}
 if (!defined('NBDESIGNER_MODE_DEBUG')) {
-    define('NBDESIGNER_MODE_DEBUG', 'dev');
+    define('NBDESIGNER_MODE_DEBUG', TRUE);
 }
 if (!defined('NBDESIGNER_DATA_DIR')) {   
     define('NBDESIGNER_DATA_DIR', $basedir . '/nbdesigner');

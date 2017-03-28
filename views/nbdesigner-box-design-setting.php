@@ -253,7 +253,7 @@ endforeach; ?>
                 </a>
                 <?php 
                     endif;
-                    $link_manager_template = add_query_arg(array('pid' => $post_id), admin_url('admin.php?page=nbdesigner_admin_template'));
+                    $link_manager_template = add_query_arg(array('pid' => $post_id, 'view' => 'templates'), admin_url('admin.php?page=nbdesigner_manager_product'));
                 ?>
                 <a href="<?php echo $link_manager_template; ?>" class="button nbd-admin-tem-link">
                     <span class="dashicons dashicons-images-alt"></span>

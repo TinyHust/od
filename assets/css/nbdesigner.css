@@ -1,11 +1,11 @@
 #nbdesigner_frontend_area .img-con {
     margin: 0 5px 5px 0;
     border: 1px solid #ddd;
-    border-radius: 4px;
     width: 60px;
     height: 60px;
     display: inline-block;
     text-align: center;
+    vertical-align: top;
 }
 #nbdesigner_frontend_area .img-con img{
     max-width: 100%;
@@ -31,7 +31,7 @@
     cursor: pointer;
 }
 .nbdesigner-disable {
-    opacity: 0.7;
+    opacity: 0.2;
     pointer-events: none;
 }
 @-webkit-keyframes rotating /* Safari and Chrome */ {
@@ -88,6 +88,27 @@
 }
 .nbdesign-button {
     float: none;
+    background-color: #fff;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #222;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-size: 0.875rem;
+    font-weight: 800;
+    line-height: 1;
+    padding: 1em 2em;
+    text-shadow: none;
+    -webkit-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    transition: all 0.4s;
+    border: 1px solid #ddd;       
+}
+.nbdesign-button:hover{
+    color: #66b6cd;
+    border: 1px solid #66b6cd;    
 }
 .nbdesigner-gallery {
     display: block;

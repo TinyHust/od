@@ -63,6 +63,7 @@
                     $bgHeight = 500;
                     $bgWidth = round($proWidth * $bgRatio);
                     $offsetTop = 0;
+                    $offsetLeft = round((500 - $bgWidth) / 2);  
                     $scale = round(500 / ($unitRatio * $proHeight * $mm2Px), 2);    
                 }
                 $cdWidth = $pdfData['area_design_width'];

@@ -4,7 +4,7 @@
     $hide_on_mobile = nbdesigner_get_option('nbdesigner_disable_on_smartphones');
     if(wp_is_mobile() && $hide_on_mobile == 'yes'):                           
 ?>
-<html lang="<?php echo get_bloginfo('language'); ?>" ng-app="app">
+<html lang="<?php echo str_replace('-', '_', get_bloginfo('language')); ?>" ng-app="app">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -66,7 +66,7 @@
     </body>
 </html>
 <?php else: ?>
-<html lang="<?php echo get_bloginfo('language'); ?>" ng-app="app">
+<html lang="<?php echo str_replace('-', '_', get_bloginfo('language')); ?>" ng-app="app">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -106,13 +106,42 @@
             $template_folder = (isset($_GET['template_folder']) &&  $_GET['template_folder'] != '') ? $_GET['template_folder'] : '';
             $reference_product = (isset($_GET['reference_product']) &&  $_GET['reference_product'] != '') ? $_GET['reference_product'] : '';
             $order_item_folder = (isset($_GET['order_item_folder']) &&  $_GET['order_item_folder'] != '') ? $_GET['order_item_folder'] : '';
-            $template_priority = (isset($_GET['template_priority']) &&  $_GET['template_priority'] != '') ? $_GET['template_priority'] : '';
+            $template_priority = (isset($_GET['priority']) &&  $_GET['priority'] != '') ? $_GET['priority'] : '';
             $user_id = (get_current_user_id() > 0) ? get_current_user_id() : session_id();
-            $ui_mode = 1;/*1: iframe popup, 2: div popup, 3: studio*/
+            $ui_mode = 1;/*1: iframe popup, 2: div popup, 3: studio*/   
+            $product = wc_get_product($product_id);
+            $vid = 0;
+            if( $product->is_type( 'variable' ) ) { 
+                $available_variations = $product->get_available_variations();   
+                $default_attributes = $product->get_variation_default_attributes();  
+                foreach ( $available_variations as $variation ){
+                    if(count($default_attributes) == count($variation['attributes'])){
+                        $vid = $variation['variation_id'];
+                        foreach ($default_attributes as $key => $attribute){
+                            if($variation['attributes']['attribute_'.$key] != $attribute){
+                                $vid = 0;
+                                break;
+                            }
+                        }
+                    }
+                    if($vid > 0)  break;
+                }     
+            }       
+            if($task == 'edit_template'){
+                $origin_folder = $template_folder;                 
+            }else if($task == 'create_template' && $template_priority == 'primary'){
+                $priority = get_post_meta($product_id, '_nbdesigner_admintemplate_primary', true);    
+                if($priority){
+                    $template_priority = 'extra';
+                }
+                $origin_folder = 'primary';
+            }else {
+                $origin_folder = '';
+            }
         ?>
         <script type="text/javascript">
             var NBDESIGNCONFIG = {
-                lang_code   :   "<?php echo get_bloginfo('language'); ?>",
+                lang_code   :   "<?php echo str_replace('-', '_', get_bloginfo('language')); ?>",
                 lang_rtl    :   "<?php if(is_rtl()){ echo 'rtl'; } else {  echo 'ltr';  } ?>",
                 is_mobile   :   "<?php echo wp_is_mobile(); ?>",
                 ui_mode   :   "<?php echo $ui_mode; ?>",
@@ -137,7 +166,7 @@
                 nbdesigner_default_color    :   "<?php echo nbdesigner_get_option('nbdesigner_default_color'); ?>",
                 font_url    :   "<?php echo NBDESIGNER_FONT_URL .'/'; ?>",
                 is_designer :  <?php if(current_user_can('edit_nbd_template')) echo 1; else echo 0; ?>,
-                origin_folder_template   :   "<?php if (isset($_GET['task']) && $_GET['task'] == 'edit_template') {echo $template_folder;} else echo '';  ?>",
+                origin_folder_template   :   "<?php echo $origin_folder  ?>",
                 order_id    :   "<?php echo $order_id; ?>",
                 task    :   "<?php echo $task; ?>",
                 template_priority   :   "<?php echo $template_priority; ?>",
@@ -153,7 +182,7 @@
                 ajax_url    : "<?php echo admin_url('admin-ajax.php'); ?>",
                 nonce   :   "<?php echo wp_create_nonce('save-design'); ?>",
                 nonce_get   :   "<?php echo wp_create_nonce('nbdesigner-get-data'); ?>",
-                product_data  :   <?php echo json_encode(nbd_get_product_info($user_id, $product_id, 0, $task, $reference_product, $template_folder, $order_id, $order_item_folder)); ?>
+                product_data  :   <?php echo json_encode(nbd_get_product_info($user_id, $product_id, $vid, $task, $reference_product, $template_folder, $order_id, $order_item_folder)); ?>
             };                  
             var _colors = NBDESIGNCONFIG['_palette'].split(','),
             colorPalette = [], row = [];
@@ -186,7 +215,11 @@
             <?php endif; ?>     
         </script>
     </head>
+    <?php if(NBDESIGNER_MODE_DEV): ?>
     <body ng-controller="DesignerController" ng-style="{'background-image' : 'url(<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/'+backgroundId+'.png)'}">
+    <?php else: ?>
+    <body ng-controller="DesignerController" >    
+    <?php endif; ?>    
         <div class="od_loading"></div>
         <div class="container-fluid" id="designer-controller">
             <?php
@@ -220,7 +253,9 @@
             <span class="hide-tool-config fa fa-chevron-down e-shadow e-hover-shadow item-config" ng-hide="modeMobile" ng-style="{'display' : (pop.text == 'block' || pop.art == 'block' || pop.qrcode == 'block' || pop.clipArt == 'block' || pop.draw == 'block') ? 'block' : 'none'}"></span>
         </div>
         <?php
-        include_once('components/config_style.php');
+        if(NBDESIGNER_MODE_DEV){
+            include_once('components/config_style.php');           
+        }
         include_once('components/popover_layer.php');
         include_once('components/tool_top.php');
         include_once('components/helpdesk.php');
@@ -235,17 +270,32 @@
             <p id="first_message">{{(langs['NBDESIGNER_PROCESSING']) ? langs['NBDESIGNER_PROCESSING'] : "NBDESIGNER PROCESSING"}}...</p>
             <p ng-show="partialSave"><span id="saved_sides">0</span> / <span id="total_sides">1</span></p>
         </div>
-<!--        <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>-->
+        <?php if(!NBDESIGNER_MODE_DEV): ?>
+        <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <?php else: ?>
         <script type='text/javascript' src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/libs/jquery.min.js'; ?>"></script>
-<!--        <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>-->
+        <?php endif; ?>
+        <?php if(!NBDESIGNER_MODE_DEV): ?>
+        <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+        <?php else: ?>
         <script type='text/javascript' src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/libs/jquery-ui.min.js'; ?>"></script>
+        <?php endif; ?>
         <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/touch.js'; ?>"></script>
-<!--        <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
+        <?php if(!NBDESIGNER_MODE_DEV): ?>
+        <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <?php else: ?>
         <script type='text/javascript' src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/libs/bootstrap.min.js'; ?>"></script>
-<!--        <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.2/angular.min.js"></script>-->
+        <?php endif; ?>
+        <?php if(!NBDESIGNER_MODE_DEV): ?>
+        <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.2/angular.min.js"></script>
+        <?php else: ?>
         <script type='text/javascript' src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/libs/angular.min.js'; ?>"></script>
-<!--        <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>-->
+        <?php endif; ?>
+        <?php if(!NBDESIGNER_MODE_DEV): ?>
+        <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
+        <?php else: ?>
         <script type='text/javascript' src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/libs/lodash.js'; ?>"></script>
+        <?php endif; ?>
         <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/bundle.min.js'; ?>"></script>
         <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/fabric.curvedText.js'; ?>"></script>
         <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/fabric.removeColor.js'; ?>"></script>

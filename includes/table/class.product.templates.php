@@ -287,7 +287,7 @@ class Product_Template_List_Table extends WP_List_Table {
         if (( isset($_POST['action']) && $_POST['action'] == 'bulk-private' ) || ( isset($_POST['action2']) && $_POST['action2'] == 'bulk-private' )) {
             $delete_ids = esc_sql($_POST['bulk-delete']);
             foreach ($delete_ids as $id) {
-                self::update_template($id, array('private' => 1));
+                self::update_template($id, array('private' => 1, 'publish' => 0));
             }
             wp_redirect(esc_url_raw(add_query_arg('','')));
             exit;

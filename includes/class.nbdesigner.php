@@ -153,13 +153,10 @@ class Nbdesigner_Plugin {
     public function nbdesigner_add_to_cart_shop_link($handler, $product){
         if(is_nbdesigner_product($product->id)){    
             $label = __('Start Design', 'nbdesigner');
-            return sprintf( '<a href="%s" rel="nofollow" data-product_id="%s" data-product_sku="%s" class="button product_type_%s">%s</a>',
-                esc_url( get_permalink($product->id) ),
-                esc_attr( $product->id ),
-                esc_attr( $product->get_sku() ),
-                esc_attr( $product->product_type ),
-                esc_html( $label )
-            );              
+            ob_start();            
+            nbdesigner_get_template('loop/start-design.php', array('product' => $product, 'label' => $label));
+            $button = ob_get_clean();    
+            return $button;
         }
         return $handler;
     }
@@ -1233,13 +1230,18 @@ class Nbdesigner_Plugin {
             if(isset($_GET['product_id'])){
                 $license = $this->nbdesigner_check_license();
                 $product_id = $_GET['product_id'];
+                $variation_id = $_GET['vid'];
                 $path = NBDESIGNER_CUSTOMER_DIR . '/' . $user_id . '/' . $order_id .'/' .$product_id;  
                 if(isset($_GET['order_item_id'])){
                     $order_item_id = $_GET['order_item_id'];
                     $folder_design = wc_get_order_item_meta($order_item_id, '_nbdesigner_folder_design');     
                     $path = NBDESIGNER_CUSTOMER_DIR . '/' . $user_id . '/' . $order_id .'/' .$folder_design;  
                 }
-                $datas = unserialize(get_post_meta($product_id, '_designer_setting', true)); 
+                if($variation_id > 0){
+                    $datas = unserialize(get_post_meta($variation_id, '_designer_setting'.$variation_id, true)); 
+                }else{
+                    $datas = unserialize(get_post_meta($product_id, '_designer_setting', true)); 
+                }
                 $list_design = array();
                 $list_images = Nbdesigner_IO::get_list_thumbs($path, 1);
                 foreach ($list_images as $img){
@@ -1657,7 +1659,7 @@ class Nbdesigner_Plugin {
             $button .= '<div style="position: fixed; top: 0; left: 0; z-index: 999999; opacity: 0; width: 100%; height: 100%;" id="container-online-designer"><iframe id="onlinedesigner-designer"  width="100%" height="100%" scrolling="no" frameborder="0" noresize="noresize" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" src="' . $src . '"></iframe><span id="closeFrameDesign"  class="nbdesigner_pp_close">&times;</span></div>';
             
             if(is_array($att)){
-                if($att['button'] == 'yes'){                   
+                if(isset($att['button']) && $att['button'] == 'yes'){                   
                     ob_start();            
                     nbdesigner_get_template('add-to-cart.php', array('pid' => $pid));
                     $content = ob_get_clean();                
@@ -1700,8 +1702,11 @@ class Nbdesigner_Plugin {
         $reference_product = (isset($_POST['reference_product']) &&  $_POST['reference_product'] != '') ? $_POST['reference_product'] : '';
         $order_item_folder = (isset($_POST['order_item_folder']) &&  $_POST['order_item_folder'] != '') ? $_POST['order_item_folder'] : '';
         $template_priority = (isset($_POST['template_priority']) &&  $_POST['template_priority'] != '') ? $_POST['template_priority'] : '';
-        $user_id = (get_current_user_id() > 0) ? get_current_user_id() : session_id();            
-        $data = nbd_get_product_info($user_id, $product_id, $variation_id, $task, $reference_product, $template_folder, $order_id, $order_item_folder);       
+        $user_id = (get_current_user_id() > 0) ? get_current_user_id() : session_id();         
+        $data = nbd_get_product_info($user_id, $product_id, $variation_id, $task, $reference_product, $template_folder, $order_id, $order_item_folder);  
+        if($task != 'create_template' && $task != 'edit_template' && $task != 'redesign' && $template_folder != '' && $product_id != ''){
+            $this->update_template_hit($product_id, $template_folder);
+        }
         echo json_encode($data);
         wp_die();
     }
@@ -1823,7 +1828,7 @@ class Nbdesigner_Plugin {
             $result['image'] = $data_after_save_image['link'];
             $result['flag'] = 'success';     
             if(($task == 'create_template' || $task == 'edit_template')){
-                $this->nbdesigner_create_thumbnail_design($path, $path.'/preview', $product_id, 500, 500);     
+                $this->nbdesigner_create_thumbnail_design($path, $path.'/preview', $product_id, 500, 500);               
                 if(!$save_status){
                     $this->nbdesigner_insert_table_templates($product_id, $template_folder, $priority, 1, 0);
                     if($priority){
@@ -2020,7 +2025,8 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             23   =>    'delete_nbd_language',
             24   =>    'delete_nbd_template',
             25   =>    'sell_nbd_design',
-            26   =>    'update_nbd_data'
+            26   =>    'update_nbd_data',
+            27   =>    'manage_nbd_setting'
         );
         $admin_role = get_role('administrator');
         if (null != $admin_role) {
@@ -2496,7 +2502,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                 $list = json_decode($data_design);
                 foreach ($list as $img) {
                     $src = $this->nbdesigner_create_secret_image_url($img);
-                    $html .= '<img width="60" height="60" style="border-radius: 3px; border: 1px solid #ddd; margin-top: 5px; margin-right: 5px; display: inline-block;" src="' . $src . '"/>';
+                    $html .= '<img style="max-width: 60px; max-height: 60px; border-radius: 3px; border: 1px solid #ddd; margin-top: 5px; margin-right: 5px; display: inline-block;" src="' . $src . '"/>';
                 }
                 $html .= '</div>';
                 echo $html;
@@ -3060,10 +3066,10 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         require_once ABSPATH . 'wp-admin/includes/translation-install.php';
         $languages = wp_get_available_translations();
         $path = NBDESIGNER_PLUGIN_DIR . 'data/language.json';  
-        $path_data = $this->plugin_path_data . 'data/language.json';
+        $path_data = NBDESIGNER_DATA_CONFIG_DIR . '/language.json';
         if(file_exists($path_data)) $path = $path_data;  
-        $path_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en-US.json';
-        $path_data_lang = $this->plugin_path_data . 'data/language/en-US.json';
+        $path_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en_US.json';
+        $path_data_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language/en_US.json';
         if(file_exists($path_data_lang)) $path_lang = $path_data_lang;  
         $list = json_decode(file_get_contents($path));     
         $lang = json_decode(file_get_contents($path_lang)); 
@@ -3090,8 +3096,14 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         } 
         if(isset($langs) && isset($code)){
             $path_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/'.$code.'.json';
-            $path_data = $this->plugin_path_data . 'data/language/'.$code.'.json';
-            if(file_exists($path_data)) $path_lang = $path_data;                   
+            $path_data = NBDESIGNER_DATA_CONFIG_DIR . '/language/'.$code.'.json';
+            if(file_exists($path_data)){
+                $path_lang = $path_data;                   
+            }else{
+                if($code = "en_US") {
+                    $path_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language/en_US.json';
+                }
+            } 
             foreach ($langs[0] as $key => $lang){
                 $langs[0][$key] = strip_tags($lang);
             }           
@@ -3123,7 +3135,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $path_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/'.$code.'.json';
         $path_data_lang = $this->plugin_path_data . 'data/language/'.$code.'.json';
         if(file_exists($path_data_lang)) $path_lang = $path_data_lang;
-        $path_original_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en-US.json';
+        $path_original_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en_US.json';
         if(!file_exists($path_lang)) $path_lang = $path_original_lang;
         $lang_original = json_decode(file_get_contents($path_original_lang)); 
         $lang = json_decode(file_get_contents($path_lang)); 
@@ -3191,8 +3203,8 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         if(isset($_POST['nbdesigner_codelang']) && isset($_POST['nbdesigner_namelang'])){           
             $code = sanitize_text_field($_POST['nbdesigner_codelang']);
             $path_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language/'.$code.'.json';
-            $path_original_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en-US.json';
-            $path_original_data_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language/en-US.json';
+            $path_original_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en_US.json';
+            $path_original_data_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language/en_US.json';
             if(file_exists($path_original_data_lang)) $path_original_lang = $path_original_data_lang;
             $path_cat_lang = NBDESIGNER_PLUGIN_DIR . 'data/language.json';
             $path_data_cat_lang = NBDESIGNER_DATA_CONFIG_DIR . '/language.json';
@@ -3272,27 +3284,12 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         }  
         $result = array();
         if(isset($_POST['id'])){
-            $pid = $_POST['id'];
+            $pid = absint($_POST['id']);
             $list_design = array();
-            $path = $this->plugin_path_data . 'admindesign/' . $pid;
-            $up = wp_upload_dir();
-            $base_path = $up['baseurl'];
-            if ($dir = @opendir($path)) {
-                while (($file = readdir($dir) ) !== false) {
-                    if (in_array($file, array('.', '..')))
-                        continue;
-                    if (is_dir($path . '/' . $file)) {
-                        $path_preview = $path . '/' . $file .'/preview';
-                        $listThumb = $this->nbdesigner_list_thumb($path_preview);
-                        $mid_path = 'nbdesigner/admindesign/' .$pid. '/' .$file. '/preview/'; 
-                        if(count($listThumb)){
-                            foreach ($listThumb as $img){
-                                $name = basename($img);
-                                $url = $base_path.'/'.$mid_path.$name;
-                                $list_design[$file][] = $url;
-                            }	                            
-                        }   
-                    }
+            $templates = $this->nbdesigner_get_templates_by_page('', '', '', $pid, true);
+            if(count($templates)){
+                foreach ($templates as $tem){
+                    $list_design[$tem['adid']] = $tem['image'];
                 }
             }
             $result['data'] = $list_design;
@@ -3381,7 +3378,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $count = $wpdb->get_var($sql);  
         return $count ? $count : 0;
     }
-    public function nbdesigner_get_templates_by_page($page, $row, $per_row, $pid = false){
+    public function nbdesigner_get_templates_by_page($page = 1, $row = 3, $per_row = 4, $pid = false, $get_all = false){
         $listTemplates = array();
         global $wpdb;
         $limit = $row * $per_row;
@@ -3391,7 +3388,9 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $sql .= " WHERE t.publish = 1 AND p.post_status = 'publish'";     
         if($pid) $sql .= " AND t.product_id = ".$pid; 
         $sql .= " ORDER BY t.created_date DESC";
-        $sql .= " LIMIT ".$limit." OFFSET ".$offset;
+        if(!$get_all){
+            $sql .= " LIMIT ".$limit." OFFSET ".$offset;
+        }       
         $posts = $wpdb->get_results($sql, 'ARRAY_A');     
         foreach ($posts as $p){
             $path_preview = NBDESIGNER_ADMINDESIGN_DIR . '/' . $p['ID'] .'/'.$p['folder']. '/preview';
@@ -3401,7 +3400,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                 $image = Nbdesigner_IO::convert_path_to_url($listThumb[0]);
             }
             $listTemplates[] = array('id' => $p['ID'], 'image' => $image, 'adid' => $p['folder']);          
-        }           
+        }         
         return $listTemplates;
     }
     protected static function nbdesigner_get_javascript_multilanguage(){

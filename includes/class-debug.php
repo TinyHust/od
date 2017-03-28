@@ -15,7 +15,7 @@ class Nbdesigner_DebugTool {
         }       
     }
     public static function log($data){
-        if(NBDESIGNER_MODE_DEBUG === 'dev'){
+        if(NBDESIGNER_MODE_DEBUG){
             ob_start();
             var_dump($data);
             error_log(ob_get_clean());
@@ -24,7 +24,7 @@ class Nbdesigner_DebugTool {
         }
     }
     public static function wirite_log($data){
-        if(NBDESIGNER_MODE_DEBUG === 'dev'){
+        if(NBDESIGNER_MODE_DEBUG){
             error_reporting( E_ALL );
             ini_set('log_errors', 1);
             ini_set('error_log', self::$_path . 'debug.log');           
@@ -40,7 +40,7 @@ class Nbdesigner_DebugTool {
     public static function manual_write_debug($data){
         $path = self::$_path . 'debug.txt';
         $data = print_r($data, true);
-        if (NBDESIGNER_MODE_DEBUG === 'dev') {
+        if (NBDESIGNER_MODE_DEBUG) {
             if (!$fp = fopen($path, 'w')) {
                 return FALSE;
             }

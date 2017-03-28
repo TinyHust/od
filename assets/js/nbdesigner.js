@@ -34,11 +34,11 @@ jQuery(document).ready(function () {
     jQuery('#nbdesign-new-template').on('click', function(){
         showDesignFrame();
     });
-});
-jQuery(window).on('resize', function () {
-    var width = jQuery(window).width(),
-            height = jQuery(window).height();
-    jQuery('#container-online-designer').css({'width': width, 'height': height});
+    jQuery(window).on('resize', function () {
+        var width = jQuery(window).width(),
+                height = jQuery(window).height();
+        jQuery('#container-online-designer').css({'width': width, 'height': height});
+    });    
 });
 var NBDESIGNERPRODUCT = {
     insert_customer_design: function (data) {
@@ -66,8 +66,15 @@ var NBDESIGNERPRODUCT = {
         jQuery('#nbdesigner_frontend_area').html('');
         jQuery('#nbdesigner_frontend_area').append(html);
     },
-    nbdesigner_ready: function(){
-        jQuery('.nbdesign-button').removeClass('nbdesigner-disable');
+    nbdesigner_ready: function(){ 
+        if(jQuery('input[name="variation_id"]').length > 0){
+            var vid = jQuery('input[name="variation_id"]').val();
+            if(vid != '' &&  parseInt(vid) > 0) {
+                jQuery('.nbdesign-button').removeClass('nbdesigner-disable');
+            }
+        }else{
+            jQuery('.nbdesign-button').removeClass('nbdesigner-disable');
+        }
         jQuery('.nbdesigner-img-loading').hide();
     },
     nbdesigner_unready: function(){

@@ -360,7 +360,7 @@ function nbd_get_product_info($user_id, $product_id, $variation_id = 0, $task = 
             $data['ref'] = unserialize(get_post_meta($reference_product, '_designer_setting', true));
         }else{
             $option = unserialize(get_post_meta($product_id, '_nbdesigner_option', true));   
-            if($option['admindesign']){
+            if(isset($option['admindesign']) && $option['admindesign']){
                 if($template_folder != ''){
                     $path = NBDESIGNER_ADMINDESIGN_DIR . '/' . $product_id . '/' . $template_folder;
                 }else {

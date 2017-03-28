@@ -1,5 +1,32 @@
 var mobile = false,
 w2 = 140;
+var toggleShowTool = function(){
+    if($('#addition_tool .menu_right').hasClass('open')) $('.menu_right').triggerHandler('click');
+    if($('#menu').hasClass('open')) $('#menu').triggerHandler('click');
+    if($('#layer').hasClass('open')) $('#layer').triggerHandler('click');
+    if($('.m-center').hasClass('open')) $('.m-center').triggerHandler('click');
+    if($('.menu_cart').hasClass('open')) $('.menu_cart').triggerHandler('click');
+    if($('#od_config').hasClass('open')){
+        $(' #gesture, .container_menu, #layer, #info, #addition_tool').fadeOut();
+    }else{
+        $(' #gesture, .container_menu, #layer, #info, #addition_tool').fadeIn();
+    }
+};
+var showConfig = function(){
+    if(mobile){
+        if(!$('#layer').hasClass('open')){
+            $('#od_config').addClass('open'); 
+            toggleShowTool();			                       
+        }
+        $('#od_config').addClass('open'); 
+    };
+};
+var hideConfig = function(){
+    if(mobile){                   
+        $('#od_config').removeClass('open');     
+        toggleShowTool();
+    };            
+};
 $(document).ready(function(){
     setTimeout(function() {
         $('#menu').triggerHandler('click');
@@ -105,35 +132,6 @@ $(document).ready(function(){
 				left: left
 			}, 400);
 	});
-	toggleShowTool = function(){
-		if($('#addition_tool .menu_right').hasClass('open')) $('.menu_right').triggerHandler('click');
-		if($('#menu').hasClass('open')) $('#menu').triggerHandler('click');
-		if($('#layer').hasClass('open')) $('#layer').triggerHandler('click');
-		if($('.m-center').hasClass('open')) $('.m-center').triggerHandler('click');
-		if($('.menu_cart').hasClass('open')) $('.menu_cart').triggerHandler('click');
-                if($('#od_config').hasClass('open')){
-                    $(' #gesture, .container_menu, #layer, #info, #addition_tool').fadeOut();
-                }else{
-                    $(' #gesture, .container_menu, #layer, #info, #addition_tool').fadeIn();
-                }
-	};
-	showConfig = function(){
-		if(mobile){
-                    if(!$('#layer').hasClass('open')){
-                        $('#od_config').addClass('open'); 
-			toggleShowTool();			                       
-                    }
-                    $('#od_config').addClass('open'); 
-//                    toggleShowTool();
-		};
-                	
-	};
-        hideConfig = function(){
-		if(mobile){                   
-                    $('#od_config').removeClass('open');     
-                    toggleShowTool();
-		};            
-        }
 	$( ".od_tab" ).tabs({
 		collapsible: true,
 		active: 0 

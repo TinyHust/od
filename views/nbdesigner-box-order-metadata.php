@@ -36,7 +36,8 @@
                             <?php endforeach; ?>
                             <?php 
                                 if($folder != ''){
-                                    $link_view_detail = add_query_arg(array('product_id' => $product["product_id"], 'order_id' => $order->id, 'order_item_id' => $order_item_id), admin_url('admin.php?page=nbdesigner_detail_order'));
+                                    $arr = array('product_id' => $product["product_id"], 'order_id' => $order->id, 'order_item_id' => $order_item_id, 'vid' => $product['variation_id']);
+                                    $link_view_detail = add_query_arg($arr, admin_url('admin.php?page=nbdesigner_detail_order'));
                                 }else{
                                     $link_view_detail = add_query_arg(array('product_id' => $product["product_id"], 'order_id' => $order->id), admin_url('admin.php?page=nbdesigner_detail_order'));
                                 }
