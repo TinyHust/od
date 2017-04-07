@@ -10,7 +10,7 @@ Version: 1.7.0
 Author: Netbaseteam
 Author URI: http://netbaseteam.com/
 License: GPLv2 or later
-Text Domain: nbdesigner
+Text Domain: web-to-print-online-designer
 Domain Path: /langs
 */
 
@@ -61,6 +61,12 @@ if (!defined('NBDESIGNER_FONT_DIR')) {
 }
 if (!defined('NBDESIGNER_FONT_URL')) {   
     define('NBDESIGNER_FONT_URL', NBDESIGNER_DATA_URL . '/fonts');
+}
+if (!defined('NBDESIGNER_ART_DIR')) {   
+    define('NBDESIGNER_ART_DIR', NBDESIGNER_DATA_DIR . '/cliparts');
+}
+if (!defined('NBDESIGNER_ART_URL')) {   
+    define('NBDESIGNER_ART_URL', NBDESIGNER_DATA_URL . '/cliparts');
 }
 if (!defined('NBDESIGNER_DOWNLOAD_DIR')) {   
     define('NBDESIGNER_DOWNLOAD_DIR', NBDESIGNER_DATA_DIR . '/download');

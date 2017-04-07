@@ -89,7 +89,7 @@ if( !class_exists('Nbdesigner_Settings') ) {
             }
             echo '</h2><br class="clear"/>';
             if (isset($_POST['nbdesigner_save_options_' . $this->page_id]) || isset($_POST['nbdesigner_reset_options_' . $this->page_id])) {
-                $text = isset($_POST['nbdesigner_save_options_' . $this->page_id]) ? __('Settings saved.', 'nbdesigner') : __('Settings reseted.', 'nbdesigner');
+                $text = isset($_POST['nbdesigner_save_options_' . $this->page_id]) ? __('Settings saved.', 'web-to-print-online-designer') : __('Settings reseted.', 'web-to-print-online-designer');
                 echo '<div class="updated"><p><strong>' . $text . '</strong></p></div>';
             }
             do_action( 'nbdesigner_settings_header_end', $this->page_id );            
@@ -99,8 +99,8 @@ if( !class_exists('Nbdesigner_Settings') ) {
             ?>
                 <br class="clear" />
                 <p>
-                    <button type="submit" class="button-primary" name="nbdesigner_save_options_<?php echo $this->page_id; ?>"><?php _e('Save Options', 'nbdesigner'); ?></button>
-                    <button type="submit" class="button-secondary" name="nbdesigner_reset_options_<?php echo $this->page_id; ?>" ><?php _e('Reset', 'nbdesigner'); ?></button>
+                    <button type="submit" class="button-primary" name="nbdesigner_save_options_<?php echo $this->page_id; ?>"><?php _e('Save Options', 'web-to-print-online-designer'); ?></button>
+                    <button type="submit" class="button-secondary" name="nbdesigner_reset_options_<?php echo $this->page_id; ?>" ><?php _e('Reset', 'web-to-print-online-designer'); ?></button>
                 </p>
             </form>
             <?php
@@ -253,7 +253,7 @@ if( !class_exists('Nbdesigner_Settings') ) {
                     $head_td .= '<td>' . $prefixes_html . '<input type="text" id="nbdesigner-values-group-input--' . esc_attr($key) . '" ' . $regex_html . ' /></td>';
                 }
                 $head_th .= '<th></th>';
-                $head_td .= '<td><a href="#" class="nbdesigner-values-group-add button-secondary" id="nbdesigner-values-group-add--' . $id . '">' . __('Add', 'nbdesigner') . '</a></td>';
+                $head_td .= '<td><a href="#" class="nbdesigner-values-group-add button-secondary" id="nbdesigner-values-group-add--' . $id . '">' . __('Add', 'web-to-print-online-designer') . '</a></td>';
                 $input_html = '<div id="' . esc_attr($id) . '" style="' . esc_attr($css) . '" class="nbdesigner-values-group ' . esc_attr($class) . '"><table><thead><tr>' . $head_th . '</tr><tr>' . $head_td . '</tr></thead><tbody></tbody></table></div><input class="nbdesigner-option-value nbdesigner-hidden" name="' . esc_attr($id) . '" value="' . esc_attr($current_value) . '" />';
             }
             //multivalues
@@ -267,7 +267,7 @@ if( !class_exists('Nbdesigner_Settings') ) {
                 $input_html .= '</div>';
             }else if($type == 'multicheckbox'){
                 $input_html = '<div id="' . esc_attr($id) . '" class="nbdesigner-multi-values ' . esc_attr($class) . '"><input type="hidden" name="' . esc_attr($id) . '" value="' . esc_attr($current_value) . '" />';
-                $input_html .= '<p>'.__('Select', 'nbdesigner').': <a class="nbd-select select-all">All</a>&nbsp;&nbsp;<a class="nbd-select select-none">None</a></p>';
+                $input_html .= '<p>'.__('Select', 'web-to-print-online-designer').': <a class="nbd-select select-all">All</a>&nbsp;&nbsp;<a class="nbd-select select-none">None</a></p>';
                 foreach ($options as $key => $label) {
                     $val = nbdesigner_get_option($key);
                     $op_checked = $val == 1 ? 'checked="checked"' : '';                    

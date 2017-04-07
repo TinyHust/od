@@ -107,7 +107,7 @@ class Nbdesigner_DebugTool {
     }
     public static function update_data_migrate_domain(){
         $result = array(
-                'mes'   =>  __('You do not have permission to update data!', 'nbdesigner'),
+                'mes'   =>  __('You do not have permission to update data!', 'web-to-print-online-designer'),
                 'flag'  => 0
             );	        
         if (!wp_verify_nonce($_POST['_nbdesigner_migrate_nonce'], 'nbdesigner-migrate-key') || !current_user_can('update_nbd_data')) {
@@ -127,7 +127,7 @@ class Nbdesigner_DebugTool {
               if(is_file($file)) unlink($file); 
             }   
             $result['flag'] = 1;
-            $result['mes'] = __("Success!", 'nbdesigner');             
+            $result['mes'] = __("Success!", 'web-to-print-online-designer');             
             foreach ($files as $file){
                 $fullname = $path . $file . '.json';    
                 if (file_exists($fullname)) {
@@ -143,24 +143,24 @@ class Nbdesigner_DebugTool {
                         }
                         if(!file_put_contents($fullname, json_encode($list))){
                             $result['flag'] = 0;
-                            $result['mes'] = __("Erorr write data!", 'nbdesigner');                             
+                            $result['mes'] = __("Erorr write data!", 'web-to-print-online-designer');                             
                         }
                     }else{
                         $result['flag'] = 0;
-                        $result['mes'] = __("Erorr backup!", 'nbdesigner');                        
+                        $result['mes'] = __("Erorr backup!", 'web-to-print-online-designer');                        
                     }
                 }
             }           
         }else{
             $result['flag'] = 0;
-            $result['mes'] = __("Invalid info!", 'nbdesigner');   
+            $result['mes'] = __("Invalid info!", 'web-to-print-online-designer');   
         }
         echo json_encode($result);
         wp_die();
     }
     public static function restore_data_migrate_domain(){
         $result = array(
-                'mes'   =>  __('You do not have permission to update data!', 'nbdesigner'),
+                'mes'   =>  __('You do not have permission to update data!', 'web-to-print-online-designer'),
                 'flag'  => 0
             );	         
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('update_nbd_data')) {
@@ -190,7 +190,7 @@ class Nbdesigner_DebugTool {
     }
     public static function save_custom_css(){
         $result = array(
-                'mes'   =>  __('You do not have permission to update data!', 'nbdesigner'),
+                'mes'   =>  __('You do not have permission to update data!', 'web-to-print-online-designer'),
                 'flag'  => 0
             );	        
         if (!wp_verify_nonce($_POST['_nbdesigner_custom_css'], 'nbdesigner-custom-css') || !current_user_can('administrator')) {
@@ -205,7 +205,7 @@ class Nbdesigner_DebugTool {
             fwrite($fp, $custom_css);
             fclose($fp);
             $result['flag'] = 1;
-            $result['mes'] = __('Your CSS has been saved!', 'nbdesigner');
+            $result['mes'] = __('Your CSS has been saved!', 'web-to-print-online-designer');
         }
         echo json_encode($result);
         wp_die();           

@@ -24,7 +24,7 @@ if(count($templates)):
     endforeach;
     echo '</ul>'; ?>
 <?php else: ?>    
-    <?php _e('No template', 'nbdesigner'); ?>
+    <?php _e('No template', 'web-to-print-online-designer'); ?>
 <?php endif; ?>
 <?php if(($total > $limit) && $pagination): ?>
 <?php  
@@ -42,7 +42,7 @@ if(count($templates)):
 ?>
     <div class="tablenav top nbdesigner-pagination-con">
         <div class="tablenav-pages">
-            <span class="displaying-num"><?php printf( _n( '%s Template', '%s Templates', $total, 'nbdesigner' ), number_format_i18n( $total ) ); ?>
+            <span class="displaying-num"><?php printf( _n( '%s Template', '%s Templates', $total, 'web-to-print-online-designer'), number_format_i18n( $total ) ); ?>
             <?php echo $paging->html();  ?>
         </div>
     </div>  

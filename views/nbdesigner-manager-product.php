@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
-<h2 class="nbd-title-page"><?php echo __('Manager NBDesigner Products', 'nbdesigner'); ?></h2>
+<h2 class="nbd-title-page"><?php echo __('Manager NBDesigner Products', 'web-to-print-online-designer'); ?></h2>
 <div class="wrap postbox nbdesigner-manager-product">
     <div>
 	<?php 
@@ -18,17 +18,17 @@
                         <a href="<?php echo $val['url']; ?>" class="nbdesigner-product-link"><?php echo $val['img']; ?></a> 
                     </div>
                     <p class="nbdesigner-product-link">
-                        <a href="<?php echo $val['url'].'#nbdesigner_setting'; ?>" title="<?php _e('Edit product', 'nbdesigner'); ?>"><span class="dashicons dashicons-edit"></span></a>
-                        <a href="<?php echo get_permalink($val['id']); ?>" title="<?php _e('View product', 'nbdesigner'); ?>"><span class="dashicons dashicons-visibility"></span></a>
-                        <a href="<?php echo $link_create_template; ?>" target="_blank" title="<?php _e('Create template', 'nbdesigner'); ?>"><span class="dashicons dashicons-admin-customizer"></span></a>
-                        <a href="<?php echo $link_manager_template; ?>" title="<?php _e('Manager template', 'nbdesigner'); ?>"><span class="dashicons dashicons-images-alt"></span></a>
+                        <a href="<?php echo $val['url'].'#nbdesigner_setting'; ?>" title="<?php _e('Edit product', 'web-to-print-online-designer'); ?>"><span class="dashicons dashicons-edit"></span></a>
+                        <a href="<?php echo get_permalink($val['id']); ?>" title="<?php _e('View product', 'web-to-print-online-designer'); ?>"><span class="dashicons dashicons-visibility"></span></a>
+                        <a href="<?php echo $link_create_template; ?>" target="_blank" title="<?php _e('Create template', 'web-to-print-online-designer'); ?>"><span class="dashicons dashicons-admin-customizer"></span></a>
+                        <a href="<?php echo $link_manager_template; ?>" title="<?php _e('Manager template', 'web-to-print-online-designer'); ?>"><span class="dashicons dashicons-images-alt"></span></a>
                     </p>                     
 		</div>		
 	<?php endforeach;?>
     </div>
     <div class="tablenav top">
         <div class="tablenav-pages">
-            <span class="displaying-num"><?php echo $number_pro.' '. __('Products', 'nbdesigner'); ?></span>
+            <span class="displaying-num"><?php echo $number_pro.' '. __('Products', 'web-to-print-online-designer'); ?></span>
             <?php echo $paging->html();  ?>
         </div>
     </div>    

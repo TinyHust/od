@@ -7,9 +7,9 @@
     ?>  
     <div class="wrap">
         <h1 class="nbd-title">
-            <?php _e('Templates for', 'nbdesigner'); ?>: <a href="<?php echo get_edit_post_link($_GET['pid']); ?>"><?php echo $pro->get_title(); ?></a>
+            <?php _e('Templates for', 'web-to-print-online-designer'); ?>: <a href="<?php echo get_edit_post_link($_GET['pid']); ?>"><?php echo $pro->get_title(); ?></a>
             <a class="button" href="<?php echo $link_add_template; ?>" target="_blank"><?php _e('Add Template'); ?></a>
-            <a href="<?php echo admin_url('admin.php?page=nbdesigner_manager_product') ?>" class="button-primary nbdesigner-right"><?php _e('Back', 'nbdesigner'); ?></a>
+            <a href="<?php echo admin_url('admin.php?page=nbdesigner_manager_product') ?>" class="button-primary nbdesigner-right"><?php _e('Back', 'web-to-print-online-designer'); ?></a>
         </h1>
         <div id="poststuff">
             <div id="post-body" class="metabox-holder">

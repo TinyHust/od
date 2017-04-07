@@ -15,7 +15,8 @@
                     <li><a href="javascript:void(0);" ng-click="addCircle()">{{(langs['CIRCLE']) ? langs['CIRCLE'] : "Circle"}}</a></li>
                     <li><a href="javascript:void(0);" ng-click="addTriangle()">{{(langs['TRIANGLE']) ? langs['TRIANGLE'] : "Triangle"}}</a></li>
                     <li><a href="javascript:void(0);" ng-click="addLine()">{{(langs['LINE']) ? langs['LINE'] : "Line"}}</a></li>
-                    <li><a href="javascript:void(0);" ng-click="addPolygon()">{{(langs['POLYGON']) ? langs['POLYGON'] : "Polygon"}}</a></li>                
+                    <li><a href="javascript:void(0);" ng-click="addPolygon('star')">{{(langs['POLYGON']) ? langs['POLYGON'] : "Polygon"}}</a></li>                
+                    <li><a href="javascript:void(0);" ng-click="addPolygon('hex')">{{(langs['HEXAGON']) ? langs['HEXAGON'] : "Hexagon"}}</a></li>                
                 </ul>                
             </div>
         </div>

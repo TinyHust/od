@@ -61,8 +61,8 @@
     </head>
     <body>
         <p><img src="<?php echo NBDESIGNER_PLUGIN_URL . 'assets/images/mobile.png'; ?>" /></p>
-        <p class="announce"><?php _e('Sorry, our design tool is not currently supported on mobile devices.', 'nbdesigner'); ?></p>
-        <p class="recommend"><a href="javascript:void(0)" onclick="window.parent.hideDesignFrame();"><?php _e('Back to product', 'nbdesigner'); ?></a></p>
+        <p class="announce"><?php _e('Sorry, our design tool is not currently supported on mobile devices.', 'web-to-print-online-designer'); ?></p>
+        <p class="recommend"><a href="javascript:void(0)" onclick="window.parent.hideDesignFrame();"><?php _e('Back to product', 'web-to-print-online-designer'); ?></a></p>
     </body>
 </html>
 <?php else: ?>
@@ -165,6 +165,7 @@
                 _palette    :   "<?php echo nbdesigner_get_option('nbdesigner_hex_names'); ?>",
                 nbdesigner_default_color    :   "<?php echo nbdesigner_get_option('nbdesigner_default_color'); ?>",
                 font_url    :   "<?php echo NBDESIGNER_FONT_URL .'/'; ?>",
+                art_url    :   "<?php echo NBDESIGNER_ART_URL .'/'; ?>",
                 is_designer :  <?php if(current_user_can('edit_nbd_template')) echo 1; else echo 0; ?>,
                 origin_folder_template   :   "<?php echo $origin_folder  ?>",
                 order_id    :   "<?php echo $order_id; ?>",

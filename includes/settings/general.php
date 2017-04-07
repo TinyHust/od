@@ -6,32 +6,32 @@ if( !class_exists('Nbdesigner_Settings_General') ) {
             return apply_filters('nbdesigner_general_settings', array(
                 'general-settings' => array(      
                     array(
-                        'title' => __('Position of button design', 'nbdesigner'),
+                        'title' => __('Position of button design', 'web-to-print-online-designer'),
                         'id' => 'nbdesigner_position_button_product_detail',
                         'default' => '1',
-                        'description' => __( 'The position of the product button designer in the product page', 'nbdesigner' ),
+                        'description' => __( 'The position of the product button designer in the product page', 'web-to-print-online-designer'),
                         'type' => 'radio',
                         'options' => array(
-                            '1' => __('Before add to cart button and after variantions option', 'nbdesigner'),
-                            '2' => __('Before variantions option', 'nbdesigner'),
-                            '3' => __('After add to cart button', 'nbdesigner'),
-                            '4' => __('Custom Hook, <code>echo do_shortcode( \'[nbdesigner_button id="Product ID"]\' );</code>', 'nbdesigner')
+                            '1' => __('Before add to cart button and after variantions option', 'web-to-print-online-designer'),
+                            '2' => __('Before variantions option', 'web-to-print-online-designer'),
+                            '3' => __('After add to cart button', 'web-to-print-online-designer'),
+                            '4' => __('Custom Hook, <code>echo do_shortcode( \'[nbdesigner_button id="Product ID"]\' );</code>', 'web-to-print-online-designer')
                         )
                     ),  
                     array(
-                        'title' => __('Position of button in the catalog', 'nbdesigner'),
+                        'title' => __('Position of button in the catalog', 'web-to-print-online-designer'),
                         'id' => 'nbdesigner_position_button_in_catalog',
                         'default' => '1',
-                        'description' => __( 'The position of the button in the catalog listing.', 'nbdesigner' ),
+                        'description' => __( 'The position of the button in the catalog listing.', 'web-to-print-online-designer'),
                         'type' => 'radio',
                         'options' => array(
-                            '1' => __('Replace Add-to-Cart button', 'nbdesigner'),
-                            '2' => __('End of catalog item', 'nbdesigner'),
-                            '3' => __('Don\'t show', 'nbdesigner')
+                            '1' => __('Replace Add-to-Cart button', 'web-to-print-online-designer'),
+                            '2' => __('End of catalog item', 'web-to-print-online-designer'),
+                            '3' => __('Do not show', 'web-to-print-online-designer')
                         )
                     ),                    
                     array(
-                        'title' => __( 'Preview thumbnail width', 'nbdesigner' ),
+                        'title' => __( 'Preview thumbnail width', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_thumbnail_width',
                         'css'         => 'width: 65px',
                         'default'	=> '100',
@@ -39,7 +39,7 @@ if( !class_exists('Nbdesigner_Settings_General') ) {
                         'type' 		=> 'number'
                     ),
                     array(
-                        'title' => __( 'Preview thumbnail height', 'nbdesigner' ),
+                        'title' => __( 'Preview thumbnail height', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_thumbnail_height',
                         'css'         => 'width: 65px',
                         'default'	=> '100',
@@ -47,94 +47,94 @@ if( !class_exists('Nbdesigner_Settings_General') ) {
                         'type' 		=> 'number'
                     ),                    
                     array(
-                        'title' => __( 'Thumbnail quality', 'nbdesigner' ),
+                        'title' => __( 'Thumbnail quality', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_thumbnail_quality',
-                        'description' 	=> __('Quality of the generated thumbnails between 0 - 100', 'nbdesigner'),
+                        'description' 	=> __('Quality of the generated thumbnails between 0 - 100', 'web-to-print-online-designer'),
                         'css'         => 'width: 65px',
                         'default'	=> '60',
                         'subfix'        => ' %',
                         'type' 		=> 'number'
                     ),
                     array(
-                        'title' => __( 'Default output DPI', 'nbdesigner' ),
+                        'title' => __( 'Default output DPI', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_default_dpi',
                         'css'         => 'width: 65px',
                         'default'	=> '150',
                         'type' 		=> 'number'
                     ),                    
                     array(
-                        'title' => __( 'Show customer design in cart', 'nbdesigner' ),
+                        'title' => __( 'Show customer design in cart', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_show_in_cart',
-                        'description' 	=> __('Show the thumbnail of the customized product in the cart.', 'nbdesigner'),
+                        'description' 	=> __('Show the thumbnail of the customized product in the cart.', 'web-to-print-online-designer'),
                         'default'	=> 'yes',
                         'type' 		=> 'radio',
                         'options'   => array(
-                            'yes' => __('Yes', 'nbdesigner'),
-                            'no' => __('No', 'nbdesigner')
+                            'yes' => __('Yes', 'web-to-print-online-designer'),
+                            'no' => __('No', 'web-to-print-online-designer')
                         )                        
                     ),
                     array(
-                        'title' => __( 'Show customer design in order', 'nbdesigner' ),
+                        'title' => __( 'Show customer design in order', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_show_in_order',
-                        'description' 	=> __('Show the thumbnail of the customized product in the order.', 'nbdesigner'),
+                        'description' 	=> __('Show the thumbnail of the customized product in the order.', 'web-to-print-online-designer'),
                         'default'	=> 'yes',
                         'type' 		=> 'radio',
                         'options'   => array(
-                            'yes' => __('Yes', 'nbdesigner'),
-                            'no' => __('No', 'nbdesigner')
+                            'yes' => __('Yes', 'web-to-print-online-designer'),
+                            'no' => __('No', 'web-to-print-online-designer')
                         )                        
                     ),
                     array(
-                        'title' => __( 'Dimensions Unit', 'nbdesigner' ),
+                        'title' => __( 'Dimensions Unit', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_dimensions_unit',
-                        'description' 	=> __('This controls what unit you will define lengths in.', 'nbdesigner'),
+                        'description' 	=> __('This controls what unit you will define lengths in.', 'web-to-print-online-designer'),
                         'default'	=> 'cm',
                         'type' 		=> 'radio',
                         'options'   => array(
-                            'cm' => __('cm', 'nbdesigner'),
-                            'in' => __('inch', 'nbdesigner'),
-                            'mm' => __('mm', 'nbdesigner')
+                            'cm' => __('cm', 'web-to-print-online-designer'),
+                            'in' => __('inch', 'web-to-print-online-designer'),
+                            'mm' => __('mm', 'web-to-print-online-designer')
                         )                        
                     ),         
                     array(
-                        'title' => __('Hide On Smartphones', 'nbdesigner'),
-                        'description' => __('Hide product designer on smartphones and display an information instead.', 'nbdesigner'),
+                        'title' => __('Hide On Smartphones', 'web-to-print-online-designer'),
+                        'description' => __('Hide product designer on smartphones and display an information instead.', 'web-to-print-online-designer'),
                         'id' => 'nbdesigner_disable_on_smartphones',
                         'default' => 'no',
                         'type' => 'radio',
                         'options' => array(
-                            'yes' => __('Yes', 'nbdesigner'),
-                            'no' => __('No', 'nbdesigner'),
+                            'yes' => __('Yes', 'web-to-print-online-designer'),
+                            'no' => __('No', 'web-to-print-online-designer'),
                         )
                     )
                 ),
                 'admin-notifications' => array(
                     array(
-                        'title' => __( 'Admin notifications', 'nbdesigner' ),
+                        'title' => __( 'Admin notifications', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_notifications',
-                        'description' 	=> __('Send a message to the admin when customer design saved / changed.', 'nbdesigner'),
+                        'description' 	=> __('Send a message to the admin when customer design saved / changed.', 'web-to-print-online-designer'),
                         'default'	=> 'yes',
                         'type' 		=> 'radio',
                         'options'   => array(
-                            'yes' => __('Yes', 'nbdesigner'),
-                            'no' => __('No', 'nbdesigner')
+                            'yes' => __('Yes', 'web-to-print-online-designer'),
+                            'no' => __('No', 'web-to-print-online-designer')
                         )                        
                     ),
                     array(
-                        'title' => __( 'Recurrence', 'nbdesigner' ),
+                        'title' => __( 'Recurrence', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_notifications_recurrence',
-                        'description' 	=> __('Choose how many times you want to receive an e-mail.', 'nbdesigner'),
+                        'description' 	=> __('Choose how many times you want to receive an e-mail.', 'web-to-print-online-designer'),
                         'default'	=> 'hourly',
                         'type' 		=> 'select',
                         'options'   => array(
-                            'hourly' => __('Hourly', 'nbdesigner'),
-                            'twicedaily' => __('Twice a day', 'nbdesigner'),
-                            'daily' => __('Daily', 'nbdesigner')
+                            'hourly' => __('Hourly', 'web-to-print-online-designer'),
+                            'twicedaily' => __('Twice a day', 'web-to-print-online-designer'),
+                            'daily' => __('Daily', 'web-to-print-online-designer')
                         )
                     ),   
                     array(
-                        'title' => __( 'Recipients', 'nbdesigner' ),
-                        'description' 		=> __( 'Enter recipients (comma separated) for this email. Defaults to ', 'nbdesigner' ).'<code>'.get_option('admin_email').'</code>',
+                        'title' => __( 'Recipients', 'web-to-print-online-designer'),
+                        'description' 		=> __( 'Enter recipients (comma separated) for this email. Defaults to ', 'web-to-print-online-designer').'<code>'.get_option('admin_email').'</code>',
                         'id' 		=> 'nbdesigner_notifications_emails',
                         'class'         => 'regular-text',
                         'default'	=> '',
@@ -144,24 +144,24 @@ if( !class_exists('Nbdesigner_Settings_General') ) {
                 ),
                 'application'       => array(
                     array(
-                        'title' => __( 'Facebook App-ID', 'nbdesigner' ),
-                        'description' 		=> __( 'Enter a Facebook App-ID to allow customer use Facebook photos.', 'nbdesigner' ).' <a href="#" id="nbdesigner_show_helper">'.__("Where do I get this info?", 'nbdesigner').'</a>',
+                        'title' => __( 'Facebook App-ID', 'web-to-print-online-designer'),
+                        'description' 		=> __( 'Enter a Facebook App-ID to allow customer use Facebook photos.', 'web-to-print-online-designer').' <a href="#" id="nbdesigner_show_helper">'.__("Where do I get this info?", 'web-to-print-online-designer').'</a>',
                         'id' 		=> 'nbdesigner_facebook_app_id',
                         'class'         => 'regular-text',
                         'default'	=> '',
                         'type' 		=> 'text'
                     ), 
                     array(
-                        'title' => __( 'Instagram App-ID', 'nbdesigner' ),
-                        'description' 		=> __( 'Enter a Instagram App-ID to allow customer use Instagram photos.', 'nbdesigner' ),
+                        'title' => __( 'Instagram App-ID', 'web-to-print-online-designer'),
+                        'description' 		=> __( 'Enter a Instagram App-ID to allow customer use Instagram photos.', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_instagram_app_id',
                         'class'         => 'regular-text',
                         'default'	=> '',
                         'type' 		=> 'text'
                     ), 
                     array(
-                        'title' => __( 'Printful key', 'nbdesigner' ),
-                        'description' 		=> __( 'Enter a Printful key to sync with Printful service.', 'nbdesigner' ),
+                        'title' => __( 'Printful key', 'web-to-print-online-designer'),
+                        'description' 		=> __( 'Enter a Printful key to sync with Printful service.', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_printful_key',
                         'class'         => 'regular-text',
                         'default'	=> '',

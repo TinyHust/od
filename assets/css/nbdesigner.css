@@ -6,6 +6,7 @@
     display: inline-block;
     text-align: center;
     vertical-align: top;
+    background: #ddd;
 }
 #nbdesigner_frontend_area .img-con img{
     max-width: 100%;

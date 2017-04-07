@@ -5,8 +5,8 @@ class NBDesigner_Widget extends WP_Widget {
     function __construct() {
         parent::__construct(
                 'nbdesigner_widget', 
-                esc_html__('Product design', 'nbdesigner'),
-                array('description' => esc_html__('Product design suggest', 'nbdesigner')) 
+                esc_html__('Product design', 'web-to-print-online-designer'),
+                array('description' => esc_html__('Product design suggest', 'web-to-print-online-designer')) 
         );        
     }
     public function widget($args, $instance) {
@@ -44,15 +44,15 @@ class NBDesigner_Widget extends WP_Widget {
     }
 
     public function form($instance) {
-        $title = !empty($instance['title']) ? $instance['title'] : esc_html__('Related product design', 'nbdesigner');
+        $title = !empty($instance['title']) ? $instance['title'] : esc_html__('Related product design', 'web-to-print-online-designer');
         $number = !empty($instance['number']) ? $instance['number'] : 3;
         ?>
             <p>
-            <label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_attr_e('Title:', 'nbdesigner'); ?></label> 
+            <label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_attr_e('Title:', 'web-to-print-online-designer'); ?></label> 
             <input class="widefat" id="<?php echo esc_attr($this->get_field_id('title')); ?>" name="<?php echo esc_attr($this->get_field_name('title')); ?>" type="text" value="<?php echo esc_attr($title); ?>">
             </p>
             <p>
-            <label for="<?php echo esc_attr($this->get_field_id('number')); ?>"><?php esc_attr_e('Number of products to show', 'nbdesigner'); ?></label> 
+            <label for="<?php echo esc_attr($this->get_field_id('number')); ?>"><?php esc_attr_e('Number of products to show', 'web-to-print-online-designer'); ?></label> 
             <input class="widefat" id="<?php echo esc_attr($this->get_field_id('number')); ?>" name="<?php echo esc_attr($this->get_field_name('number')); ?>" type="text" value="<?php echo esc_attr($number); ?>">
             </p>            
         <?php

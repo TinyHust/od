@@ -20,17 +20,17 @@
 ?>
 <div id="nbdesign-order-tabs">
     <h2>
-        <?php _e('Detail product design', 'nbdesigner'); ?>
-        <a class="button-primary nbdesigner-right" href="<?php echo admin_url('post.php?post=' . absint($order_id) . '&action=edit'); ?>"><?php _e('Back to order', 'nbdesigner'); ?></a>
+        <?php _e('Detail product design', 'web-to-print-online-designer'); ?>
+        <a class="button-primary nbdesigner-right" href="<?php echo admin_url('post.php?post=' . absint($order_id) . '&action=edit'); ?>"><?php _e('Back to order', 'web-to-print-online-designer'); ?></a>
     </h2>
     <?php if(!isset($_GET['product_id'])): ?>
-            <p><?php echo __('Go to order detail and choose product design you want to view detail!', 'nbdesigner'); ?></p>
+            <p><?php echo __('Go to order detail and choose product design you want to view detail!', 'web-to-print-online-designer'); ?></p>
     <?php else: 
 
         ?>
         <ul class="nbd-nav-tab">
-            <li><a href="#customer-design"><?php _e('Customer design', 'nbdesigner') ?></a></li>
-            <li><a href="#save-to-pdf"><?php _e('Create PDF', 'nbdesigner') ?></a></li>
+            <li><a href="#customer-design"><?php _e('Customer design', 'web-to-print-online-designer') ?></a></li>
+            <li><a href="#save-to-pdf"><?php _e('Create PDF', 'web-to-print-online-designer') ?></a></li>
         </ul>   
         <div class="nbdesigner_detail_order_container" id="customer-design">
             <div class="nbdesigner_preview">
@@ -116,14 +116,14 @@
                     <tbody>
                         <tr valign="top">
                             <th scope="row" class="titledesc">
-                                <label><?php _e('Force all side in the same format', 'nbdesigner'); ?></label>
+                                <label><?php _e('Force all side in the same format', 'web-to-print-online-designer'); ?></label>
                             </th>
                             <td class="forminp forminp-text">
                                 <input name="force_same_format" type="hidden" value="0">
                                 <input name="force_same_format" type="checkbox" value="1">                             
                                 <input name="order_id" type="hidden" value="<?php echo $_GET['order_id']; ?>">                             
                                 <input name="order_item_id" type="hidden" value="<?php echo $_GET['order_item_id']; ?>">                             
-                                <br /><small><?php _e('Create a PDF file contain all page in the same page size. By default, each page correspond a PDF file.', 'nbdesigner'); ?></small>
+                                <br /><small><?php _e('Create a PDF file contain all page in the same page size. By default, each page correspond a PDF file.', 'web-to-print-online-designer'); ?></small>
                             </td>
                         </tr>                       
                     </tbody>     
@@ -163,7 +163,7 @@
                 <tbody>
                     <tr valign="top">
                         <th scope="row" class="titledesc">
-                            <label><?php _e('Name', 'nbdesigner'); ?></label>
+                            <label><?php _e('Name', 'web-to-print-online-designer'); ?></label>
                         </th>
                         <td class="forminp forminp-text">
                             <input name="pdf[<?php echo $key; ?>][name]" class="regular-text" type="text" value="<?php echo $pdfData['orientation_name'] ?>">
@@ -171,11 +171,11 @@
                     </tr>                      
                     <tr valign="top">
                         <th scope="row" class="titledesc">
-                            <label for="format"><?php _e('Paper Size', 'nbdesigner'); ?></label>
+                            <label for="format"><?php _e('Paper Size', 'web-to-print-online-designer'); ?></label>
                         </th>
                         <td class="forminp forminp-text">
                         <select name="pdf[<?php echo $key; ?>][format]" id="format" style="width: 25em;">    
-                            <option value="-1"><?php printf(__('As product size %s x %s (exclude margin)', 'nbdesigner'), round($pdfData['product_width'] * $unitRatio, 2),  round($pdfData['product_height'] * $unitRatio, 2)); ?></option>
+                            <option value="-1"><?php printf(__('As product size %s x %s (exclude margin)', 'web-to-print-online-designer'), round($pdfData['product_width'] * $unitRatio, 2),  round($pdfData['product_height'] * $unitRatio, 2)); ?></option>
                     <?php
                     foreach ($output_format as $group=>$group_values) {
                         ?><optgroup label="<?php echo $group;?>"><?php
@@ -192,84 +192,84 @@
                     </tr>     
                     <tr valign="top">
                         <th scope="row" class="titledesc">  
-                            <label for="orientation"><?php _e('Product size', 'nbdesigner'); ?></label>
+                            <label for="orientation"><?php _e('Product size', 'web-to-print-online-designer'); ?></label>
                         </th>
                         <td class="forminp forminp-text">
-                            <?php _e('Width', 'nbdesigner'); ?>: <input name="pdf[<?php echo $key; ?>][product-width]" type="text" readonly style="width: 60px;" value="<?php echo round($proWidth * $unitRatio, 2); ?>"> 
-                            <?php _e('Hight', 'nbdesigner'); ?>: <input name="pdf[<?php echo $key; ?>][product-height]" type="text" readonly style="width: 60px;" value="<?php echo round($proHeight * $unitRatio, 2); ?>"> 
-                            <br /><small><?php _e('In mm', 'nbdesigner'); ?></small>
+                            <?php _e('Width', 'web-to-print-online-designer'); ?>: <input name="pdf[<?php echo $key; ?>][product-width]" type="text" readonly style="width: 60px;" value="<?php echo round($proWidth * $unitRatio, 2); ?>"> 
+                            <?php _e('Hight', 'web-to-print-online-designer'); ?>: <input name="pdf[<?php echo $key; ?>][product-height]" type="text" readonly style="width: 60px;" value="<?php echo round($proHeight * $unitRatio, 2); ?>"> 
+                            <br /><small><?php _e('In mm', 'web-to-print-online-designer'); ?></small>
                         </td>                        
                     </tr>
                     <tr valign="top">
                         <th scope="row" class="titledesc">
-                            <label for="orientation"><?php _e('Orientation', 'nbdesigner'); ?></label>
+                            <label for="orientation"><?php _e('Orientation', 'web-to-print-online-designer'); ?></label>
                         </th>
                         <td class="forminp forminp-text">
                             <select name="pdf[<?php echo $key; ?>][orientation]" id="orientation">
-                                <option value="P" selected="selected"><?php _e('Portrait', 'nbdesigner');?></option>
-                                <option value="L"><?php _e('Landscape', 'nbdesigner');?></option>
+                                <option value="P" selected="selected"><?php _e('Portrait', 'web-to-print-online-designer');?></option>
+                                <option value="L"><?php _e('Landscape', 'web-to-print-online-designer');?></option>
                             </select>
                         </td>
                     </tr>                    
                     <tr valign="top">
                         <th scope="row" class="titledesc">
-                            <label><?php _e('Margin', 'nbdesigner'); ?></label>
+                            <label><?php _e('Margin', 'web-to-print-online-designer'); ?></label>
                         </th>
                         <td class="forminp forminp-text">
                             <input name="pdf[<?php echo $key; ?>][margin-top]" class="margin-top-val" type="number" min="0" style="width: 60px;" value="0" onchange="changeMargin(this, 'top');">
                             <input name="pdf[<?php echo $key; ?>][margin-right]" class="margin-right-val" type="number" min="0" style="width: 60px;" value="0" onchange="changeMargin(this, 'right');">
                             <input name="pdf[<?php echo $key; ?>][margin-bottom]" class="margin-bottom-val" type="number" min="0" style="width: 60px;" value="0" onchange="changeMargin(this, 'bottom');">
                             <input name="pdf[<?php echo $key; ?>][margin-left]" class="margin-left-val" type="number" min="0" style="width: 60px;" value="0" onchange="changeMargin(this, 'left');">
-                            <p><small><?php _e('Margin top, right, bottom, left in mm', 'nbdesigner'); ?></small></p>
+                            <p><small><?php _e('Margin top, right, bottom, left in mm', 'web-to-print-online-designer'); ?></small></p>
                         </td>
                     </tr>  
                     <tr valign="top">
                         <th scope="row" class="titledesc">
-                            <label><?php _e('Show Bleed Line', 'nbdesigner'); ?></label>
+                            <label><?php _e('Show Bleed Line', 'web-to-print-online-designer'); ?></label>
                         </th>
                         <td class="forminp forminp-text">
                             <p>
-                                <input name="pdf[<?php echo $key; ?>][show-bleed-line]" type="radio" value="yes" onclick="showSettingBleed(this)"><?php _e('Yes', 'nbdesigner'); ?>
+                                <input name="pdf[<?php echo $key; ?>][show-bleed-line]" type="radio" value="yes" onclick="showSettingBleed(this)"><?php _e('Yes', 'web-to-print-online-designer'); ?>
                             </p>   
                             <p>
-                                <input name="pdf[<?php echo $key; ?>][show-bleed-line]" type="radio" value="no" checked="checked" onclick="showSettingBleed(this)"><?php _e('No', 'nbdesigner'); ?>
+                                <input name="pdf[<?php echo $key; ?>][show-bleed-line]" type="radio" value="no" checked="checked" onclick="showSettingBleed(this)"><?php _e('No', 'web-to-print-online-designer'); ?>
                             </p>
                         </td>
                     </tr>   
                     <tr valign="top" style="display: none;" class="setting-bleed">
                         <th scope="row" class="titledesc">
-                            <label><?php _e('Margin bleed', 'nbdesigner'); ?></label>
+                            <label><?php _e('Margin bleed', 'web-to-print-online-designer'); ?></label>
                         </th>
                         <td class="forminp forminp-text">
                             <input name="pdf[<?php echo $key; ?>][bleed-top]" type="number" min="0" style="width: 60px;" value="3" onchange="changeBleed(this, 'top');">
                             <input name="pdf[<?php echo $key; ?>][bleed-right]" type="number" min="0" style="width: 60px;" value="3" onchange="changeBleed(this, 'right');">
                             <input name="pdf[<?php echo $key; ?>][bleed-bottom]" type="number" min="0" style="width: 60px;" value="3" onchange="changeBleed(this, 'bottom');">
                             <input name="pdf[<?php echo $key; ?>][bleed-left]" type="number" min="0" style="width: 60px;" value="3" onchange="changeBleed(this, 'left');">
-                            <p><small><?php _e('Margin bleed top, right, bottom, left in mm', 'nbdesigner'); ?></small></p>
+                            <p><small><?php _e('Margin bleed top, right, bottom, left in mm', 'web-to-print-online-designer'); ?></small></p>
                         </td>
                     </tr>     
                     <tr valign="top">
                         <th scope="row" class="titledesc">
-                            <label><?php _e('Background', 'nbdesigner'); ?></label>
+                            <label><?php _e('Background', 'web-to-print-online-designer'); ?></label>
                         </th>
                         <td class="forminp forminp-text">                            
                             <?php if($pdfData['bg_type'] == 'image'): ?>
-                            <a class="button" onclick="changeBackground(this)"><?php _e('Change image', 'nbdesigner'); ?></a>
+                            <a class="button" onclick="changeBackground(this)"><?php _e('Change image', 'web-to-print-online-designer'); ?></a>
                             <img class="bg_src" src="<?php echo $pdfData['img_src']; ?>"  style="width: 30px; height: 30px; display: inline-block; vertical-align: top;"/><br />
-                            <small><?php _e('Change image with heigh resolution if you want. Support: jpeg, jpg, png, svg', 'nbdesigner'); ?></small>
+                            <small><?php _e('Change image with heigh resolution if you want. Support: jpeg, jpg, png, svg', 'web-to-print-online-designer'); ?></small>
                             <?php elseif($pdfData['bg_type'] == 'color'): ?>
                             <span 
                                  style="width: 30px; height: 30px; vertical-align: top; display: inline-block; background: <?php echo $pdfData['bg_color_value']; ?>"></span>
                             <?php else: ?>
                             <span class="background-transparent" style="width: 30px; height: 30px; vertical-align: top; display: inline-block; border: 1px solid #ddd;"></span>
-                            <?php _e('Transparent', 'nbdesigner'); ?>
+                            <?php _e('Transparent', 'web-to-print-online-designer'); ?>
                             <?php endif; ?>
                         </td>
                     </tr>                     
                 </tbody>
             </table>
             
-            <p><b><?php echo __('Scale Factor', 'nbdesigner').': '.$scale; ?></b></p>
+            <p><b><?php echo __('Scale Factor', 'web-to-print-online-designer').': '.$scale; ?></b></p>
             <div class="design-containers">
                 <div class="ruler corner">
                     <span class="dashicons dashicons-screenoptions nbdesigner-toggle-grid" onclick="toggleGrid(this)"></span>
@@ -366,7 +366,7 @@
         <?php  endforeach; ?>    
         <p class="result-pdf">
             <?php wp_nonce_field( 'nbdesigner_pdf_nonce'); ?>
-            <a href="javascript:void(0)" class="button-primary" id="create_pdf"><?php _e('Create PDF', 'nbdesigner'); ?></a>
+            <a href="javascript:void(0)" class="button-primary" id="create_pdf"><?php _e('Create PDF', 'web-to-print-online-designer'); ?></a>
         </p>            
         </div>    
         <script>
@@ -542,7 +542,7 @@
                     var formdata = jQuery('#save-to-pdf').find('input, select').serialize();
                     formdata = formdata + '&action=nbdesigner_save_design_to_pdf';                   
                     swal({
-                        title: "<?php _e('Create PDFs', 'nbdesigner'); ?>",
+                        title: "<?php _e('Create PDFs', 'web-to-print-online-designer'); ?>",
                         text: "Submit to create pdfs",
                         type: "info",
                         showCancelButton: true,

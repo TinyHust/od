@@ -6,8 +6,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 class Product_Template_List_Table extends WP_List_Table {
     public function __construct() {
         parent::__construct(array(
-            'singular' => __('Template', 'nbdesigner'), 
-            'plural' => __('Templates', 'nbdesigner'), 
+            'singular' => __('Template', 'web-to-print-online-designer'), 
+            'plural' => __('Templates', 'web-to-print-online-designer'), 
             'ajax' => false 
         ));
     }
@@ -98,7 +98,7 @@ class Product_Template_List_Table extends WP_List_Table {
     }
     /** Text displayed when no template data is available */
     public function no_items() {
-        _e( 'No templates avaliable.', 'nbdesigner' );
+        _e( 'No templates avaliable.', 'web-to-print-online-designer');
     }
     /**
      * Method for name column
@@ -113,9 +113,9 @@ class Product_Template_List_Table extends WP_List_Table {
         $_nonce = wp_create_nonce('nbdesigner_template_nonce');
         $title = '<strong>' . $item['folder'] . '</strong>';     
         $actions = array(
-            'delete' => sprintf('<a href="?page=%s&action=%s&template=%s&_wpnonce=%s&pid=%s&paged=%s&view=templates">'.__('Delete', 'nbdesigner').'</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $_nonce, esc_attr($_REQUEST['pid']), $this->get_pagenum()),
-            'primary' => sprintf('<a href="?page=%s&action=%s&template=%s&pid=%s&_wpnonce=%s&paged=%s&view=templates">'.__('Primary', 'nbdesigner').'</a>', esc_attr($_REQUEST['page']), 'primary', absint($item['id']), esc_attr($_REQUEST['pid']), $_nonce, $this->get_pagenum()),
-            'edit' => sprintf('<a href="%s" target="_blank">'.__('Edit', 'nbdesigner').'</a>', $link_admindesign)
+            'delete' => sprintf('<a href="?page=%s&action=%s&template=%s&_wpnonce=%s&pid=%s&paged=%s&view=templates">'.__('Delete', 'web-to-print-online-designer').'</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $_nonce, esc_attr($_REQUEST['pid']), $this->get_pagenum()),
+            'primary' => sprintf('<a href="?page=%s&action=%s&template=%s&pid=%s&_wpnonce=%s&paged=%s&view=templates">'.__('Primary', 'web-to-print-online-designer').'</a>', esc_attr($_REQUEST['page']), 'primary', absint($item['id']), esc_attr($_REQUEST['pid']), $_nonce, $this->get_pagenum()),
+            'edit' => sprintf('<a href="%s" target="_blank">'.__('Edit', 'web-to-print-online-designer').'</a>', $link_admindesign)
         );     
         if($item['priority']){
             unset($actions['delete']);
@@ -172,11 +172,11 @@ class Product_Template_List_Table extends WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb' => '<input type="checkbox" />',            
-            'folder' => __('Preview', 'nbdesigner'),
-            'priority' => __('Primary', 'nbdesigner'),
-            'product_id' => __('Folder', 'nbdesigner'),
-            'user_id' => __('Created By', 'nbdesigner'),
-            'created_date' => __('Created', 'nbdesigner')
+            'folder' => __('Preview', 'web-to-print-online-designer'),
+            'priority' => __('Primary', 'web-to-print-online-designer'),
+            'product_id' => __('Folder', 'web-to-print-online-designer'),
+            'user_id' => __('Created By', 'web-to-print-online-designer'),
+            'created_date' => __('Created', 'web-to-print-online-designer')
         );
         return $columns;
     }
@@ -185,14 +185,14 @@ class Product_Template_List_Table extends WP_List_Table {
         if ($which == 'top') {
             ?>
             <select id="nbdesigner-admin-template-filter" name="nbdesigner_filter">
-                <option value="-1"><?php _e('Show all design', 'nbdesigner'); ?></option>
-                <option value="publish"><?php _e('Publish design', 'nbdesigner'); ?></option>
-                <option value="unpublish"><?php _e('Unpublish design', 'nbdesigner'); ?></option>
-                <option value="private"><?php _e('Private design', 'nbdesigner'); ?></option>
-                <option value="priority"><?php _e('Primary design', 'nbdesigner'); ?></option>
+                <option value="-1"><?php _e('Show all design', 'web-to-print-online-designer'); ?></option>
+                <option value="publish"><?php _e('Publish design', 'web-to-print-online-designer'); ?></option>
+                <option value="unpublish"><?php _e('Unpublish design', 'web-to-print-online-designer'); ?></option>
+                <option value="private"><?php _e('Private design', 'web-to-print-online-designer'); ?></option>
+                <option value="priority"><?php _e('Primary design', 'web-to-print-online-designer'); ?></option>
             </select>
             <?php wp_nonce_field($this->plugin_id, $this->plugin_id . '_hidden'); ?>	
-            <button class="button-primary" type="submit"><?php _e('Filter', 'nbdesigner'); ?></button>
+            <button class="button-primary" type="submit"><?php _e('Filter', 'web-to-print-online-designer'); ?></button>
             <?php
         }
     }    

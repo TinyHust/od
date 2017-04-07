@@ -69,7 +69,7 @@ class Nbdesigner_IO {
             }
         } else if (file_exists($src)) copy($src, $dst);
     }        
-    public static function create_image_path($upload_path, $filename, $ext=''){
+    public static function create_file_path($upload_path, $filename, $ext=''){
 	$date_path = '';
         if (!file_exists($upload_path))
             mkdir($upload_path);
@@ -199,7 +199,7 @@ function nbdesigner_get_all_frontend_setting(){
 function nbdesigner_get_default_setting($key = false){
     $frontend = default_frontend_setting();
     $nbd_setting = apply_filters('nbdesigner_default_settings', array_merge(array(
-        'nbdesigner_button_label' => __('Start Design', 'nbdesigner'),
+        'nbdesigner_button_label' => __('Start Design', 'web-to-print-online-designer'),
         'nbdesigner_position_button_in_catalog' => 1,
         'nbdesigner_position_button_product_detail' => 1,
         'nbdesigner_thumbnail_width' => 100,
@@ -216,7 +216,7 @@ function nbdesigner_get_default_setting($key = false){
         'nbdesigner_notifications_emails' => '',
         'nbdesigner_facebook_app_id' => '',
         'nbdesigner_enable_text' => 'yes',
-        'nbdesigner_default_text' => __('Text here', 'nbdesigner'),
+        'nbdesigner_default_text' => __('Text here', 'web-to-print-online-designer'),
         'nbdesigner_enable_curvedtext' => 'yes',
         'nbdesigner_enable_textpattern' => 'yes',
         'nbdesigner_enable_clipart' => 'yes',
@@ -226,10 +226,10 @@ function nbdesigner_get_default_setting($key = false){
         'nbdesigner_enable_facebook_photo' => 'yes',
         'nbdesigner_upload_show_term' => 'no',
         'nbdesigner_enable_image_url' => 'yes',
-        'nbdesigner_upload_term' => __('Your term', 'nbdesigner'),
+        'nbdesigner_upload_term' => __('Your term', 'web-to-print-online-designer'),
         'nbdesigner_enable_draw' => 'yes',
         'nbdesigner_enable_qrcode' => 'yes',
-        'nbdesigner_default_qrcode' => __('example.com', 'nbdesigner'),
+        'nbdesigner_default_qrcode' => __('example.com', 'web-to-print-online-designer'),
         'nbdesigner_show_all_color' => 'yes',
         'nbdesigner_maxsize_upload' => 5,
         'nbdesigner_minsize_upload' => 0,    

@@ -152,7 +152,7 @@ class Nbdesigner_Plugin {
     }    
     public function nbdesigner_add_to_cart_shop_link($handler, $product){
         if(is_nbdesigner_product($product->id)){    
-            $label = __('Start Design', 'nbdesigner');
+            $label = __('Start Design', 'web-to-print-online-designer');
             ob_start();            
             nbdesigner_get_template('loop/start-design.php', array('product' => $product, 'label' => $label));
             $button = ob_get_clean();    
@@ -163,7 +163,7 @@ class Nbdesigner_Plugin {
     public function add_catalog_nbdesign_button(){
         global $product;
         if(is_nbdesigner_product($product->id)){  
-            $label = __('Start Design', 'nbdesigner');
+            $label = __('Start Design', 'web-to-print-online-designer');
             printf( '<a href="%s" rel="nofollow" class="button">%s</a>',
                 esc_url( get_permalink($product->id) ),
                 esc_html( $label )
@@ -252,15 +252,15 @@ class Nbdesigner_Plugin {
     }
     public static function plugin_activation() {
         if (version_compare($GLOBALS['wp_version'], NBDESIGNER_MINIMUM_WP_VERSION, '<')) {
-            $message = sprintf(__('<p>Plugin <strong>not compatible</strong> with WordPress %s. Requires WordPress %s to use this Plugin.</p>', 'nbdesigner'), $GLOBALS['wp_version'], NBDESIGNER_MINIMUM_WP_VERSION);
+            $message = sprintf(__('<p>Plugin <strong>not compatible</strong> with WordPress %s. Requires WordPress %s to use this Plugin.</p>', 'web-to-print-online-designer'), $GLOBALS['wp_version'], NBDESIGNER_MINIMUM_WP_VERSION);
             die($message);
         }
         if(version_compare(PHP_VERSION, '5.4.0', '<=')){
-            $message = sprintf(__('<p>Plugin <strong>not compatible</strong> with PHP %s. Requires PHP %s to use this Plugin.</p>', 'nbdesigner'), PHP_VERSION, NBDESIGNER_MINIMUM_PHP_VERSION);
+            $message = sprintf(__('<p>Plugin <strong>not compatible</strong> with PHP %s. Requires PHP %s to use this Plugin.</p>', 'web-to-print-online-designer'), PHP_VERSION, NBDESIGNER_MINIMUM_PHP_VERSION);
             die($message);            
         }
         if (!is_plugin_active('woocommerce/woocommerce.php')) {
-            $message = '<div class="error"><p>' . sprintf(__('WooCommerce is not active. Please activate WooCommerce before using %s.', 'nbdesigner'), '<b>Nbdesigner</b>') . '</p></div>';
+            $message = '<div class="error"><p>' . sprintf(__('WooCommerce is not active. Please activate WooCommerce before using %s.', 'web-to-print-online-designer'), '<b>Nbdesigner</b>') . '</p></div>';
             die($message);
         }
         if (!file_exists(NBDESIGNER_TEMP_DIR)) {
@@ -274,7 +274,10 @@ class Nbdesigner_Plugin {
         }   
         if (!file_exists(NBDESIGNER_FONT_DIR)) {
             wp_mkdir_p(NBDESIGNER_FONT_DIR);
-        }     
+        }  
+        if (!file_exists(NBDESIGNER_ART_DIR)) {
+            wp_mkdir_p(NBDESIGNER_ART_DIR);
+        }          
         if (!file_exists(NBDESIGNER_PDF_DIR)) {
             wp_mkdir_p(NBDESIGNER_PDF_DIR);
         }        
@@ -300,7 +303,7 @@ class Nbdesigner_Plugin {
     public function nbdesigner_set_schedule($schedules){   
         if(!isset($schedules['hourly'])){
             $schedules['hourly'] = array('interval' => 60*60, 'display' => __('Once Hourly'));
-            //$schedules['every5min'] = array('interval' => 60*5, 'display' => __('Every 5 Minutes', 'nbdesigner'));
+            //$schedules['every5min'] = array('interval' => 60*5, 'display' => __('Every 5 Minutes', 'web-to-print-online-designer'));
         }
         return $schedules;
     }
@@ -370,7 +373,7 @@ class Nbdesigner_Plugin {
                     foreach ($orders AS $order => $order_number) {
                         update_post_meta($order, '_nbdesigner_order_changed', 0);
                     }                    
-                    $subject = __('New / Modified order(s)', 'nbdesigner');
+                    $subject = __('New / Modified order(s)', 'web-to-print-online-designer');
                     $mailer = $woocommerce->mailer();
                     ob_start();
                     wc_get_template('emails/nbdesigner-admin-notifications.php', array(
@@ -416,7 +419,7 @@ class Nbdesigner_Plugin {
         $class            = '';
         $query_string     = remove_query_arg(array( 'orderby', 'order' ));
         $query_string     = add_query_arg( 'has_nbd', urlencode('1'), $query_string );        
-	$views['has_nbd'] = '<a href="' . esc_url( $query_string ) . '" class="' . esc_attr( $class ) . '">' . __( 'Has NBDesigner', 'nbdesigner' ) . '</a>';        
+	$views['has_nbd'] = '<a href="' . esc_url( $query_string ) . '" class="' . esc_attr( $class ) . '">' . __( 'Has NBDesigner', 'web-to-print-online-designer') . '</a>';        
         return $views;
     }
     public function nbdesigner_lincense_notices(){            
@@ -430,7 +433,7 @@ class Nbdesigner_Plugin {
         printf($mes);
     }
     public function translation_load_textdomain() {	 
-        load_plugin_textdomain('nbdesigner', false, dirname(dirname( plugin_basename( __FILE__ ))) . '/langs/');
+        load_plugin_textdomain('web-to-print-online-designer', false, dirname(dirname( plugin_basename( __FILE__ ))) . '/langs/');
     }
     public static function plugin_deactivation() {
         wp_clear_scheduled_hook( 'nbdesigner_lincense_event' );
@@ -447,9 +450,9 @@ class Nbdesigner_Plugin {
     public function nbdesigner_settings(){
         $page_id = 'nbdesigner';
         $tabs = apply_filters('nbdesigner_settings_tabs', array(
-            'general' => '<span class="dashicons dashicons-admin-generic"></span> ' . __('General', 'nbdesigner'),
-            'frontend' => '<span class="dashicons dashicons-admin-customizer"></span> '. __('Design Tool', 'nbdesigner'),            
-            'color' => '<span class="dashicons dashicons-art"></span> '. __('Colors', 'nbdesigner')            
+            'general' => '<span class="dashicons dashicons-admin-generic"></span> ' . __('General', 'web-to-print-online-designer'),
+            'frontend' => '<span class="dashicons dashicons-admin-customizer"></span> '. __('Design Tool', 'web-to-print-online-designer'),            
+            'color' => '<span class="dashicons dashicons-art"></span> '. __('Colors', 'web-to-print-online-designer')            
         ));
         require_once(NBDESIGNER_PLUGIN_DIR . 'includes/settings/general.php');
         require_once(NBDESIGNER_PLUGIN_DIR . 'includes/settings/frontend.php');
@@ -460,19 +463,19 @@ class Nbdesigner_Plugin {
         ));   
         $blocks = apply_filters('nbdesigner_settings_blocks', array(
             'general' => array(
-                'general-settings' => __('General Settings', 'nbdesigner'),
-                'admin-notifications' => __('Notifications', 'nbdesigner'),
-                'application' => __('Application', 'nbdesigner')
+                'general-settings' => __('General Settings', 'web-to-print-online-designer'),
+                'admin-notifications' => __('Notifications', 'web-to-print-online-designer'),
+                'application' => __('Application', 'web-to-print-online-designer')
             ),
             'frontend' => array(
-                'tool-text' =>  __('Text Options', 'nbdesigner'),
-                'tool-clipart' =>  __('Clipart Options', 'nbdesigner'),
-                'tool-image' =>  __('Image Options', 'nbdesigner'),
-                'tool-draw' =>  __('Free draw Options', 'nbdesigner'),
-                'tool-qrcode' =>  __('Qr Code Options', 'nbdesigner')
+                'tool-text' =>  __('Text Options', 'web-to-print-online-designer'),
+                'tool-clipart' =>  __('Clipart Options', 'web-to-print-online-designer'),
+                'tool-image' =>  __('Image Options', 'web-to-print-online-designer'),
+                'tool-draw' =>  __('Free draw Options', 'web-to-print-online-designer'),
+                'tool-qrcode' =>  __('Qr Code Options', 'web-to-print-online-designer')
             ),
             'color' => array(
-                'color-setting' =>  __('Setting color', 'nbdesigner')
+                'color-setting' =>  __('Setting color', 'web-to-print-online-designer')
             )
         ));  
         $Nbdesigner_Settings->add_blocks($blocks);
@@ -508,7 +511,7 @@ class Nbdesigner_Plugin {
         add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
     }
     public function admin_footer_text($footer_text){
-	$footer_text = sprintf( __( 'If you like <strong>NBDesigner</strong> please leave us a %s&#9733;&#9733;&#9733;&#9733;&#9733;%s rating. A huge thanks in advance!', 'nbdesigner' ), '<a href="https://wordpress.org/support/view/plugin-reviews/web-to-print-online-designer?filter=5#new-post" target="_blank" class="nbd-rating-link" data-rated="' . esc_attr__( 'Thanks :)', 'nbdesigner' ) . '">', '</a>' );
+	$footer_text = sprintf( __( 'If you like <strong>NBDesigner</strong> please leave us a %s&#9733;&#9733;&#9733;&#9733;&#9733;%s rating. A huge thanks in advance!', 'web-to-print-online-designer'), '<a href="https://wordpress.org/support/view/plugin-reviews/web-to-print-online-designer?filter=5#new-post" target="_blank" class="nbd-rating-link" data-rated="' . esc_attr__( 'Thanks :)', 'web-to-print-online-designer') . '">', '</a>' );
         return $footer_text;
     }
     public function display_license_key(){
@@ -676,7 +679,7 @@ class Nbdesigner_Plugin {
     }
     public function nbdesigner_add_font_cat() {
         $data = array(
-                'mes'   =>  __('You do not have permission to add/edit font category!', 'nbdesigner'),
+                'mes'   =>  __('You do not have permission to add/edit font category!', 'web-to-print-online-designer'),
                 'flag'  => 0
             );	        
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_font')) {
@@ -690,14 +693,14 @@ class Nbdesigner_Plugin {
             'id' => $_POST['id']
         );
         $this->nbdesigner_update_json_setting($path, $cat, $cat['id']);
-        $data['mes'] = __('Category has been added/edited successfully!', 'nbdesigner');
+        $data['mes'] = __('Category has been added/edited successfully!', 'web-to-print-online-designer');
         $data['flag'] = 1;        
         echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_add_art_cat() {    
         $data = array(
-                'mes'   =>  __('You do not have permission to add/edit clipart category!', 'nbdesigner'),
+                'mes'   =>  __('You do not have permission to add/edit clipart category!', 'web-to-print-online-designer'),
                 'flag'  => 0
             );	        
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_art')) {
@@ -710,14 +713,14 @@ class Nbdesigner_Plugin {
             'id' => $_POST['id']
         );
         $this->nbdesigner_update_json_setting($path, $cat, $cat['id']);
-        $data['mes'] = __('Category has been added/edited successfully!', 'nbdesigner');
+        $data['mes'] = __('Category has been added/edited successfully!', 'web-to-print-online-designer');
         $data['flag'] = 1;        
         echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_delete_font_cat() {
         $data = array(
-                'mes'   =>  __('You do not have permission to delete font category!', 'nbdesigner'),
+                'mes'   =>  __('You do not have permission to delete font category!', 'web-to-print-online-designer'),
                 'flag'  => 0
             );        
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_font')) {
@@ -729,14 +732,14 @@ class Nbdesigner_Plugin {
         $this->nbdesigner_delete_json_setting($path, $id, true);
         $font_path = NBDESIGNER_DATA_DIR . '/fonts.json';
         $this->nbdesigner_update_json_setting_depend($font_path, $id);
-        $data['mes'] = __('Category has been delete successfully!', 'nbdesigner');
+        $data['mes'] = __('Category has been delete successfully!', 'web-to-print-online-designer');
         $data['flag'] = 1;        
         echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_delete_art_cat() {
         $data = array(
-                'mes'   =>  __('You do not have permission to delete clipart category!', 'nbdesigner'),
+                'mes'   =>  __('You do not have permission to delete clipart category!', 'web-to-print-online-designer'),
                 'flag'  => 0
             );          
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('delete_nbd_art')) {
@@ -748,7 +751,7 @@ class Nbdesigner_Plugin {
         $this->nbdesigner_delete_json_setting($path, $id, true);
         $art_path = NBDESIGNER_DATA_DIR . '/arts.json';
         $this->nbdesigner_update_json_setting_depend($art_path, $id);
-        $data['mes'] = __('Category has been delete successfully!', 'nbdesigner');
+        $data['mes'] = __('Category has been delete successfully!', 'web-to-print-online-designer');
         $data['flag'] = 1;        
         echo json_encode($data);
         wp_die();
@@ -760,7 +763,7 @@ class Nbdesigner_Plugin {
     }
     public function nbdesigner_add_google_font() {
         $data = array(
-                'mes'   =>  __('You do not have permission to add font!', 'nbdesigner'),
+                'mes'   =>  __('You do not have permission to add font!', 'web-to-print-online-designer'),
                 'flag'  => 0
             );        
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_font')) {
@@ -771,7 +774,7 @@ class Nbdesigner_Plugin {
         $path_font = NBDESIGNER_DATA_DIR . '/googlefonts.json';
         $data = array("name" => $name, "id" => $id);
         $this->nbdesigner_update_json_setting($path_font, $data, $id);
-        $data['mes'] = __('The font has been added successfully!', 'nbdesigner');
+        $data['mes'] = __('The font has been added successfully!', 'web-to-print-online-designer');
         $data['flag'] = 1;        
         echo json_encode($data);
         wp_die();
@@ -782,9 +785,9 @@ class Nbdesigner_Plugin {
         $cats = array("0");
         $current_font_cat_id = 0;
         $update = false;
-        $list = $this->nbdesigner_read_json_setting($this->plugin_path_data . 'fonts.json');	
-        $cat = $this->nbdesigner_read_json_setting($this->plugin_path_data . 'font_cat.json');
-        $data_font_google = $this->nbdesigner_read_json_setting($this->plugin_path_data . 'googlefonts.json');
+        $list = $this->nbdesigner_read_json_setting(NBDESIGNER_DATA_DIR . '/fonts.json');	
+        $cat = $this->nbdesigner_read_json_setting(NBDESIGNER_DATA_DIR . '/font_cat.json');
+        $data_font_google = $this->nbdesigner_read_json_setting(NBDESIGNER_DATA_DIR . '/googlefonts.json');
         $list_all_google_font = $this->nbdesigner_get_list_google_font();
         $current_cat = filter_input(INPUT_GET, "cat_id", FILTER_VALIDATE_INT);
         if (is_array($cat))
@@ -813,36 +816,36 @@ class Nbdesigner_Plugin {
                     $upload_overrides = array('test_form' => false);
                     $uploaded_file = wp_handle_upload($_FILES['woff'], $upload_overrides);
                     if (isset($uploaded_file['url'])) {
-                        $new_path_font = $this->plugin_path_data . 'fonts/' . $font['alias'] .'.'. $font['type'];
+                        $new_path_font = Nbdesigner_IO::create_file_path(NBDESIGNER_FONT_DIR, $font['alias'], $font['type']);
                         $font['file'] = $uploaded_file['file'];
                         $font['url'] = $uploaded_file['url'];
-                        if (!copy($font['file'], $new_path_font)) {
-                            $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Failed to copy.', 'nbdesigner')));
+                        if (!copy($font['file'], $new_path_font['full_path'].'.'.$font['type'])) {
+                            $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Failed to copy.', 'web-to-print-online-designer')));
                         }else{
-                            $font['file'] = $this->plugin_path_data . 'fonts/' . $font['alias'] .'.'. $font['type'];
-                            $font['url'] = content_url().'/uploads/nbdesigner/fonts/' . $font['alias'] .'.'. $font['type'];
+                            $font['file'] = $new_path_font['date_path'] .'.'. $font['type'];
+                            $font['url'] = $new_path_font['date_path'] .'.'. $font['type'];
                         }
                         if ($update) {
                             $this->nbdesigner_update_list_fonts($font, $font_id);
                         } else {
                             $this->nbdesigner_update_list_fonts($font);
                         }
-                        $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('success', __('Your font has been saved.', 'nbdesigner')));
+                        $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('success', __('Your font has been saved.', 'web-to-print-online-designer')));
                     } else {
-                        $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Error while upload font, please try again!', 'nbdesigner')));
+                        $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Error while upload font, please try again!', 'web-to-print-online-designer')));
                     }
                 } else {
-                    $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Incorrect file extensions.', 'nbdesigner')));
+                    $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Incorrect file extensions.', 'web-to-print-online-designer')));
                 }
             } else if ($update && ($_POST['nbdesigner_font_name'] != '')) {
                 $font_data->name = $_POST['nbdesigner_font_name'];
                 $font_data->cat = $font['cat'];
                 $this->nbdesigner_update_list_fonts($font_data, $font_id);
-                $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('success', __('Your font has been saved.', 'nbdesigner')));
+                $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('success', __('Your font has been saved.', 'web-to-print-online-designer')));
             } else {
-                $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('warning', __('Please choose font file or font name.', 'nbdesigner')));
+                $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('warning', __('Please choose font file or font name.', 'web-to-print-online-designer')));
             }
-            $list = $this->nbdesigner_read_json_setting($this->plugin_path_data . 'fonts.json');
+            $list = $this->nbdesigner_read_json_setting(NBDESIGNER_DATA_DIR . '/fonts.json');
             $cats = $font['cat'];
         }        
         if(isset($current_cat)){
@@ -972,7 +975,7 @@ class Nbdesigner_Plugin {
     }
     public function nbdesigner_delete_font() {
         $data = array(
-                'mes'   =>  __('You do not have permission to delete font!', 'nbdesigner'),
+                'mes'   =>  __('You do not have permission to delete font!', 'web-to-print-online-designer'),
                 'flag'  => 0
             );        
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('delete_nbd_font')) {
@@ -985,18 +988,24 @@ class Nbdesigner_Plugin {
             $path = NBDESIGNER_DATA_DIR . '/fonts.json';
             $list = $this->nbdesigner_read_json_setting($path);
             $file_font = $list[$id]->file;
-            unlink($file_font);
+            if(file_exists($file_font)){
+                unlink($file_font);
+            }else{
+                $file_font = NBDESIGNER_FONT_DIR . $list[$id]->file;
+                unlink($file_font);
+            }
+            
         } else
             $path = NBDESIGNER_DATA_DIR . '/googlefonts.json';
         $this->nbdesigner_delete_json_setting($path, $id);
-        $data['mes'] = __('Clipart has been deleted successfully!', 'nbdesigner');
+        $data['mes'] = __('Clipart has been deleted successfully!', 'web-to-print-online-designer');
         $data['flag'] = 1;
         echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_delete_art() {
         $data = array(
-                'mes'   =>  __('You do not have permission to delete clipart!', 'nbdesigner'),
+                'mes'   =>  __('You do not have permission to delete clipart!', 'web-to-print-online-designer'),
                 'flag'  => 0
             );
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('delete_nbd_art')) {
@@ -1007,9 +1016,14 @@ class Nbdesigner_Plugin {
         $path = NBDESIGNER_DATA_DIR . '/arts.json';
         $list = $this->nbdesigner_read_json_setting($path);
         $file_art = $list[$id]->file;
-        unlink($file_art);
+        if(file_exists($file_art)){
+            unlink($file_art);
+        }else{
+            $file_art = NBDESIGNER_FONT_DIR . $list[$id]->file;
+            unlink($file_art);
+        }	     
         $this->nbdesigner_delete_json_setting($path, $id);
-        $data['mes'] = __('Clipart has been deleted successfully!', 'nbdesigner');
+        $data['mes'] = __('Clipart has been deleted successfully!', 'web-to-print-online-designer');
         $data['flag'] = 1;
         echo json_encode($data);
         wp_die();
@@ -1025,7 +1039,7 @@ class Nbdesigner_Plugin {
         switch ($command) {
             case 'success':
                 if (!isset($mes))
-                    $mes = __('Your settings have been saved.', 'nbdesigner');
+                    $mes = __('Your settings have been saved.', 'web-to-print-online-designer');
                 $notice = '<div class="updated notice notice-success is-dismissible">
                                 <p>' . $mes . '</p>
                                 <button type="button" class="notice-dismiss">
@@ -1035,7 +1049,7 @@ class Nbdesigner_Plugin {
                 break;
             case 'error':
                 if (!isset($mes))
-                    $mes = __('Irks! An error has occurred.', 'nbdesigner');
+                    $mes = __('Irks! An error has occurred.', 'web-to-print-online-designer');
                 $notice = '<div class="notice notice-error is-dismissible">
                                 <p>' . $mes . '</p>
                                 <button type="button" class="notice-dismiss">
@@ -1045,14 +1059,14 @@ class Nbdesigner_Plugin {
                 break;
             case 'notices':
                 if (!isset($mes))
-                    $mes = __('Irks! An error has occurred.', 'nbdesigner');
+                    $mes = __('Irks! An error has occurred.', 'web-to-print-online-designer');
                 $notice = '<div class="notice notice-warning">
                                 <p>' . $mes . '</p>				  
                             </div>';
                 break;             
             case 'warning':
                 if (!isset($mes))
-                    $mes = __('Warning.', 'nbdesigner');
+                    $mes = __('Warning.', 'web-to-print-online-designer');
                 $notice = '<div class="notice notice-warning is-dismissible">
                                 <p>' . $mes . '</p>
                                 <button type="button" class="notice-dismiss">
@@ -1071,8 +1085,8 @@ class Nbdesigner_Plugin {
         $art_id = 0;
         $update = false;
         $cats = array("0");
-        $list = $this->nbdesigner_read_json_setting($this->plugin_path_data . 'arts.json');
-        $cat = $this->nbdesigner_read_json_setting($this->plugin_path_data . 'art_cat.json');
+        $list = $this->nbdesigner_read_json_setting(NBDESIGNER_DATA_DIR . '/arts.json');
+        $cat = $this->nbdesigner_read_json_setting(NBDESIGNER_DATA_DIR . '/art_cat.json');
         $total = sizeof($list);
         $limit = 40;
         if (is_array($cat))
@@ -1102,29 +1116,36 @@ class Nbdesigner_Plugin {
                     $upload_overrides = array('test_form' => false);
                     $uploaded_file = wp_handle_upload($_FILES['svg'], $upload_overrides);
                     if (isset($uploaded_file['url'])) {
+                        $new_path_art = Nbdesigner_IO::create_file_path(NBDESIGNER_ART_DIR, $uploaded_file_name);
                         $art['file'] = $uploaded_file['file'];
                         $art['url'] = $uploaded_file['url'];
+                        if (!copy($art['file'], $new_path_art['full_path'])) {
+                            $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Failed to copy.', 'web-to-print-online-designer')));
+                        }else{
+                            $art['file'] = $new_path_art['date_path'];
+                            $art['url'] = NBDESIGNER_ART_URL . $new_path_art['date_path'];
+                        }                                               
                         if ($update) {
                             $this->nbdesigner_update_list_arts($art, $art_id);
                         } else {
                             $this->nbdesigner_update_list_arts($art);
                         }
-                        $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('success', __('Your art has been saved.', 'nbdesigner')));
+                        $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('success', __('Your art has been saved.', 'web-to-print-online-designer')));
                     } else {
-                        $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Error while upload art, please try again!', 'nbdesigner')));
+                        $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Error while upload art, please try again!', 'web-to-print-online-designer')));
                     }
                 } else {
-                    $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Incorrect file extensions.', 'nbdesigner')));
+                    $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('error', __('Incorrect file extensions.', 'web-to-print-online-designer')));
                 }
             } else if ($update && ($_POST['nbdesigner_art_name'] != '')) {
                 $art_data->name = $_POST['nbdesigner_art_name'];
                 $art_data->cat = $art['cat'];
                 $this->nbdesigner_update_list_arts($art_data, $art_id);
-                $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('success', __('Your art has been saved.', 'nbdesigner')));
+                $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('success', __('Your art has been saved.', 'web-to-print-online-designer')));
             } else {
-                $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('warning', __('Please choose art file or art name.', 'nbdesigner')));
+                $notice = apply_filters('nbdesigner_notices', $this->nbdesigner_custom_notices('warning', __('Please choose art file or art name.', 'web-to-print-online-designer')));
             }
-            $list = $this->nbdesigner_read_json_setting($this->plugin_path_data . 'arts.json');
+            $list = $this->nbdesigner_read_json_setting(NBDESIGNER_DATA_DIR . '/arts.json');
             $cats = $art['cat'];
             $total = sizeof($list);
             
@@ -1180,7 +1201,7 @@ class Nbdesigner_Plugin {
     public function admin_success() {
         if (isset($_POST[$this->plugin_id . '_hidden']) && wp_verify_nonce($_POST[$this->plugin_id . '_hidden'], $this->plugin_id)){
             echo '<div class="updated notice notice-success is-dismissible">
-                        <p>' . __('Your settings have been saved.', 'nbdesigner') . '</p>
+                        <p>' . __('Your settings have been saved.', 'web-to-print-online-designer') . '</p>
                         <button type="button" class="notice-dismiss">
                             <span class="screen-reader-text">Dismiss this notice.</span>
                         </button>				  
@@ -1188,8 +1209,8 @@ class Nbdesigner_Plugin {
         }
     }
     public function add_design_box() {
-        add_meta_box('nbdesigner_setting', __('Setting NBDesigner', 'nbdesigner'), array($this, 'setting_design'), 'product', 'normal', 'high');
-        add_meta_box('nbdesigner_order', __('Customer Design', 'nbdesigner'), array($this, 'order_design'), 'shop_order', 'side', 'default');
+        add_meta_box('nbdesigner_setting', __('Setting NBDesigner', 'web-to-print-online-designer'), array($this, 'setting_design'), 'product', 'normal', 'high');
+        add_meta_box('nbdesigner_order', __('Customer Design', 'web-to-print-online-designer'), array($this, 'order_design'), 'shop_order', 'side', 'default');
     }
     public function nbdesigner_detail_order() {
         if(isset($_GET['order_id'])){
@@ -1421,43 +1442,43 @@ class Nbdesigner_Plugin {
             if(isset($data)) {
                 switch ($data["code"]) {
                     case -1 :
-                        $result['mes'] = __('Missing necessary information!', 'nbdesigner');
+                        $result['mes'] = __('Missing necessary information!', 'web-to-print-online-designer');
                         $result['flag'] = 0;
                         break;
                     case 0 :
-                        $result['mes'] = __('Incorrect information, check again license key', 'nbdesigner');
+                        $result['mes'] = __('Incorrect information, check again license key', 'web-to-print-online-designer');
                         $result['flag'] = 0;
                         break;     
                     case 1 :
-                        $result['mes'] = __('Incorrect License key', 'nbdesigner');
+                        $result['mes'] = __('Incorrect License key', 'web-to-print-online-designer');
                         $result['flag'] = 0;
                         break;
                     case 2 :
-                        $result['mes'] = __('License key is locked ', 'nbdesigner');
+                        $result['mes'] = __('License key is locked ', 'web-to-print-online-designer');
                         $result['flag'] = 0;
                         break; 
                     case 3 :
-                        $result['mes'] = __('License key have expired', 'nbdesigner');
+                        $result['mes'] = __('License key have expired', 'web-to-print-online-designer');
                         $result['flag'] = 0;
                         break;
                     case 4 :
-                        $result['mes'] = __('Link your website incorrect', 'nbdesigner');
+                        $result['mes'] = __('Link your website incorrect', 'web-to-print-online-designer');
                         $result['flag'] = 0;
                         break;     
                     case 5 :
-                        $result['mes'] = __('License key can using', 'nbdesigner');
+                        $result['mes'] = __('License key can using', 'web-to-print-online-designer');
                         $result['flag'] = 1;
                         break;
                     case 6 :
-                        $result['mes'] = __('Domain has been added successfully', 'nbdesigner');
+                        $result['mes'] = __('Domain has been added successfully', 'web-to-print-online-designer');
                         $result['flag'] = 1;
                         break;     
                     case 7 :
-                        $result['mes'] = __('Exceed your number of domain license', 'nbdesigner');
+                        $result['mes'] = __('Exceed your number of domain license', 'web-to-print-online-designer');
                         $result['flag'] = 0;
                         break;
                     case 8 :
-                        $result['mes'] = __('Unsuccessfully active license key', 'nbdesigner');
+                        $result['mes'] = __('Unsuccessfully active license key', 'web-to-print-online-designer');
                         $result['flag'] = 0;
                         break;                     
                 }            
@@ -1468,10 +1489,10 @@ class Nbdesigner_Plugin {
                     $this->nbdesigner_write_license(json_encode($data));  
                 }                      
             }else{
-                $result['mes'] = __('Try again later!', 'nbdesigner');
+                $result['mes'] = __('Try again later!', 'web-to-print-online-designer');
             }
         }else {
-            $result['mes'] = __('Please fill your license!', 'nbdesigner');
+            $result['mes'] = __('Please fill your license!', 'web-to-print-online-designer');
         }
         echo json_encode($result);
         wp_die();
@@ -1489,7 +1510,7 @@ class Nbdesigner_Plugin {
         }
         $license = $this->nbdesigner_check_license();
         if(!file_exists($path)){
-            $result['mes'] = __('You haven\'t any license!', 'nbdesigner');
+            $result['mes'] = __('You haven\'t any license!', 'web-to-print-online-designer');
         }else{
             $license = $this->nbdesigner_check_license();
             $key = (isset($license['key'])) ? $license['key'] : '';
@@ -1498,26 +1519,26 @@ class Nbdesigner_Plugin {
                 $request = (array)json_decode($_request);                   
                 switch ($request["code"]) {
                     case -1:
-                        $result['mes'] = __('Missing necessary information', 'nbdesigner');
+                        $result['mes'] = __('Missing necessary information', 'web-to-print-online-designer');
                         break;
                     case 0:
-                        $result['mes'] = __('Incorrect information', 'nbdesigner');
+                        $result['mes'] = __('Incorrect information', 'web-to-print-online-designer');
                         break;
                     case 1:
-                        $result['mes'] = __('Incorrect License key', 'nbdesigner');
+                        $result['mes'] = __('Incorrect License key', 'web-to-print-online-designer');
                         break;
                     case 2: 
                         if(!unlink($path)){
-                            $result['mes'] = __('Error, try again later!', 'nbdesigner');
+                            $result['mes'] = __('Error, try again later!', 'web-to-print-online-designer');
                         }else{
                             $_path = NBDESIGNER_PLUGIN_DIR . 'data/license.json';
                             if(file_exists($_path)) unlink($_path);                        
-                            $result['mes'] = __('Remove license key Successfully', 'nbdesigner');
+                            $result['mes'] = __('Remove license key Successfully', 'web-to-print-online-designer');
                             $result['flag'] = 1;
                         };                        
                         break;  
                     case 3:
-                        $result['mes'] = __('Remove license key Unsuccessfully!', 'nbdesigner');
+                        $result['mes'] = __('Remove license key Unsuccessfully!', 'web-to-print-online-designer');
                         break;                    
                 }
             }
@@ -1645,12 +1666,12 @@ class Nbdesigner_Plugin {
             }else {
                 $iid = $sid;
             }; 
-            $label = __('Start Design', 'nbdesigner');
+            $label = __('Start Design', 'web-to-print-online-designer');
             $div_image = '<div id="nbdesigner_frontend_area"></div>';
             $button = '<div class="nbdesigner_frontend_container">';
             $button .= '<a class="button nbdesign-button nbdesigner-disable" id="triggerDesign" >'
                     . '<img class="nbdesigner-img-loading rotating" src="'.NBDESIGNER_PLUGIN_URL.'assets/images/loading.png'.'"/>'.$label.'</a><br />';
-            $button .= '<h4 id="nbdesigner-preview-title" style="display: none;">'.__('Preview your design', 'nbdesigner').'</h4>' . $div_image;
+            $button .= '<h4 id="nbdesigner-preview-title" style="display: none;">'.__('Preview your design', 'web-to-print-online-designer').'</h4>' . $div_image;
             $button .= '</div><br />';
             $src = add_query_arg(array('action' => 'nbdesigner_editor_html', 'product_id' => $pid), site_url());                    
             if(is_numeric($order)) $src .= '&orderid='.$order;
@@ -1754,10 +1775,10 @@ class Nbdesigner_Plugin {
             if (wp_mkdir_p($path)) {
                 if (!file_exists($path_thumb))
                     if (!wp_mkdir_p($path_thumb)) {
-                        $result['mes'] = __('Your server not allow creat folder', 'nbdesigner');
+                        $result['mes'] = __('Your server not allow creat folder', 'web-to-print-online-designer');
                     }
             } else {
-                $result['mes'] = __('Your server not allow creat folder', 'nbdesigner');
+                $result['mes'] = __('Your server not allow creat folder', 'web-to-print-online-designer');
             }
         } 
         $configs = unserialize(get_post_meta($pid, '_designer_setting', true));      
@@ -1782,7 +1803,7 @@ class Nbdesigner_Plugin {
                     if ($image->save($thumb_file, 'image/png')) $result['link'] = Nbdesigner_IO::secret_image_url($thumb_file);
                 }                
             } else {
-                $result['mes'] = __('Your server not allow writable file', 'nbdesigner');
+                $result['mes'] = __('Your server not allow writable file', 'web-to-print-online-designer');
             }            
         }       
         $result['flag'] = "success";
@@ -1798,7 +1819,7 @@ class Nbdesigner_Plugin {
         $product_id = (isset($_POST['product_id']) && $_POST['product_id'] != '') ? absint($_POST['product_id']) : 0;        
         $variation_id = (isset($_POST['variation_id']) && $_POST['variation_id'] != '') ? absint($_POST['variation_id']) : 0;        
         if(!$product_id) {
-            $result['mes'] = __('Not a product', 'nbdesigner'); echo json_encode($result); wp_die();        
+            $result['mes'] = __('Not a product', 'web-to-print-online-designer'); echo json_encode($result); wp_die();        
         }
         $user_id = (get_current_user_id() > 0) ? get_current_user_id() : session_id();
         $task = (isset($_POST['task']) && $_POST['task'] != '') ? $_POST['task'] : '';
@@ -1810,13 +1831,13 @@ class Nbdesigner_Plugin {
         $path = '';      
         if($task == 'redesign'){
             if(!get_current_user_id()) {
-                $result['mes'] = __('You must login to re-design', 'nbdesigner'); echo json_encode($result); wp_die();
+                $result['mes'] = __('You must login to re-design', 'web-to-print-online-designer'); echo json_encode($result); wp_die();
             }
             $path_old = NBDESIGNER_CUSTOMER_DIR . '/' .$user_id. '/' .$order_id. '/' .$order_item_folder ;
             $path = NBDESIGNER_CUSTOMER_DIR . '/' . $user_id . '/nb_order/' . $product_id;   
         }else if($task == 'create_template' || $task == 'edit_template'){
             if(!current_user_can('edit_nbd_template')){
-                $result['mes'] = __('You have not permission to create or edit template', 'nbdesigner'); echo json_encode($result); wp_die();
+                $result['mes'] = __('You have not permission to create or edit template', 'web-to-print-online-designer'); echo json_encode($result); wp_die();
             }
             $priority = (isset($_POST['priority']) && $_POST['priority'] == 'primary') ? 1 : 0; 
             $path = NBDESIGNER_ADMINDESIGN_DIR . '/' . $product_id . '/' . $template_folder;
@@ -1839,7 +1860,7 @@ class Nbdesigner_Plugin {
                 Nbdesigner_IO::delete_folder($path_old);
                 if(wp_mkdir_p($path_old)){
                     Nbdesigner_IO::copy_dir($path, $path_old);
-                    $result['redesign'] = __("Your design has been saved success! Please wait response email!", 'nbdesigner');
+                    $result['redesign'] = __("Your design has been saved success! Please wait response email!", 'web-to-print-online-designer');
                     update_post_meta($order_id, '_nbdesigner_order_changed', 1);                     
                 }
             }else {
@@ -1949,12 +1970,12 @@ class Nbdesigner_Plugin {
                 rename($path_product, $path_old);
                 if(wp_mkdir_p($path_product)){
                     $this->nbdesigner_copy_dir($path_new, $path_product);
-                    $result['redesign'] = __("Your design has been saved success! Please wait response email!", 'nbdesigner');
+                    $result['redesign'] = __("Your design has been saved success! Please wait response email!", 'web-to-print-online-designer');
                     update_post_meta($oid, '_nbdesigner_order_changed', 1);                  
                 }
             }else {
                 $result['flag'] = 'pendding';
-                $result['redesign'] = __("Your design has been approved or pendding to review!", 'nbdesigner');
+                $result['redesign'] = __("Your design has been approved or pendding to review!", 'web-to-print-online-designer');
             }
         }
         echo json_encode($result);
@@ -2176,10 +2197,10 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             if (wp_mkdir_p($path)) {
                 if (!file_exists($path_thumb))
                     if (!wp_mkdir_p($path_thumb)) {
-                        $mes[] = __('Your server not allow creat folder', 'nbdesigner');
+                        $mes[] = __('Your server not allow creat folder', 'web-to-print-online-designer');
                     }
             } else {
-                $mes[] = __('Your server not allow creat folder', 'nbdesigner');
+                $mes[] = __('Your server not allow creat folder', 'web-to-print-online-designer');
             }
         }   
         if($vid > 0){
@@ -2221,7 +2242,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                     }                    
                 }
             } else {
-                $mes[] = __('Your server not allow writable file', 'nbdesigner');
+                $mes[] = __('Your server not allow writable file', 'web-to-print-online-designer');
             }                
         }
         return array('link' => $links, 'mes' => $mes);
@@ -2487,7 +2508,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         }
     }
     public function nbdesigner_add_design_column($columns) {
-        return array_merge($columns, array('design' => __('Design', 'nbdesigner')));
+        return array_merge($columns, array('design' => __('Design', 'web-to-print-online-designer')));
     }
     public function nbdesigner_render_cart($title = null, $cart_item = null, $cart_item_key = null) {
         if ($cart_item_key && is_cart()) {
@@ -2598,10 +2619,10 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                 $response['mes'] = 'success';
             }else{
                 update_post_meta($order_id, '_nbdesigner_order_changed', 0);
-                $response['mes'] = __('You don\'t change anything? Or an error occured saving the data, please refresh this page and check if changes took place.', 'nbdesigner');
+                $response['mes'] = __('You don\'t change anything? Or an error occured saving the data, please refresh this page and check if changes took place.', 'web-to-print-online-designer');
             }
         } else if(!isset($_design_file) || !is_array($_design_file)){
-            $response['mes'] = __('You haven\'t chosen a item.', 'nbdesigner');
+            $response['mes'] = __('You haven\'t chosen a item.', 'web-to-print-online-designer');
         }
         echo json_encode($response);
         wp_die();
@@ -2610,19 +2631,19 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         check_admin_referer('approve-design-email', '_nbdesigner_design_email_nonce');	
         $response['success'] = 0;
         if (empty($_POST['nbdesigner_design_email_order_content'])) {
-            $response['error'] = __('The reason cannot be empty', 'nbdesigner');        
+            $response['error'] = __('The reason cannot be empty', 'web-to-print-online-designer');        
         } elseif (!is_numeric($_POST['nbdesigner_design_email_order_id'])) {
-            $response['error'] = __('Error while sending mail', 'nbdesigner');
+            $response['error'] = __('Error while sending mail', 'web-to-print-online-designer');
         } 
         if (empty($response['error'])) {
             $message = $_POST['nbdesigner_design_email_order_content'];
             $order = new WC_Order($_POST['nbdesigner_design_email_order_id']);  
-            $reason = ($_POST['nbdesigner_design_email_reason'] == 'approved')?__('Your design accepted', 'nbdesigner'): 'Your design rejected';
+            $reason = ($_POST['nbdesigner_design_email_reason'] == 'approved')?__('Your design accepted', 'web-to-print-online-designer'): 'Your design rejected';
             $send_email = $this->nbdesigner_send_email($order, $reason, $message);
             if ($send_email)
                 $response['success'] = 1;
             else
-                $response['error'] = __('Error while sending mail', 'nbdesigner');            
+                $response['error'] = __('Error while sending mail', 'web-to-print-online-designer');            
         }
         echo json_encode($response);
         wp_die();        
@@ -2687,10 +2708,10 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                 $link_redesign = $redesign_url.'?product_id='.$item["product_id"].'&orderid='.$order_id[0];
             }  
             if(isset($design_data[$index]) && ($design_data[$index] == 'decline')){
-                $notice = "<small style='color:red;'>". __('(Rejected! Click ', 'nbdesigner')."<a href='".$link_redesign."' target='_blank'>". __('here ', 'nbdesigner'). "</a>". __(' to design again', 'nbdesigner')."!)</small>";
+                $notice = "<small style='color:red;'>". __('(Rejected! Click ', 'web-to-print-online-designer')."<a href='".$link_redesign."' target='_blank'>". __('here ', 'web-to-print-online-designer'). "</a>". __(' to design again', 'web-to-print-online-designer')."!)</small>";
             }
             if(isset($design_data[$index]) && ($design_data[$index] == 'accept')){
-                $notice = __('<small> (Approved!)</small>', 'nbdesigner');
+                $notice = __('<small> (Approved!)</small>', 'web-to-print-online-designer');
             }
             if(isset($item["item_meta"]["_nbdesigner_has_design"])) $has_design =  $item["item_meta"]["_nbdesigner_has_design"];
             if(isset($has_design)){               
@@ -2759,24 +2780,24 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $new_name = strtotime("now").substr(md5(rand(1111,9999)),0,8).'.'.$ext;        
         if(empty($name)) {
             $result = false;
-            $res['mes'] = __('Error occurred with file upload!', 'nbdesigner');            
+            $res['mes'] = __('Error occurred with file upload!', 'web-to-print-online-designer');            
         }
         if($size > $allow_max_size){
             $result = false;
-            $res['mes'] = __('Too large file !', 'nbdesigner');                
+            $res['mes'] = __('Too large file !', 'web-to-print-online-designer');                
         }
         $check = Nbdesigner_IO::checkFileType($name, $allow_extension);
         if(!$check){
             $result = false;
-            $res['mes'] = __('Invalid file format!', 'nbdesigner');
+            $res['mes'] = __('Invalid file format!', 'web-to-print-online-designer');
         }    
-        $path = Nbdesigner_IO::create_image_path(NBDESIGNER_TEMP_DIR, $new_name);
+        $path = Nbdesigner_IO::create_file_path(NBDESIGNER_TEMP_DIR, $new_name);
         if($result){
             if(move_uploaded_file($_FILES['file']["tmp_name"],$path['full_path'])){
-                $res['mes'] = __('Upload success !', 'nbdesigner');       
+                $res['mes'] = __('Upload success !', 'web-to-print-online-designer');       
             }else{
                 $result = false;
-                $res['mes'] = __('Error occurred with file upload!', 'nbdesigner');            
+                $res['mes'] = __('Error occurred with file upload!', 'web-to-print-online-designer');            
             }                     
         }
         if($result){
@@ -2922,7 +2943,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             $post = array(
                 'post_name' => NBDESIGNER_PAGE_REDESIGN,
                 'post_status' => 'publish',
-                'post_title' => __('Customer re-design product', 'nbdesigner'),
+                'post_title' => __('Customer re-design product', 'web-to-print-online-designer'),
                 'post_type' => 'page',
                 'post_date' => date('Y-m-d H:i:s')
             );      
@@ -2933,7 +2954,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             $post = array(
                 'post_name' => NBDESIGNER_PAGE_CREATE_TEMPLATE,
                 'post_status' => 'publish',
-                'post_title' => __('Create Template', 'nbdesigner'),
+                'post_title' => __('Create Template', 'web-to-print-online-designer'),
                 'post_type' => 'page',
                 'post_date' => date('Y-m-d H:i:s')
             );      
@@ -2944,7 +2965,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             $post = array(
                 'post_name' => NBDESIGNER_PAGE_STUDIO,
                 'post_status' => 'publish',
-                'post_title' => __('Designer Studio', 'nbdesigner'),
+                'post_title' => __('Designer Studio', 'web-to-print-online-designer'),
                 'post_type' => 'page',
                 'post_date' => date('Y-m-d H:i:s')
             );      
@@ -2991,7 +3012,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $path = $this->plugin_path_data . 'designs/' . $uid . '/' . $order_id . '/' . $folder . '/thumbs';
         $list_image = $this->nbdesigner_list_thumb($path);
         if (count($list_image) > 0) {
-            $div_image = '<div id="nbdesigner_frontend_area"><h4>' . __('Preview your design', 'nbdesigner') . '</h4>';
+            $div_image = '<div id="nbdesigner_frontend_area"><h4>' . __('Preview your design', 'web-to-print-online-designer') . '</h4>';
             foreach ($list_image as $img) {
                 $src = $this->nbdesigner_create_secret_image_url($img);
                 $div_image .= '<div class="img-con"><img src="' . $src . '" /></div>';
@@ -3001,7 +3022,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             $div_image = '<div id="nbdesigner_frontend_area"></div>';
         }        
         $html .= '<div class="woocommerce_msrp">';
-        $html .= '<a class="button nbdesign-button nbdesigner-disable" id="triggerDesign" >' . '<img class="nbdesigner-img-loading rotating" src="'.NBDESIGNER_PLUGIN_URL.'assets/images/loading.png'.'"/>'.__('Design again', 'nbdesigner').'</a><br />' . $div_image;
+        $html .= '<a class="button nbdesign-button nbdesigner-disable" id="triggerDesign" >' . '<img class="nbdesigner-img-loading rotating" src="'.NBDESIGNER_PLUGIN_URL.'assets/images/loading.png'.'"/>'.__('Design again', 'web-to-print-online-designer').'</a><br />' . $div_image;
         $html .= '</div><br />';  
         $html .= '<div style="position: fixed; top: 0; left: 0; z-index: 999999; opacity: 0; width: 100%; height: 100%;" id="container-online-designer"><iframe id="onlinedesigner-designer"  width="100%" height="100%" scrolling="no" frameborder="0" noresize="noresize" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" src="' . $src_iframe . '"></iframe><span id="closeFrameDesign"  class="nbdesigner_pp_close">&times;</span></div>';
         return $html;
@@ -3014,7 +3035,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $priority = (isset($_GET['priority']) && $_GET['priority'] != '') ? $_GET['priority'] : '';       
         $task = (isset($_GET['task']) && $_GET['task'] != '') ? $_GET['task'] : '';       
         $template_folder = (isset($_GET['template_folder']) && $_GET['template_folder'] != '') ? $_GET['template_folder'] : '';       
-        if(!($uid > 0) || !isset($product_id) || !(current_user_can('edit_nbd_template'))) return $html = __("Oops! you can't accsess this page!", 'nbdesigner');
+        if(!($uid > 0) || !isset($product_id) || !(current_user_can('edit_nbd_template'))) return $html = __("Oops! you can't accsess this page!", 'web-to-print-online-designer');
         $path = NBDESIGNER_ADMINDESIGN_DIR . '/' . $product_id . '/primary/thumbs';
         if($template_folder != '') $path = NBDESIGNER_ADMINDESIGN_DIR . '/' . $product_id . '/'.$template_folder.'/thumbs';
         $query_array = array(
@@ -3080,7 +3101,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
     }
     public function nbdesigner_save_language(){
         $data = array(
-            'mes'   =>  __('You do not have permission to edit language!', 'nbdesigner'),
+            'mes'   =>  __('You do not have permission to edit language!', 'web-to-print-online-designer'),
             'flag'  => 0
         );	        
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_language')) {
@@ -3109,10 +3130,10 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             }           
             $res = json_encode($langs);
             file_put_contents($path_lang, $res);   
-            $data['mes'] =  __('Update language success!', 'nbdesigner');
+            $data['mes'] =  __('Update language success!', 'web-to-print-online-designer');
             $data['flag'] = 1;
         }else{
-            $data['mes'] = __('Update language failed!', 'nbdesigner');
+            $data['mes'] = __('Update language failed!', 'web-to-print-online-designer');
         }
         echo json_encode($data);
         wp_die();
@@ -3160,7 +3181,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
     }    
     public function nbdesigner_delete_language(){
         $data = array(
-            'mes'   =>  __('You do not have permission to delete language!', 'nbdesigner'),
+            'mes'   =>  __('You do not have permission to delete language!', 'web-to-print-online-designer'),
             'flag'  => 0
         );	        
         if (!wp_verify_nonce($_POST['nonce'], 'nbdesigner_add_cat') || !current_user_can('edit_nbd_language')) {
@@ -3181,19 +3202,19 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             if(unlink($path_lang)) {
                 $data['flag'] = 1;
                 $this->nbdesigner_delete_json_setting($path_data_cat_lang, $index);
-                $data['mes'] = __('Delete language success!', 'nbdesigner');
+                $data['mes'] = __('Delete language success!', 'web-to-print-online-designer');
                 $langs = json_decode(file_get_contents($path_primary_lang)); 
                 $data['langs'] = (array)$langs[0];
             }            
         }else {
-            $data['mes'] = __('Oops! Can not delete primary language!', 'nbdesigner');
+            $data['mes'] = __('Oops! Can not delete primary language!', 'web-to-print-online-designer');
         }
         echo json_encode($data);
         wp_die();
     }
     public function nbdesigner_create_language(){    
         $data = array(
-            'mes'   =>  __('You do not have permission to create language!', 'nbdesigner'),
+            'mes'   =>  __('You do not have permission to create language!', 'web-to-print-online-designer'),
             'flag'  => 0
         );        
         if (!wp_verify_nonce($_POST['nbdesigner_newlang_hidden'], 'nbdesigner-new-lang') || !current_user_can('edit_nbd_language')) {
@@ -3345,8 +3366,8 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $allow_extension = array('jpg','jpeg','png','gif');
         if(!in_array(strtolower($ext), $allow_extension)) $ext = 'png';
         $new_name = strtotime("now").substr(md5(rand(1111,9999)),0,8).'.'.$ext;
-        $path = $this->plugin_path_data. 'temp/'.$new_name;
-        $res['src'] = content_url().'/uploads/nbdesigner/temp/'.$new_name;
+        $path = NBDESIGNER_TEMP_DIR.'/'.$new_name;
+        $res['src'] = NBDESIGNER_TEMP_URL.'/'.$new_name;
         if(@copy($url, $path)){
             $res['flag'] = 1;
         } else {
@@ -3405,14 +3426,14 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
     }
     protected static function nbdesigner_get_javascript_multilanguage(){
         $lang = array(
-            'error' => __('Oops! Try again later!', 'nbdesigner'),
-            'complete' => __('Complete!', 'nbdesigner'),
-            'are_you_sure' => __('Are you sure?', 'nbdesigner'),
-            'warning_mes_delete_file' => __('You will not be able to recover this file!', 'nbdesigner'),
-            'warning_mes_delete_category' => __('You will not be able to recover this category!', 'nbdesigner'),
-            'warning_mes_fill_category_name' => __('Please fill category name!', 'nbdesigner'),
-            'warning_mes_backup_data' => __('Restore your last data!', 'nbdesigner'),
-            'warning_mes_delete_lang' => __('You will not be able to recover this language!', 'nbdesigner')
+            'error' => __('Oops! Try again later!', 'web-to-print-online-designer'),
+            'complete' => __('Complete!', 'web-to-print-online-designer'),
+            'are_you_sure' => __('Are you sure?', 'web-to-print-online-designer'),
+            'warning_mes_delete_file' => __('You will not be able to recover this file!', 'web-to-print-online-designer'),
+            'warning_mes_delete_category' => __('You will not be able to recover this category!', 'web-to-print-online-designer'),
+            'warning_mes_fill_category_name' => __('Please fill category name!', 'web-to-print-online-designer'),
+            'warning_mes_backup_data' => __('Restore your last data!', 'web-to-print-online-designer'),
+            'warning_mes_delete_lang' => __('You will not be able to recover this language!', 'web-to-print-online-designer')
         );
         return $lang;
     }
@@ -3473,11 +3494,11 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                     }	                    
                 }
             }else{
-                $result['mes'] = __('Missing product!', 'nbdesigner');
+                $result['mes'] = __('Missing product!', 'web-to-print-online-designer');
                 $result['flag'] = 0;                    
             }
         }else{
-            $result['mes'] = __('Missing information!', 'nbdesigner');
+            $result['mes'] = __('Missing information!', 'web-to-print-online-designer');
             $result['flag'] = 0;            
         }        
         echo json_encode($result);
@@ -3728,7 +3749,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         if($has_design == 'has_design'){
             $actions['view_nbd'] = array(
                 'url'       => admin_url( 'post.php?post='.$id.'&action=edit' ).'#nbdesigner_order',
-                'name'      => __( 'Has Design', 'nbdesigner' ),
+                'name'      => __( 'Has Design', 'web-to-print-online-designer'),
                 'action'    => "has-nbd"
             );            
         } 
