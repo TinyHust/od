@@ -113,7 +113,11 @@
             $vid = 0;
             if( $product->is_type( 'variable' ) ) { 
                 $available_variations = $product->get_available_variations();   
-                $default_attributes = $product->get_variation_default_attributes();  
+                if(is_woo_v3()){
+                    $default_attributes = $product->get_default_attributes();  
+                }else{
+                    $default_attributes = $product->get_variation_default_attributes();  
+                } 
                 foreach ( $available_variations as $variation ){
                     if(count($default_attributes) == count($variation['attributes'])){
                         $vid = $variation['variation_id'];

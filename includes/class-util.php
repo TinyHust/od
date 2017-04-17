@@ -109,7 +109,7 @@ class Nbdesigner_IO {
         $basedir = $upload_dir['basedir'];
         $arr = explode('/', $basedir);
         $upload = $arr[count($arr) - 1];
-        if(is_multisite()) $upload = $arr[count($arr) - 3].'/'.$arr[count($arr) - 2].'/'.$arr[count($arr) - 1];
+        if(is_multisite() && !is_main_site()) $upload = $arr[count($arr) - 3].'/'.$arr[count($arr) - 2].'/'.$arr[count($arr) - 1];
         return content_url( substr($path, strrpos($path, '/' . $upload . '/nbdesigner')) );
     }
     public static function convert_url_to_path($url){
@@ -117,7 +117,7 @@ class Nbdesigner_IO {
         $basedir = $upload_dir['basedir'];
         $arr = explode('/', $basedir);
         $upload = $arr[count($arr) - 1];
-        if(is_multisite()) $upload = $arr[count($arr) - 3].'/'.$arr[count($arr) - 2].'/'.$arr[count($arr) - 1];
+        if(is_multisite() && !is_main_site()) $upload = $arr[count($arr) - 3].'/'.$arr[count($arr) - 2].'/'.$arr[count($arr) - 1];
         $arr_url = explode('/'.$upload, $url);
         return $basedir.$arr_url[1];
     }
@@ -382,4 +382,55 @@ function nbd_get_data_from_json($path = ''){
 }
 function nbd_update_config_product_160($settings){
     return $settings;
+}
+function nbd_get_i18n_javascript(){
+    $lang = array(
+        'error' => __('Oops! Try again later!', 'web-to-print-online-designer'),
+        'complete' => __('Complete!', 'web-to-print-online-designer'),
+        'are_you_sure' => __('Are you sure?', 'web-to-print-online-designer'),
+        'warning_mes_delete_file' => __('You will not be able to recover this file!', 'web-to-print-online-designer'),
+        'warning_mes_delete_category' => __('You will not be able to recover this category!', 'web-to-print-online-designer'),
+        'warning_mes_fill_category_name' => __('Please fill category name!', 'web-to-print-online-designer'),
+        'warning_mes_backup_data' => __('Restore your last data!', 'web-to-print-online-designer'),
+        'warning_mes_delete_lang' => __('You will not be able to recover this language!', 'web-to-print-online-designer')
+    );
+    return $lang;    
+}
+if ( ! function_exists( 'is_nbd_studio' ) ) {
+    function is_nbd_studio(){
+        return is_page( nbd_get_page_id( 'studio' ) );
+    }    
+}
+if( !function_exists('nbd_get_page_id')){
+    function nbd_get_page_id($page){
+        $page = apply_filters( 'nbdesigner_' . $page . '_page_id', get_option('nbdesigner_' . $page . '_page_id' ) );
+        return $page ? absint( $page ) : -1;
+    }
+}
+function nbd_get_woo_version(){
+    if ( ! function_exists( 'get_plugins' ) )
+            require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+    $plugin_folder = get_plugins( '/' . 'woocommerce' );
+    $plugin_file = 'woocommerce.php';     
+    if ( isset( $plugin_folder[$plugin_file]['Version'] ) ) {
+            return $plugin_folder[$plugin_file]['Version'];
+    } else {
+            return 0;
+    }        
+}
+function is_woo_v3(){
+    $woo_ver = nbd_get_woo_version(); 
+    if( version_compare( $woo_ver, "3.0", "<" )) return false;
+    return true;
+}
+function nbd_get_dpi($filename){
+    $a = fopen($filename,'r');
+    $string = fread($a,20);
+    fclose($a);
+
+    $data = bin2hex(substr($string,14,4));
+    $x = substr($data,0,4);
+    $y = substr($data,4,4);
+
+    return array(hexdec($x),hexdec($y));
 }

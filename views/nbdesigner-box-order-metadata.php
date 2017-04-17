@@ -10,7 +10,10 @@
                     $index_accept = 'nbds_'.$order_item_id;
                     $folder = wc_get_order_item_meta($order_item_id, '_nbdesigner_folder_design');
                     $item_meta = new WC_Order_Item_Meta( $product );
-                    $variation = $item_meta->display($flat=true,$return=true);                    
+                    $variation = '';
+                    if(!is_woo_v3()){
+                        $variation = $item_meta->display($flat=true,$return=true);    
+                    }   
 		?>
                     <div>
                         <h4 class="nbdesigner_order_product_name">
@@ -36,10 +39,10 @@
                             <?php endforeach; ?>
                             <?php 
                                 if($folder != ''){
-                                    $arr = array('product_id' => $product["product_id"], 'order_id' => $order->id, 'order_item_id' => $order_item_id, 'vid' => $product['variation_id']);
+                                    $arr = array('product_id' => $product["product_id"], 'order_id' => $order_id, 'order_item_id' => $order_item_id, 'vid' => $product['variation_id']);
                                     $link_view_detail = add_query_arg($arr, admin_url('admin.php?page=nbdesigner_detail_order'));
                                 }else{
-                                    $link_view_detail = add_query_arg(array('product_id' => $product["product_id"], 'order_id' => $order->id), admin_url('admin.php?page=nbdesigner_detail_order'));
+                                    $link_view_detail = add_query_arg(array('product_id' => $product["product_id"], 'order_id' => $order_id), admin_url('admin.php?page=nbdesigner_detail_order'));
                                 }
                             ?>
                             <a class="nbdesigner-right button button-small button-secondary"  href="<?php echo $link_view_detail; ?>"><?php _e('View detail', 'web-to-print-online-designer'); ?></a>
@@ -55,7 +58,7 @@
     </div>
 	<div class="nbdesigner-right" style="padding: 5px;">
 		<?php  if($count_img_design > 0): ?>
-			<a href="<?php echo add_query_arg(array('download-all' => 'true', 'order_id' => $order->id), admin_url('admin.php?page=nbdesigner_detail_order')); ?>" class="button button-small button-secondary"><?php _e('Download all', 'web-to-print-online-designer'); ?></a>
+			<a href="<?php echo add_query_arg(array('download-all' => 'true', 'order_id' => $order_id), admin_url('admin.php?page=nbdesigner_detail_order')); ?>" class="button button-small button-secondary"><?php _e('Download all', 'web-to-print-online-designer'); ?></a>
 		<?php else: ?>
 			<span class="button button-small button-disabled" style="color: #dedede;"><?php _e('Download all', 'web-to-print-online-designer'); ?></span>
 		<?php endif; ?>
@@ -72,14 +75,14 @@
             <a href="#" class="button button-primary" id="nbdesigner_order_file_submit"><?php _e('GO', 'web-to-print-online-designer'); ?></a>			
 		</div>
 	</div>
-	<input type="hidden" name="nbdesigner_design_order_id" value="<?php echo $order->id; ?>" />
+	<input type="hidden" name="nbdesigner_design_order_id" value="<?php echo $order_id; ?>" />
 	<?php wp_nonce_field('approve-designs', '_nbdesigner_approve_nonce'); ?>
 	<div class="nbdesigner-clearfix"></div>
 </div>
 <div class="nbdesigner_container_order_email" id="nbdesigner_order_email_info">
 	<h4><?php _e('Send mail','web-to-print-online-designer'); ?></h4>
 	<?php wp_nonce_field('approve-design-email', '_nbdesigner_design_email_nonce'); ?>
-	<input type="hidden" name="nbdesigner_design_email_order_id" value="<?php echo $order->id; ?>" />
+	<input type="hidden" name="nbdesigner_design_email_order_id" value="<?php echo $order_id; ?>" />
     <div id="nbdesigner_order_email_error" class="nbdesigner_order_email_message hidden"></div>
     <div id="nbdesigner_order_email_success" class="nbdesigner_order_email_message hidden"></div>	
     <div>

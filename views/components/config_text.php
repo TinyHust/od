@@ -184,7 +184,7 @@
             <div class="container-dg-slider"><div class="dg-slider" id="text-arc"></div></div>
             <p ng-if="langMode == 'rtl'" class="label-config">{{(langs['RTL']) ? langs['RTL'] : "RTL"}}</p>
             <div ng-if="langMode == 'rtl'">
-                <input id="rtl_lang" class="cmn-toggle cmn-toggle-round" type="checkbox"  ng-model="rtlLang">
+                <input id="rtl_lang" class="cmn-toggle cmn-toggle-round" type="checkbox"  ng-click="changeTextDirection()" ng-model="rtlLang">
                 <label for="rtl_lang"></label>                
             </div>
         </div>		

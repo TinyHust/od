@@ -110,6 +110,9 @@ if (!defined('NBDESIGNER_DATA_CONFIG_DIR')) {
 if (!defined('NBDESIGNER_DATA_CONFIG_URL')) {   
     define('NBDESIGNER_DATA_CONFIG_URL', NBDESIGNER_DATA_URL . '/data');
 }
+if (!defined('NBDESIGNER_ASSETS_URL')) {   
+    define('NBDESIGNER_ASSETS_URL', NBDESIGNER_PLUGIN_URL . 'assets/');
+}
 if (!defined('NBDESIGNER_JS_URL')) {   
     define('NBDESIGNER_JS_URL', NBDESIGNER_PLUGIN_URL . 'assets/js/');
 }
@@ -144,6 +147,7 @@ require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-debug.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-helper.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/table/class.product.templates.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.php');
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.studio.php');
 
 register_activation_hook( __FILE__, array( 'Nbdesigner_Plugin', 'plugin_activation' ) );
 register_deactivation_hook( __FILE__, array( 'Nbdesigner_Plugin', 'plugin_deactivation' ) );
@@ -155,6 +159,8 @@ if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 }
 $nb_designer = new Nbdesigner_Plugin();
 $nb_designer->init();
+$nbd_studio = new Nbdesigner_Studio();
+$nbd_studio->init();
 
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-widget.php');
 

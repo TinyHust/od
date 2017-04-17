@@ -81,11 +81,14 @@
     vertical-align: middle;
     opacity: 0.4;
 }
-.nbdesigner_frontend_container .button {
+.nbdesigner_frontend_container .button,  #nbdesign-new-template{
     -webkit-transition: all 0.4s;
     -moz-transition: all 0.4s;
     -o-transition: all 0.4s;
     transition: all 0.4s;
+    padding: 1em 2em;
+    border: 1px solid #ddd;
+    font-weight: bold;    
 }
 .nbdesign-button {
     float: none;
@@ -337,7 +340,8 @@
     opacity: 0.3;
 }
 .nbdesigner-pagination-con .tablenav-pages span.pagination-links > a,
-.nbdesigner-pagination-con .tablenav-pages span.pagination-links > span {
+.nbdesigner-pagination-con .tablenav-pages span.pagination-links > span ,
+#nbdesign-new-template{
     width: 30px;
     height: 30px;
     display: inline-block;
