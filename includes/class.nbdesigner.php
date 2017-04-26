@@ -1267,6 +1267,9 @@ class Nbdesigner_Plugin {
                 }
                 if($variation_id > 0){
                     $datas = unserialize(get_post_meta($variation_id, '_designer_setting'.$variation_id, true)); 
+                    if(!isset($datas[0])) {
+                        $datas = unserialize(get_post_meta($product_id, '_designer_setting', true)); 
+                    }                    
                 }else{
                     $datas = unserialize(get_post_meta($product_id, '_designer_setting', true)); 
                 }
@@ -2231,7 +2234,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             }else if($key == 'config'){
                 $full_name = $path . '/config.json';
             }else{
-                $full_name = $path . '/' . $key . '.png';
+                $full_name = $path . '/' . $key . '.jpg';
                 $_key = explode('_', $key);                
             }
             if (move_uploaded_file($val["tmp_name"],$full_name)) {

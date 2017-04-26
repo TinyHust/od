@@ -66,9 +66,9 @@ class Product_Template_List_Table extends WP_List_Table {
         $path_primary = NBDESIGNER_ADMINDESIGN_DIR . '/' . $pid . '/primary'; 
         $path_primary_old = NBDESIGNER_ADMINDESIGN_DIR . '/' . $pid . '/primary_old'; 
         $path_primary_new = NBDESIGNER_ADMINDESIGN_DIR . '/' . $pid . '/' .$item->folder; 
-        if(!rename($path_primary, $path_primary_old)) return 1; 
-        if(!rename($path_primary_new, $path_primary)) return 1; 
-        if(!rename($path_primary_old, $path_primary_new)) return 1;          
+        if(file_exists($path_primary) && !rename($path_primary, $path_primary_old)) return 1; 
+        if(file_exists($path_primary_new) && !rename($path_primary_new, $path_primary)) return 1; 
+        if(file_exists($path_primary_old) && !rename($path_primary_old, $path_primary_new)) return 1;          
         self::update_template($id, array('priority' => 1, 'folder' => 'primary'));
         self::update_template($item_primary->id, array('priority' => 0, 'folder' => $item->folder));
     }

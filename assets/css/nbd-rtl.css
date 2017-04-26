@@ -42,3 +42,6 @@
 .nbdesigner-variation-setting .nbdesigner-info-box, .nbdesigner-variation-setting .nbdesigner-image-box {
     float: right;
 }
+.nbdesigner-list-template h3 {
+    margin-right: 15px;
+}

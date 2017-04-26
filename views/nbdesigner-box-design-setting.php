@@ -13,7 +13,7 @@
     <div class="nbdesigner-clearfix"></div>
     <div id="nbdesigner_dpi_con" class="<?php if (!get_post_meta($post_id, '_nbdesigner_enable', true)) echo 'nbdesigner-disable'; ?>">
         <label for="nbdesigner_dpi" class="nbdesigner-setting-box-label"><?php echo _e('DPI', 'web-to-print-online-designer'); ?></label>
-        <input name="_nbdesigner_dpi" id="nbdesigner_dpi" value="<?php echo $dpi;?>" type="number"  min="0" max="300" style="width: 60px;" onchange="NBDESIGNADMIN.updateSolutionImage()">&nbsp;<small>(<?php _e('Dots Per Inch', 'web-to-print-online-designer'); ?>)</small>   
+        <input name="_nbdesigner_dpi" id="nbdesigner_dpi" value="<?php echo $dpi;?>" type="number"  min="0" style="width: 60px;" onchange="NBDESIGNADMIN.updateSolutionImage()">&nbsp;<small>(<?php _e('Dots Per Inch', 'web-to-print-online-designer'); ?>)</small>   
     </div>
     <div id="nbdesigner-boxes" class="<?php if (!$enable) echo 'nbdesigner-disable'; ?>">
         <?php $count = 0;
