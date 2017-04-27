@@ -14,8 +14,11 @@
         <link type="text/css" href="<?php echo NBDESIGNER_CSS_URL .'nbdstuido-bundle.css'; ?>" rel="stylesheet" media="all">
         <link type="text/css" href="<?php echo NBDESIGNER_CSS_URL .'nbd-studio.css'; ?>" rel="stylesheet" media="all">
         <script type="text/javascript" >
-            var NBDCONFIG = {};
-            NBDCONFIG['svgUrl'] = "<?php echo NBDESIGNER_ASSETS_URL. 'svgs/' ; ?>";
+            var NBDCONFIG = {
+                svgUrl  :   "<?php echo NBDESIGNER_ASSETS_URL. 'svgs/' ; ?>",
+                nonce_get   :   "<?php echo wp_create_nonce('nbdesigner-get-data'); ?>",
+                ajax_url :   "<?php echo admin_url('admin-ajax.php'); ?>"
+            };
         </script>   
     <head>    
     <body>
@@ -30,6 +33,7 @@
                     <?php include_once('stages.php'); ?>
                 </div>    
                 <?php include_once('zoom-stage.php'); ?>
+                <?php include_once('color-modal.php'); ?>
             </div>    
         </div>      
         <script type='text/javascript' src="<?php echo NBDESIGNER_ASSETS_URL.'libs/angular-1.6.3.js'; ?>"></script>

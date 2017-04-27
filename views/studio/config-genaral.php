@@ -36,14 +36,14 @@
             <md-menu-item class="md-indent">
                 <md-icon md-svg-icon="nbd:zoom-in-layer"></md-icon>
                 <md-button aria-label="Move Up" >
-                    Zoom in Layer
+                    Zoom out Layer
                     <span class="md-alt-text">{{ 'S-' | keyboardShortcut }} -</span>
                 </md-button>             
             </md-menu-item>    
             <md-menu-item class="md-indent">
                 <md-icon md-svg-icon="nbd:zoom-out-layer"></md-icon>
                 <md-button aria-label="Move Down" >
-                    Zoom out Layer
+                    Zoom in Layer
                     <span class="md-alt-text">{{ 'S-' | keyboardShortcut }} +</span>
                 </md-button>             
             </md-menu-item>                

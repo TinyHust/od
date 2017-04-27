@@ -263,13 +263,19 @@ md-menu-bar.nbd-menu-bar button {
 }
 .comboinput md-input-container {
     width: 100%;
-    height: 100%;
-    padding-top: 12px;
+    height: 30px;
+    margin-top: 18px;  
 }
 .comboinput md-select {
     position: absolute;
     right: -3px;
     top: 16px;
+}
+.comboinput md-input-container .md-input{
+    height: 30px;
+}
+.comboinput md-input-container .md-errors-spacer {
+    display: none;
 }
 .comboinput md-select-value {
     border-bottom : none !important;
@@ -288,7 +294,7 @@ md-menu-bar.nbd-menu-bar button {
     cursor: pointer;
 }
 .md-color-picker-input-container {
-    margin: 0 6px 12px;   
+    margin: 6px 6px 12px;   
     cursor: pointer;
 }
 .md-color-picker-input-container md-input-container {
@@ -304,10 +310,10 @@ md-color-picker .md-color-picker-input-container .md-color-picker-preview {
     left: 0;
     width: 100%;
     height: 100%; 
-    -webkit-transition: all 0.4s;
+/*    -webkit-transition: all 0.4s;
     -mz-transition: all 0.4s;
     -ms-transition: all 0.4s;
-    transition: all 0.4s;    
+    transition: all 0.4s;    */
     z-index: 9;
 }
 .nbd-on-process .nbd-on-process-inner{
@@ -315,9 +321,54 @@ md-color-picker .md-color-picker-input-container .md-color-picker-preview {
     height: 100%;      
     background: rgba(255,255,255,0.85);
 }
+.nbd-on-process.ng-hide-add {
+    animation:1s zoomOut ease;
+}
+.nbd-on-process.ng-hide-remove {
+    animation:0.5s zoomIn ease;
+}
 .nbd-on-process.active {
     z-index: 99;
     opacity: 1;
+}
+.nbd-fonts {
+    width: 200px;
+    margin-right: 6px;
+}
+md-menu-item.nbd-dropdown-menu >.md-button {
+    padding: 0;
+/*    margin-right: 5px;*/
+    min-width: 40px !important;
+}
+.overline > div{
+    position: relative;
+}
+.overline > div:before {
+    position: absolute;
+    top: 0;
+    left: 12px;
+    width: 16px;
+    height: 2px;
+    content: '';
+    background: #7d7d7d;
+    display: block;
+} 
+.nbd-color {
+    width: 40px;
+    height: 40px;
+}
+.nbd-fonts md-autocomplete md-autocomplete-wrap,
+.nbd-fonts md-autocomplete  {
+    height: 30px;
+}
+.nbd-fonts md-autocomplete input:not(.md-input) {
+    line-height: 30px;
+    height: 30px;    
+}
+.md-color-picker-container .md-color-picker-history>div>div>div,
+.md-color-picker-container .md-color-picker-material-palette .md-color-picker-with-label,
+.flex-10, .layout-column>.flex-10, .layout-row>.flex-10 {
+    cursor: pointer;
 }
 .logo .text--line {
   font-size: .5em;
