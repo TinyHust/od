@@ -4,6 +4,9 @@ body, html {
     background: #f4f4f4;
     overflow: hidden;
 }
+p,  h3, h4, input, textarea {
+    color: #666;
+}
 .md-tooltip {
     font-size: 10px;
     text-transform: uppercase;
@@ -265,6 +268,7 @@ md-menu-bar.nbd-menu-bar button {
     width: 100%;
     height: 30px;
     margin-top: 18px;  
+    padding-bottom: 4px;
 }
 .comboinput md-select {
     position: absolute;
@@ -297,12 +301,75 @@ md-menu-bar.nbd-menu-bar button {
     margin: 6px 6px 12px;   
     cursor: pointer;
 }
-.md-color-picker-input-container md-input-container {
+.md-color-picker-input-container md-input-container,
+.md-color-picker-input-container .md-color-picker-clear {
     display: none;
+}
+.add-color {
+    margin: 0;
+    border-radius: 4px;
+    border: 2px solid #666;  
+    width: 40px;
+    height: 40px;
+}
+.add-color .md-button.md-icon-button {
+    padding: 6px;
+    margin: 0;
 }
 [md-color-picker] .md-color-picker-input-container .md-color-picker-preview, 
 md-color-picker .md-color-picker-input-container .md-color-picker-preview {
     top: 0;
+    background: none !important;
+    border-radius: 0;
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    box-shadow: none;
+    border-radius: 4px;
+    border: 2px solid #666;    
+    margin-bottom: 10px;
+}
+.md-color-picker-input-container {
+    display: inline-block !important;
+}
+.nbd-color-picker {
+    margin: 0 !important;
+    padding: 4px !important;
+    width: 36px !important;
+    height: 36px !important;  
+}
+.item-color {
+    width: 30px; 
+    height: 30px; 
+    display: inline-block; 
+    border-radius: 50%;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.14), 0 2px 2px 0 rgba(0,0,0,.098), 0 1px 5px 0 rgba(0,0,0,.084); 
+    overflow: hidden;
+    background-color: #fff;
+    background-image: -webkit-linear-gradient(45deg,#ddd 25%,transparent 0,transparent 75%,#ddd 0,#ddd),-webkit-linear-gradient(45deg,#ddd 25%,transparent 0,transparent 75%,#ddd 0,#ddd);
+    background-image: linear-gradient(45deg,#ddd 25%,transparent 0,transparent 75%,#ddd 0,#ddd),linear-gradient(45deg,#ddd 25%,transparent 0,transparent 75%,#ddd 0,#ddd);
+    background-size: 8px 8px;
+    background-position: 0 0,4px 4px;    
+    border: 2px solid #fff;
+    box-sizing: border-box;
+    cursor: pointer;
+    padding-bottom: 5px;
+    margin: 5px 6px 0 15px;    
+}
+.item-color:focus {
+    outline: none;
+}
+.md-color-picker-input-container {
+    margin: 0;
+}
+.palette-con:not(:last-child) {
+    margin-bottom: 10px;
+}
+.color-shadow {
+    margin-top: 35px;
+    display: block;
+    height: 5px;
+    background: transparent url(../images/color.png) repeat scroll 0 0;    
 }
 .nbd-on-process {
     position: absolute;
@@ -334,6 +401,8 @@ md-color-picker .md-color-picker-input-container .md-color-picker-preview {
 .nbd-fonts {
     width: 200px;
     margin-right: 6px;
+    padding-bottom: 5px;
+    margin-top: 5px;    
 }
 md-menu-item.nbd-dropdown-menu >.md-button {
     padding: 0;
@@ -353,9 +422,62 @@ md-menu-item.nbd-dropdown-menu >.md-button {
     background: #7d7d7d;
     display: block;
 } 
+.nbd-palette {
+    font-size: 0;
+    padding: 20px;
+    position: relative;
+}
 .nbd-color {
     width: 40px;
     height: 40px;
+    display: inline-block;
+    margin: 0;
+    padding: 0px;
+    cursor: pointer;
+    -webkit-transition: all 0.4s;
+    -mz-transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    transition: all 0.4s;    
+}
+.nbd-color:focus {
+    outline: none;
+} 
+.modal-color {
+    position: absolute; 
+    left: 60px; 
+    top: 64px; 
+    width: 320px; 
+    border-radius: 0 !important; 
+    padding: 0px;
+    box-sizing: border-box;
+}
+.nbd-content-dropdown-menu {
+    padding: 0 24px;
+}
+.nbd-content-dropdown-menu md-switch {
+    display: inline-block;
+}
+#nbd-content-dropdown-menu {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+.config-shadow {
+    -webkit-transition: all 0.4s;
+    -mz-transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    transition: all 0.4s;    
+}
+.config-shadow.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+md-dialog.modal-color.md-transition-out {
+    -webkit-transition: all .2s cubic-bezier(.25,.8,.25,1);
+    -moz--transition: all .2s cubic-bezier(.25,.8,.25,1);    
+    -ms-transition: all .2s cubic-bezier(.25,.8,.25,1);    
+    transition: all .2s cubic-bezier(.25,.8,.25,1);    
 }
 .nbd-fonts md-autocomplete md-autocomplete-wrap,
 .nbd-fonts md-autocomplete  {

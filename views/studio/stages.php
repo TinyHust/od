@@ -2,8 +2,8 @@
 <div class="nbd-stages" ng-style="{'width' : adjustStage('width'), 'height' : adjustStage('height')}">
     <div class="tool-bar" ng-style="{'left' : adjustStage('left'), 'width' : adjustStage('width')}">
         <div flex layout="row">
-            <div flex layout-align="start center" layout="row" style="padding: 0 15px; border-right: 1px solid #ddd;">
-                <?php include_once('config-text.php'); ?>
+            <div flex layout-align="start center" layout="row" style="padding-left: 15px; border-right: 1px solid #ddd;">     
+                <?php include_once('config-text.php'); ?> 
                 <?php include_once('config-clipart.php'); ?>
                 <?php include_once('config-image.php'); ?>
                 <?php include_once('config-draw.php'); ?>

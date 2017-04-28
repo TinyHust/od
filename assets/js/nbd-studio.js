@@ -115,7 +115,7 @@ var langjs = {
 (function () {
   'use strict';
     angular.module("nbDesignerApp", ['ngMaterial', 'ngCookies', 'ngRoute', 'mdColorPicker'])
-            .controller("StudioController", function($scope, $q, $mdDialog, $document, $timeout, $mdSidenav, $window, $rootScope, $log, FontService){
+            .controller("StudioController", function($scope, $q, $mdDialog, $document, $timeout, $mdSidenav, $window, $rootScope, $log, $cookies, FontService){
         $scope.canAddStage = true;           
         $scope.isFirstStage = true;           
         $scope.isLastStage = false;           
@@ -127,12 +127,33 @@ var langjs = {
         $scope.currentStageRatio = 50;
         $scope.i18nLangs = {};
         $scope.currentfontSize = 14;
+        $scope.shadowX = 30;
+        $scope.shadowY = 40;
+        $scope.shadowBlur = 20;
+        $scope.shadowOpacity = 0.5;
+        $scope.enableShadow = true;
         $scope.currentTextColor = '#607d8b';
         $scope.currentFont = 'Roboto';
+        $scope.currentAction = '';
         $scope.stages = [{id : '1'},{id : '2'}];
         $scope.fontPattern = '\\d+';
-        $scope.palette = ['#ff5c5c','#ffbd4a','#fff952','#99e265','#35b729','#44d9e6','#2eb2ff','#5271ff','#b760e6','#ff63b1'];
-        //$scope.default = 'cyan';
+        $scope.palette = [
+            ['#f44336','#e91e63','#9c27b0','#673ab7', '#3f51b5','#2196f3','#03a9f4','#00bcd4','#009688','#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548', '#9e9e9e', '#607d8b', '#374046'],
+            ['#c0dfd9', '#e9ece5', '#b3c2bf', '#3b3a36'],
+            ['#edd9c0', '#c9d8c5', '#a8b6bf', '#7d4627'],
+            ['#c9c9c9', '#e3e3e3', '#9ad3de', '#89bdd3'],
+            ['#6ed3cf', '#9068be', '#e1e8f0', '#e62739'],
+            ['#dddfd4', '#fae596', '#3fb0ac', '#173e43'],
+            ['#e8edf3', '#e6cf8b', '#b56969', '#22264b'],
+            ['#feffff', '#98dafc', '#daad86', '#312c32'],
+            ['#1d2120', '#5a5c51', '#ba9077', '#bcd5d1'],
+            ['#f0eceb', '#729f98', '#283018', '#aa863a'],
+            ['#dbe9d8', '#c2d4d8', '#f2efe8', '#b0aac2'],
+            ['#6534ff', '#62bcfa', '#fccdd3', '#bbc4ef'],
+            ['#dbc3d0', '#5e0231', '#c7a693', '#856046'],
+            ['#e6af4b', '#e05038', '#f2cbbc', '#334431']
+        ];
+        $scope.customPalette = ['#ff5c5c','#ffbd4a','#fff952','#99e265','#35b729','#44d9e6','#2eb2ff','#5271ff','#b760e6','#ff63b1'];
         $scope.langs = [
             {id : 1, code : 'en', name : 'English'},
             {id : 2, code : 'vi', name : 'Tiếng Việt'}
@@ -211,24 +232,40 @@ var langjs = {
             return is_font;
         };
         /** Font **/
+        /* General */
+        $scope._showColorDialog = function(command){
+            $scope.currentAction = command;
+            $scope.showColorDialog();
+        };
+        /** General **/
         /* Layout */
-  $scope.showPrerenderedDialog = function(ev) {
-    $mdDialog.show({
-      contentElement: '#myDialog',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      clickOutsideToClose: true,
-      hasBackdrop: false
-    });
-  };        
+        $scope.showColorDialog = function(ev) {
+            var listCustomColor = $cookies.getObject( 'mdColorPickerHistory' ) || [];
+            $scope.customPalette = [];
+            for( var i=0; i < listCustomColor.length; i++ ){
+                $scope.customPalette.push(listCustomColor[i]);
+            }
+            $mdDialog.show({
+                contentElement: '#colorDialog',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: false,
+                hasBackdrop: false,
+                skipHide: false
+            });
+        };        
+        $scope.cancelColorDialog = function(){
+            $mdDialog.cancel();
+        };
         /** Layout **/
         $scope.init = function(){
             angular.copy(langjs, $scope.i18nLangs);
             
         };
         $scope.init();
-        $scope.debug = function(){
-            $scope.showPrerenderedDialog();
+        $scope.debug = function($val){
+            console.log($val);
+            
         };
     }).config(function($mdThemingProvider, $mdIconProvider){
         $mdIconProvider.iconSet('nbd', NBDCONFIG['svgUrl'] + 'nbd-icons.svg');
@@ -403,12 +440,15 @@ var nbdPlg = {
     deactiveAllLayer : function(){}
 };
 document.addEventListener('DOMContentLoaded', function(){
+    document.getElementsByClassName('showbox')[0].style.visibility = 'hidden';
     nbdPlg.stages[0] = {
         id : '1',
         option : '',
         canvas : null
     };
     Ps.initialize(document.getElementById('stages-inner'));
+    Ps.initialize(document.getElementById('nbd-palette'));
+    Ps.initialize(document.getElementById('nbd-content-dropdown-menu'));
     nbdPlg.int();
 });
 var nbdLayout = {
