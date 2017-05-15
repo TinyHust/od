@@ -179,7 +179,17 @@ if(!class_exists('Nbdesigner_Settings_Frontend')){
                             'yes' => __('Yes', 'web-to-print-online-designer'),
                             'no' => __('No', 'web-to-print-online-designer')
                         ) 
-                    ),    
+                    ),  
+                    array(
+                        'title' => __( 'Enable Instagram photos', 'web-to-print-online-designer'),
+                        'id' 		=> 'nbdesigner_enable_instagram_photo',
+                        'default'	=> 'yes',
+                        'type' 		=> 'radio',
+                        'options'   => array(
+                            'yes' => __('Yes', 'web-to-print-online-designer'),
+                            'no' => __('No', 'web-to-print-online-designer')
+                        ) 
+                    ),                     
                     array(
                         'title' => __('Show terms and conditions', 'web-to-print-online-designer'),
                         'description' => __('Show term and conditions upload image.', 'web-to-print-online-designer'),

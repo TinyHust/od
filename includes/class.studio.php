@@ -8,6 +8,35 @@ class Nbdesigner_Studio {
         $this->frontend_enqueue_scripts();
         $this->admin_enqueue_scripts();
         $this->hook();
+        if (is_admin()) {
+            $this->ajax();
+        }
+    }
+    public function ajax(){
+        $ajax_events = array(
+            'nbd_get_data'    =>  true
+        );
+	foreach ($ajax_events as $ajax_event => $nopriv) {
+            add_action('wp_ajax_' . $ajax_event, array($this, $ajax_event));
+            if ($nopriv) {
+                add_action('wp_ajax_nopriv_' . $ajax_event, array($this, $ajax_event));
+            }
+        }        
+    }
+    public function nbd_get_data(){
+        if (!wp_verify_nonce($_REQUEST['nonce'], 'nbd-get-data')) {
+            die('Security error');
+        }
+        switch ($_REQUEST['type']) {
+            case 'typography':
+                $path = NBDESIGNER_PLUGIN_DIR . '/data/typography/typography.json';
+                break;
+            default:
+                break;
+        }        
+        $data = file_get_contents($path);
+        echo $data;
+        wp_die();
     }
     public function hook(){
         add_shortcode( 'nbdesigner_stuido', array(&$this,'studio_func') );

@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
-<div flex layout-align="start center" layout="row" style="width: 100%; height: 100%;">
+<div flex layout-align="start center" layout="row" style="width: 100%; height: 100%;" ng-show="currentActionType == 'text'" class="item-config-bar">
     <div flex layout-align="start center" layout="row" style="width: 100%; height: 100%;">
     <div class="nbd-fonts">
         <md-autocomplete 
@@ -14,11 +14,12 @@
             md-require-match="true"
             placeholder="Select Font">
             <md-item-template>
-                <span md-highlight-text="searchFont" md-highlight-flags="^i">{{font.name}}
+                <span md-highlight-text="searchFont" md-highlight-flags="^i"ng-hide="true">{{font.name}}</span>
+                <img ng-src="{{font.url}}" alt="{{font.name}}" />
             </md-item-template>
-                <md-not-found>
-                    No fonts matching "{{searchFont}}" were found.
-                </md-not-found>    
+            <md-not-found>
+                No fonts matching "{{searchFont}}" were found.
+            </md-not-found>    
         </md-autocomplete>
         <md-tooltip md-direction="bottom" ng-class="primaryPalette">Font</md-tooltip>
     </div>    
@@ -111,67 +112,94 @@
             </md-menu-item>         
         </md-menu-content>     
     </md-menu>
-    <md-menu md-offset="0 75">
-        <md-button class="md-icon-button nbd-mag-0" aria-label="Shadow" ng-click="$mdMenu.open($event)">
-            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Shadow</md-tooltip>
-            <md-icon md-svg-icon="nbd:shadow" class="bold"></md-icon>
-        </md-button> 
-        <md-menu-content width="4" flex layout="column">
-                <div class="nbd-content-dropdown-menu" id="nbd-content-dropdown-menu">
-                    <div>
-                        <md-switch class="md-primary" md-invert aria-label="Shadow" ng-model="enableShadow">
-                            Shadow
-                        </md-switch>  
-                        <span ng-style="" ng-click="_showColorDialog('shasow')">Content</span>
-                        <div class="config-shadow" ng-class="!enableShadow ? 'disabled' : ''">
-                            <md-slider-container >
-                                <span>X</span>
-                                <md-slider class="md-primary" aria-label="Dimension X" min="0" max="100" step="10" flex  ng-model="shadowX" id="shadow-x"></md-slider>
-                                <md-input-container>
-                                    <input flex type="number" ng-model="shadowX" aria-label="X" aria-controls="shadow-x"> 
-                                </md-input-container>        
-                            </md-slider-container>
-                            <md-slider-container >
-                                <span>Y</span>
-                                <md-slider class="md-primary" aria-label="Dimension Y" min="0" max="100" step="10" flex  ng-model="shadowY" id="shadow-y"></md-slider>
-                                <md-input-container>
-                                    <input flex type="number" ng-model="shadowY" aria-label="X" aria-controls="shadow-y"> 
-                                </md-input-container>        
-                            </md-slider-container>             
-                            <md-slider-container >
-                                <span>Blur</span>
-                                <md-slider class="md-primary" aria-label="Blur" min="0" max="25" step="1" flex  ng-model="shadowBlur" id="shadow-blur"></md-slider>
-                                <md-input-container>
-                                    <input flex type="number" ng-model="shadowBlur" aria-label="Blur" aria-controls="shadow-blur"> 
-                                </md-input-container>        
-                            </md-slider-container>
-                            <md-slider-container >
-                                <span>Opacity</span>
-                                <md-slider class="md-primary" aria-label="Opacity" min="0" max="1" step="0.1" flex  ng-model="shadowOpacity" id="shadow-opacity"></md-slider>
-                                <md-input-container>
-                                    <input flex type="number" ng-model="shadowOpacity" aria-label="Opacity" aria-controls="shadow-opacity"> 
-                                </md-input-container>        
-                            </md-slider-container>                               
-                        </div>
+    <md-button class="md-icon-button nbd-mag-0" aria-label="Shadow" ng-click="toggleSubMenu('shadow')">
+        <md-tooltip md-direction="bottom" ng-class="primaryPalette">Shadow</md-tooltip>
+        <md-icon md-svg-icon="nbd:shadow"></md-icon>
+    </md-button>  
+    <md-menu md-offset="-20 60">
+        <md-button class="md-icon-button nbd-mag-0" aria-label="Background" ng-click="$mdMenu.open($event)">
+            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Background</md-tooltip>
+            <md-icon md-svg-icon="nbd:paint-bucket"></md-icon>
+        </md-button>   
+        <md-menu-content width="3" flex layout="row">
+            <md-menu-item flex="33" class="nbd-dropdown-menu">
+                <md-button aria-label="Color" ng-click="_showColorDialog('background')">
+                    <div layout="row" flex>
+                        <div style="width: 24px; height: 24px; margin: 0 auto; display: inline-block;" ng-style="{'background' : currentTextColor}"></div>
+                        <md-tooltip md-direction="bottom" ng-class="primaryPalette">Color</md-tooltip>
                     </div>
-                </div>       
-        </md-menu-content>          
+                </md-button>
+            </md-menu-item>          
+            <md-menu-item flex="33" class="nbd-dropdown-menu">
+                <md-button aria-label="Pattern">
+                    <div layout="row" flex>
+                        <md-icon md-menu-align-target md-svg-icon="nbd:pattern" style="margin: 0 auto;"></md-icon>
+                        <md-tooltip md-direction="bottom" ng-class="primaryPalette">Pattern</md-tooltip>
+                    </div>
+                </md-button>
+            </md-menu-item>  
+            <md-menu-item flex="33" class="nbd-dropdown-menu">
+                <md-button aria-label="None">
+                    <div layout="row" flex>
+                        <md-icon md-menu-align-target md-svg-icon="nbd:forbidden" class="bold" style="margin: 0 auto;"></md-icon>
+                        <md-tooltip md-direction="bottom" ng-class="primaryPalette">None</md-tooltip>
+                    </div>
+                </md-button>
+            </md-menu-item>         
+        </md-menu-content>           
     </md-menu>    
-    <md-button class="md-icon-button nbd-mag-0" aria-label="Background" ng-click="_showColorDialog('background')">
-        <md-tooltip md-direction="bottom" ng-class="primaryPalette">Background</md-tooltip>
-        <md-icon md-svg-icon="nbd:paint-bucket" class="bold"></md-icon>
-    </md-button> 
+    <md-menu md-offset="-20 60">
+        <md-button class="md-icon-button nbd-mag-0" aria-label="Opacity" ng-click="$mdMenu.open($event)">
+            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Opacity</md-tooltip>
+            <md-icon md-svg-icon="nbd:opacity"></md-icon>
+        </md-button>          
+        <md-menu-content width="3" flex layout="row" style="overflow: hidden;">
+            <md-menu-item flex="100" class="nbd-dropdown-menu">
+                <md-slider-container >
+                    <span flex="20">Opacity</span>
+                    <md-slider flex="60" class="md-primary" aria-label="Opacity" min="0" max="1" step="0.01" flex  ng-model="currentLayerOpacity" id="layer-opacity"></md-slider>
+                    <md-input-container flex="20">
+                        <input flex type="number" min="0" max="1" step="0.01" ng-model="currentLayerOpacity" aria-label="X" aria-controls="layer-opacity"> 
+                    </md-input-container>        
+                </md-slider-container>
+            </md-menu-item> 
+        </md-menu-content>
+    </md-menu>    
+    <md-menu md-offset="-20 60">
+        <md-button class="md-icon-button nbd-mag-0" aria-label="Spacing" ng-click="$mdMenu.open($event)">
+            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Spacing</md-tooltip>
+            <md-icon md-svg-icon="nbd:line-spacing"></md-icon>
+        </md-button>          
+        <md-menu-content width="4" flex layout="column" style="overflow: hidden;">
+            <md-menu-item class="nbd-dropdown-menu">
+                <md-slider-container >
+                    <span flex="20" class="nbd-slide-title">Spacing</span>
+                    <md-slider flex="60" class="md-primary" aria-label="Spacing" min="-200" max="800" step="10" flex  ng-model="currentTextSpacing" id="layer-opacity"></md-slider>
+                    <md-input-container flex="20">
+                        <input flex type="number" min="-200" max="800" step="10" ng-model="currentTextSpacing" aria-label="X" aria-controls="layer-opacity"> 
+                    </md-input-container>        
+                </md-slider-container>
+            </md-menu-item> 
+            <md-menu-item class="nbd-dropdown-menu">
+                <md-slider-container >
+                    <span flex="20" class="nbd-slide-title">Line height</span>
+                    <md-slider flex="60" class="md-primary" aria-label="Line height" min="0.5" max="2.5" step="0.01" flex  ng-model="currentTextLineHeight" id="layer-opacity"></md-slider>
+                    <md-input-container flex="20">
+                        <input flex type="number" min="0.5" max="2.5" step="0.01" ng-model="currentTextLineHeight" aria-label="X" aria-controls="layer-opacity"> 
+                    </md-input-container>        
+                </md-slider-container>
+            </md-menu-item>             
+        </md-menu-content>
+    </md-menu>         
     </div>   
-    <md-menu md-offset="0 75">
+    <md-menu md-offset="0 65">
         <md-button class="md-icon-button" aria-label="More" ng-click="$mdMenu.open($event)">
             <md-tooltip md-direction="bottom" ng-class="primaryPalette">More</md-tooltip>
-            <md-icon md-svg-icon="nbd:more-vert"></md-icon>
+            <md-icon md-svg-icon="nbd:more-vert" ng-click="toggleSubMenu('', 'close')"></md-icon>
         </md-button>    
         <md-menu-content width="6" flex layout="column">
                 <div style="height: 500px;">
-                    <p>fsf</p>
-                    <p>fsf</p>
-                    <p>fsf</p>
+                    <p>Outline</p>
                 </div>       
         </md-menu-content>     
     </md-menu>

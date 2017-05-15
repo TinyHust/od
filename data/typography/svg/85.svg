@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="430.325px" height="430.325px" viewBox="0 0 430.325 430.325" enable-background="new 0 0 430.325 430.325"
+	 xml:space="preserve">
+<g id="change1">
+	<circle fill="#F6D294" cx="214.714" cy="214.881" r="205.637"/>
+	<path fill="#F6D294" d="M215.16,430.325c-57.471,0-111.502-22.381-152.141-63.02S0,272.635,0,215.163
+		C0,157.691,22.381,103.659,63.02,63.02C103.658,22.381,157.689,0,215.16,0c57.473,0,111.506,22.381,152.145,63.02
+		c40.64,40.639,63.021,94.671,63.021,152.143c0,57.472-22.381,111.504-63.021,152.143
+		C326.666,407.944,272.633,430.325,215.16,430.325z M215.16,3C98.175,3,3,98.176,3,215.163c0,116.986,95.175,212.162,212.16,212.162
+		c116.988,0,212.165-95.176,212.165-212.162C427.325,98.176,332.148,3,215.16,3z"/>
+</g>
+<g id="T_2_">
+	<rect x="106.413" y="133.512" fill="none" width="218" height="152"/>
+	<text transform="matrix(1 0 0 1 114.3096 273.8008)" fill="#FFFFFF" font-family="'Economica-Regular'" font-size="172.6523">OCT</text>
+</g>
+<g id="T">
+	<rect x="40.413" y="178.512" fill="none" width="60" height="61"/>
+	<text transform="matrix(1 0 0 1 43.0259 235.374)" fill="#FFFFFF" font-family="'Economica-Regular'" font-size="68.8252">12</text>
+</g>
+<g id="T_1_">
+	<rect x="330.413" y="178.512" fill="none" width="60" height="61"/>
+	<text transform="matrix(1 0 0 1 332.0918 235.374)" fill="#FFFFFF" font-family="'Economica-Regular'" font-size="68.8252">14</text>
+</g>
+<g id="change2">
+	<rect x="41.413" y="171.512" fill="#FFFFFF" width="59" height="3"/>
+	<rect x="330.413" y="171.512" fill="#FFFFFF" width="60" height="3"/>
+	<rect x="41.413" y="251.512" fill="#FFFFFF" width="59" height="3"/>
+	<rect x="330.413" y="251.512" fill="#FFFFFF" width="60" height="3"/>
+</g>
+</svg>

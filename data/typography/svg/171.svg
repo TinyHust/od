@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="448.896px" height="93.18px" viewBox="0 0 448.896 93.18" enable-background="new 0 0 448.896 93.18" xml:space="preserve">
+<g id="E">
+	<g id="change3_1_">
+		<path fill="#DE5947" d="M364.014,93.179h84.883l-21.133-27l21.133-27h-94.678v44.204
+			C354.219,88.772,358.629,93.179,364.014,93.179"/>
+	</g>
+	<g id="change2_1_">
+		<path fill="#873933" d="M354.219,54h39.685c5.388,0,9.795,4.406,9.795,9.794c0,5.389-4.407,9.795-9.795,9.795h-29.89
+			c-5.391,0-9.795,4.407-9.795,9.795C354.219,73.589,354.219,63.794,354.219,54"/>
+	</g>
+	<g id="change1_2_">
+		<path fill="#EE826D" d="M393.903,0h-39.685v54h39.685c5.391,0,9.795,4.406,9.795,9.794c0-18,0-36,0-54
+			C403.698,4.407,399.291,0,393.903,0z"/>
+	</g>
+</g>
+<g id="W">
+	<g id="change3">
+		<path fill="#DE5947" d="M84.883,93.179H0l21.133-27L0,39.179H94.68v44.204C94.678,88.772,90.271,93.179,84.883,93.179"/>
+	</g>
+	<g id="change2">
+		<path fill="#873933" d="M94.678,54H54.993c-5.387,0-9.795,4.406-9.795,9.794c0,5.389,4.408,9.795,9.795,9.795h29.89
+			c5.39,0,9.798,4.407,9.798,9.795C94.678,73.589,94.678,63.794,94.678,54"/>
+	</g>
+	<g id="change1_1_">
+		<path fill="#EE826D" d="M54.993,0c-5.387,0-9.795,4.407-9.795,9.794c0,18,0,36,0,54c0-5.388,4.408-9.794,9.795-9.794H94.68V0
+			H54.993z"/>
+	</g>
+</g>
+<g id="C">
+	<g id="change1">
+		<rect x="94.678" y="0" fill="#EE826D" width="259.541" height="54"/>
+	</g>
+	<g id="T">
+		<rect x="94.678" y="6.424" fill="none" width="259.541" height="40.167"/>
+		<text transform="matrix(1 0 0 1 149.7087 37.677)" fill="#FFFFFF" font-family="'Raleway-ExtraBold'" font-size="30">TEXT HERE</text>
+	</g>
+</g>
+</svg>

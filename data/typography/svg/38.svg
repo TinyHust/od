@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+<!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 612 612" version="1.1" y="0px" x="0px" enable-background="new 0 0 612 612">
+<g id="change1">
+	<circle cy="306" cx="306" r="277.8" fill="#fff"/>
+</g>
+<g id="change2">
+	<path d="m306 612c-168.7 0-306-137.3-306-306s137.3-306 306-306 306 137.3 306 306-137.3 306-306 306zm0-598.7c-161.4 0-292.7 131.3-292.7 292.7s131.3 292.7 292.7 292.7 292.7-131.3 292.7-292.7-131.3-292.7-292.7-292.7z" fill="#fff"/>
+</g>
+<g id="Change3" fill="#272c33">
+		<rect transform="matrix(-.7071 -.7071 .7071 -.7071 307.22 735.95)" height="6.5" width="360.2" y="301.1" x="125.9"/>
+		<rect transform="matrix(-.7069 -.7073 .7073 -.7069 306.97 736.14)" height="360.2" width="6.5" y="124.4" x="302.8"/>
+</g>
+<g id="T_Center_2_">
+	<rect y="246.1" x="52" height="154.9" width="212.1" fill="none"/>
+	<rect y="239.8" x="36.6" height="170.8" width="238.9" fill="none"/>
+	<text font-size="138.4" font-family="&apos;TimesNewRomanPSMT&apos;" transform="translate(106.05 336.01)" fill="#272c33">O</text>
+</g>
+<g id="T_Center_1_">
+	<rect y="124" x="201.1" height="154.9" width="212.1" fill="none"/>
+	<rect y="116.2" x="187.8" height="170.8" width="238.9" fill="none"/>
+	<text font-size="138.4" font-family="&apos;TimesNewRomanPSMT&apos;" transform="translate(241.93 212.36)" fill="#272c33">W</text>
+</g>
+<g id="T_Center">
+	<rect y="361.4" x="201.1" height="154.9" width="212.1" fill="none"/>
+	<rect y="353.6" x="187.8" height="170.8" width="238.9" fill="none"/>
+	<text font-size="138.4" font-family="&apos;TimesNewRomanPSMT&apos;" transform="translate(257.27 449.76)" fill="#272c33">K</text>
+</g>
+<g id="T_Center_10_">
+	<rect y="246.1" x="352.7" height="154.9" width="212.1" fill="none"/>
+	<rect y="239.8" x="339.2" height="170.8" width="238.9" fill="none"/>
+	<text font-size="138.4" font-family="&apos;TimesNewRomanPSMT&apos;" transform="translate(412.52 336.01)" fill="#272c33">R</text>
+</g>
+</svg>

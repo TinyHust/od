@@ -224,6 +224,7 @@ function nbdesigner_get_default_setting($key = false){
         'nbdesigner_enable_upload_image' => 'yes',
         'nbdesigner_enable_image_webcam' => 'yes',
         'nbdesigner_enable_facebook_photo' => 'yes',
+        'nbdesigner_enable_instagram_photo' => 'yes',
         'nbdesigner_upload_show_term' => 'no',
         'nbdesigner_enable_image_url' => 'yes',
         'nbdesigner_upload_term' => __('Your term', 'web-to-print-online-designer'),

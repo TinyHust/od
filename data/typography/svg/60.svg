@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495px" height="361.779px" viewBox="0 0 495 361.779" enable-background="new 0 0 495 361.779" xml:space="preserve">
+<g id="change1">
+	<path fill="#8C6929" d="M105.532,114.782C130.314,59.656,185.746,21.174,250,21.174s119.686,38.482,144.468,93.608h5.011
+		C374.398,57.06,316.843,16.586,250,16.586c-66.841,0-124.398,40.475-149.478,98.196H105.532z"/>
+	<path fill="#8C6929" d="M394.468,244.168c-24.782,55.126-80.214,93.607-144.468,93.607s-119.686-38.481-144.468-93.607h-5.01
+		c25.079,57.724,82.637,98.196,149.478,98.196c66.843,0,124.398-40.474,149.478-98.196H394.468L394.468,244.168z"/>
+	<path fill="#8C6929" d="M89.568,109.047C117.089,47.83,178.646,5.094,250,5.094c71.354,0,132.912,42.735,160.433,103.952h5.563
+		C388.146,44.947,324.229,0,250,0C175.773,0,111.854,44.947,84.005,109.047H89.568z"/>
+	<path fill="#8C6929" d="M410.433,252.731C382.912,313.949,321.354,356.683,250,356.683c-71.354,0-132.911-42.734-160.432-103.952
+		h-5.563c27.85,64.102,91.769,109.048,165.995,109.048c74.229,0,138.146-44.946,165.996-109.048H410.433L410.433,252.731z"/>
+</g>
+<g id="t_center_2_">
+	<rect x="164" y="244.651" fill="none" width="183" height="33"/>
+	<text transform="matrix(1 0 0 1 173.6025 269.5808)" fill="#685C44" font-family="'Prata-Regular'" font-size="16.5184">PREMIUM COFFEE</text>
+</g>
+<g id="t_center_1_">
+	<text transform="matrix(1 0 0 1 210.687 96.9353)" fill="#7B653A" font-family="'Prata-Regular'" font-size="16.5184">EST. 2015</text>
+	<rect x="153" y="69.047" fill="none" width="194" height="40"/>
+</g>
+<g id="t_center">
+	<text transform="matrix(1 0 0 1 55.8291 205.2341)" fill="#7B653A" font-family="'Yellowtail'" font-size="78.0035">Espresso Shot</text>
+	<rect y="120.099" fill="none" width="495" height="111"/>
+</g>
+<rect x="165" y="243.686" fill="none" width="181" height="34.931"/>
+</svg>

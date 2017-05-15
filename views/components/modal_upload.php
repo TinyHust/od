@@ -1,6 +1,8 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
 <div class="modal fade" id="dg-myclipart">
-    <div class="modal-dialog">
+    <div class="modal-dialog"
+        ng-class="(settings['nbdesigner_enable_upload_image'] == 'yes' && settings['nbdesigner_enable_instagram_photo'] == 'yes' && settings['nbdesigner_enable_image_webcam'] == 'yes'
+                    && settings['nbdesigner_enable_image_url'] == 'yes' && settings['nbdesigner_enable_facebook_photo'] == 'yes' ) ? 'modal-lg' : ''" >
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>				
@@ -9,6 +11,7 @@
                     <li ng-show="settings['nbdesigner_enable_upload_image'] == 'yes'"><a href="#uploaded-photo" role="tab" data-toggle="tab"><i class="fa fa-cloud visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['PHOTO_UPLOADED']) ? langs['PHOTO_UPLOADED'] : "Uploaded"}}</span></a></li>
                     <li ng-show="settings['nbdesigner_enable_image_url'] == 'yes'"><a href="#nbdesigner_url" role="tab" data-toggle="tab"><i class="fa fa-link visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['IMAGE_URL']) ? langs['IMAGE_URL'] : "Image Url"}}</span></a></li>
                     <li ng-show="settings['nbdesigner_enable_facebook_photo'] == 'yes'"><a href="#nbdesigner_facebook" role="tab" data-toggle="tab"><i class="fa fa-facebook-square visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['FACEBOOK']) ? langs['FACEBOOK'] : "Facebook"}}</span></a></li>
+                    <li ng-show="settings['nbdesigner_enable_instagram_photo'] == 'yes'"><a href="#nbdesigner_instagram" role="tab" data-toggle="tab"><i class="fa fa-instagram visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['INSTAGRAM']) ? langs['INSTAGRAM'] : "Instagram"}}</span></a></li>
                     <li ng-if="hasGetUserMedia && !modeMobile" ng-click="initWebcam()" ng-show="settings['nbdesigner_enable_image_webcam'] == 'yes'"><a href="#nbdesigner_webcam" role="tab" data-toggle="tab"><i class="fa fa-camera visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['WEBCAM']) ? langs['WEBCAM'] : "Webcam"}}</span></a></li>
                 </ul>
             </div>
@@ -78,6 +81,19 @@
                             <button style="margin-right: 15px; margin-top: 10px;" id="facebook-load-more" type="button" class="hidden btn btn-primary shadow nbdesigner_upload" ng-click="loadMoreFacebookPhoto()">{{(langs['MORE']) ? langs['MORE'] : "More"}}</button>
                             <img id="loading_fb_upload" class="hidden" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/images/ajax-loader.gif'; ?>" />
                         </div>
+                    </div>
+                    <div id="nbdesigner_instagram" class="tab-pane">
+                        <?php 
+                            $insID = nbdesigner_get_option('nbdesigner_instagram_app_id');
+                            if($insID == ''): ?>
+                            <p>{{(langs['MES_INSTAGRAM']) ? langs['MES_INSTAGRAM'] : "Please fill Instagram app ID"}}</p>
+                        <?php  else:  ?>
+                        <button class="btn btn-primary shadow nbdesigner_upload" id="instagram_login">
+                            <i class="fa fa-instagram" aria-hidden="true"></i>
+                            <span ng-click="authenticateInstagram()">Instagram</span>
+                        </button>
+                        <?php endif; ?>
+                        <div id="instagram_images"></div>
                     </div>
                     <div class="tab-pane" id="nbdesigner_url" ng-show="settings['nbdesigner_enable_image_url'] == 'yes'">
                         <div class="row">
