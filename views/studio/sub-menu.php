@@ -55,7 +55,8 @@
                             </md-input-container>        
                         </md-slider-container>                               
                     </div>
-                </div>              
+                </div>
+            </div>    
         </md-dialog-content>
     </md-dialog>
 </div>    

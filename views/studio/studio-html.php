@@ -1,4 +1,4 @@
-<?php // ?>
+<?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
 <!DOCTYPE html>
 <html lang="<?php echo str_replace('-', '_', get_bloginfo('language')); ?>">
     <head>
@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="nbd-workbench nbd-div-shadow" ng-app="nbDesignerApp" ng-cloak>
-            <div ng-controller="StudioController as ctrl" md-theme="{{theme}}" ng-class="primaryPalette" id="nbd-workbench" >
+            <div ng-controller="StudioController as ctrl" md-theme="{{theme}}" ng-class="primaryPalette" id="nbd-workbench" ng-click="hideContextMenu($event)">
                 <div>
                     <?php include_once('main-bar.php'); ?>
                     <?php include_once('sidebar.php'); ?>
@@ -46,7 +46,9 @@
                 </div>    
                 <?php include_once('zoom-stage.php'); ?>
                 <?php include_once('color-modal.php'); ?>
-                <?php include_once('sub-menu.php'); ?>
+                <?php include_once('clear-stage-dialog.php'); ?>
+                <?php include_once('sub-menu.php'); ?>      
+                <?php include_once('context-menu.php'); ?>      
             </div>    
         </div>   
         

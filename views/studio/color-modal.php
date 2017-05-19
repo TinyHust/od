@@ -6,7 +6,7 @@
                 <div class="md-toolbar-tools">
                     <h2>Choose color</h2>
                     <span flex></span>
-                    <md-button class="md-icon-button" ng-click="cancelColorDialog()">
+                    <md-button class="md-icon-button" ng-click="cancelDialog()">
                         <md-icon md-svg-src="nbd:delete" aria-label="Close dialog"></md-icon>
                     </md-button>  
                 </div>

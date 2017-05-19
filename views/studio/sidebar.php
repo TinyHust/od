@@ -63,13 +63,13 @@
                     <?php include_once('typography.php'); ?>
                 </div>        
                 <div class="menu-panel before" data-panel="clipart" data-panel-index="3">
-                    <?php include_once('element.php'); ?>
+                    
                 </div>
                 <div class="menu-panel before" data-panel="upload" data-panel-index="4">
-                    
+                    <?php include_once('images.php'); ?>
                 </div>       
                 <div class="menu-panel before" data-panel="draw" data-panel-index="5">
-                    
+                    <?php include_once('element.php'); ?>
                 </div>
                 <div class="menu-panel before"  data-panel="qrcode" data-panel-index="6">
                     <?php include_once('qrcode.php'); ?>

@@ -54,36 +54,36 @@
             <md-icon md-svg-icon="nbd:rotate"></md-icon>
         </button >   
         <md-menu-content>
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="rotateLayer('reflect-hoz')">
                 <md-icon md-svg-icon="nbd:reflect-horizontal"></md-icon>
                 <md-button aria-label="Reflect Horizontal" >
                     Reflect Horizontal
                     <span class="md-alt-text">{{ 'S-H' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>     
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="rotateLayer('reflect-ver')">
                 <md-icon md-svg-icon="nbd:reflect-vertical"></md-icon>
                 <md-button aria-label="Reflect Vertical" >
                     Reflect Vertical
                     <span class="md-alt-text">{{ 'S-V' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>   
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="rotateLayer('180')">
                 <md-icon md-svg-icon="nbd:one-hundred-eighty"></md-icon>
                 <md-button aria-label="Rotate 180&#176;" >
                     Rotate 180&#176;
                     <span class="md-alt-text">{{ 'S-F' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>     
-            <md-menu-item class="md-indent">
-                <md-icon md-svg-icon="nbd:ninety-cw"></md-icon>
+            <md-menu-item class="md-indent" ng-click="rotateLayer('90cw')">
+                <md-icon md-svg-icon="nbd:cw"></md-icon>
                 <md-button aria-label="Rotate 90&#176; CW" >
                     Rotate 90&#176; CW
                     <span class="md-alt-text">{{ 'S-C' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>     
-            <md-menu-item class="md-indent">
-                <md-icon md-svg-icon="nbd:ninety-ccw"></md-icon>
+            <md-menu-item class="md-indent" ng-click="rotateLayer('90ccw')">
+                <md-icon md-svg-icon="nbd:ccw"></md-icon>
                 <md-button aria-label="Rotate 90&#176; CCW" >
                     Rotate 90&#176; CCW
                     <span class="md-alt-text">{{ 'S-W' | keyboardShortcut }}</span>
@@ -179,9 +179,9 @@
 <md-button class="md-icon-button" aria-label="Copy" >
     <md-icon md-svg-icon="nbd:copy"></md-icon>
 </md-button> 
-<md-button class="md-icon-button" aria-label="Delete" onclick="nbdPlg.deleteLayer()">
+<md-button class="md-icon-button" aria-label="Delete" ng-click="deleteLayer()">
     <md-icon md-svg-icon="nbd:trash"></md-icon>
 </md-button>  
-<md-button class="md-icon-button" aria-label="Delete" onclick="nbdPlg.deleteLayer()">
+<md-button class="md-icon-button" aria-label="Lock" ng-click="lockLayer()">
     <md-icon md-svg-icon="nbd:lock"></md-icon>
 </md-button>  

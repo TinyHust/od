@@ -12,6 +12,7 @@
                     <li ng-show="settings['nbdesigner_enable_image_url'] == 'yes'"><a href="#nbdesigner_url" role="tab" data-toggle="tab"><i class="fa fa-link visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['IMAGE_URL']) ? langs['IMAGE_URL'] : "Image Url"}}</span></a></li>
                     <li ng-show="settings['nbdesigner_enable_facebook_photo'] == 'yes'"><a href="#nbdesigner_facebook" role="tab" data-toggle="tab"><i class="fa fa-facebook-square visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['FACEBOOK']) ? langs['FACEBOOK'] : "Facebook"}}</span></a></li>
                     <li ng-show="settings['nbdesigner_enable_instagram_photo'] == 'yes'"><a href="#nbdesigner_instagram" role="tab" data-toggle="tab"><i class="fa fa-instagram visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['INSTAGRAM']) ? langs['INSTAGRAM'] : "Instagram"}}</span></a></li>
+                    <li ng-show="settings['nbdesigner_enable_dropbox_photo'] == 'yes'"><a href="#nbdesigner_dropbox" role="tab" data-toggle="tab"><i class="fa fa-dropbox visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['DROPBOX']) ? langs['DROPBOX'] : "Dropbox"}}</span></a></li>
                     <li ng-if="hasGetUserMedia && !modeMobile" ng-click="initWebcam()" ng-show="settings['nbdesigner_enable_image_webcam'] == 'yes'"><a href="#nbdesigner_webcam" role="tab" data-toggle="tab"><i class="fa fa-camera visible-xs" aria-hidden="true"></i><span class="hidden-xs">{{(langs['WEBCAM']) ? langs['WEBCAM'] : "Webcam"}}</span></a></li>
                 </ul>
             </div>
@@ -95,6 +96,19 @@
                         <?php endif; ?>
                         <div id="instagram_images"></div>
                     </div>
+                    <div id="nbdesigner_dropbox" class="tab-pane">
+                        <?php 
+                            $dbID = nbdesigner_get_option('nbdesigner_dropbox_app_id');
+                            if($dbID == ''): ?>
+                            <p>{{(langs['MES_DROPBOX']) ? langs['MES_DROPBOX'] : "Please fill Dropbox app ID"}}</p>
+                        <?php  else:  ?>
+                        <button class="btn btn-primary shadow nbdesigner_upload" id="dropbox_login">
+                            <i class="fa fa-dropbox" aria-hidden="true"></i>
+                            <span ng-click="authenticateDropbox()">Dropbox</span>
+                        </button>
+                        <?php endif; ?>
+                        <div id="dropbox_images"></div>
+                    </div>                    
                     <div class="tab-pane" id="nbdesigner_url" ng-show="settings['nbdesigner_enable_image_url'] == 'yes'">
                         <div class="row">
                             <div class="col-xs-12">

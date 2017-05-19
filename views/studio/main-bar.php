@@ -16,7 +16,7 @@
         </md-button>          
         <md-button class="md-icon-button" aria-label="Grid" ng-click="showGrid = !showGrid">
             <md-tooltip md-direction="bottom" ng-class="primaryPalette">Grid snap</md-tooltip>
-            <md-icon md-svg-icon="nbd:grid"></md-icon>
+            <md-icon md-svg-icon="nbd:{{!showGrid ? 'grid' : 'grid-off'}}"></md-icon>
         </md-button>     
         <md-button class="md-icon-button" aria-label="Debug" ng-click="debug()">
             <md-icon md-svg-icon="nbd:magic" class="bold"></md-icon>

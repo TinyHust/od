@@ -159,6 +159,7 @@
                 nbdesigner_enable_image_webcam  :   "<?php echo nbdesigner_get_option('nbdesigner_enable_image_webcam'); ?>",
                 nbdesigner_enable_facebook_photo    :   "<?php echo nbdesigner_get_option('nbdesigner_enable_facebook_photo'); ?>",
                 nbdesigner_enable_instagram_photo    :   "<?php echo nbdesigner_get_option('nbdesigner_enable_instagram_photo'); ?>",
+                nbdesigner_enable_dropbox_photo    :   "<?php echo nbdesigner_get_option('nbdesigner_enable_dropbox_photo'); ?>",
                 nbdesigner_enable_image_url :   "<?php echo nbdesigner_get_option('nbdesigner_enable_image_url'); ?>",
                 default_text_qrcode :   "<?php echo nbdesigner_get_option('nbdesigner_default_qrcode'); ?>",
                 enable_text :    "<?php echo nbdesigner_get_option('nbdesigner_enable_text'); ?>",
@@ -190,6 +191,9 @@
                 nonce_get   :   "<?php echo wp_create_nonce('nbdesigner-get-data'); ?>",
                 unit :   "<?php echo nbdesigner_get_option('nbdesigner_dimensions_unit'); ?>",
                 nbdesigner_instagram_app_id   :   "<?php echo nbdesigner_get_option('nbdesigner_instagram_app_id'); ?>",
+                nbdesigner_dropbox_app_id   :   "<?php echo nbdesigner_get_option('nbdesigner_dropbox_app_id'); ?>",
+                instagram_redirect_uri    : "<?php echo NBDESIGNER_PLUGIN_URL.'includes/auth-instagram.php'; ?>",
+                dropbox_redirect_uri    : "<?php echo NBDESIGNER_PLUGIN_URL.'includes/auth-dropbox.php'; ?>",
                 product_data  :   <?php echo json_encode(nbd_get_product_info($user_id, $product_id, $vid, $task, $reference_product, $template_folder, $order_id, $order_item_folder)); ?>
             };                  
             var _colors = NBDESIGNCONFIG['_palette'].split(','),

@@ -1,29 +1,16 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
 <div class="nbd-stages" ng-style="{'width' : adjustStage('width'), 'height' : adjustStage('height')}">
-    <div class="tool-bar" ng-style="{'left' : adjustStage('left'), 'width' : adjustStage('width')}">
-        <div flex layout="row">
-            <div flex layout-align="start center" layout="row" style="padding-left: 15px; border-right: 1px solid #ddd;">     
-                <?php include_once('config-text.php'); ?> 
-                <?php include_once('config-clipart.php'); ?>
-                <?php include_once('config-image.php'); ?>
-                <?php include_once('config-draw.php'); ?>
-                <?php include_once('config-qrcode.php'); ?>
-            </div>
-            <div flex="none" layout-align="center center" layout="row" class="config-general">
-                <?php include_once('config-genaral.php'); ?>
-            </div>
-        </div>    
-    </div>     
+    <?php include_once('tools-bar.php'); ?>  
     <div class="stages-inner" id="stages-inner">
         <div class="nbd-on-process" ng-show="onProcess">
             <div flex layout-align="center center" layout="row" class="nbd-on-process-inner">
                 <md-progress-circular class="md-primary md-default" md-diameter="70"></md-progress-circular>
             </div>
-        </div>         
+        </div>   
         <div class="stage" ng-repeat="stage in stages" ng-repeat="stage in stages" on-finish-render-canvas="stageRepeatFinished" 
              ng-class="{'hidden':$index > 0}" id="stage-container-{{stage.id}}">
             <div class="stage-inner">
-                <div class="stage-content md-whiteframe-5dp"
+                <div class="stage-content md-whiteframe-5dp" ng-contextmenu action="showContextMenu"
                      ng-style="{'width' : calcStageDimension(stage, 'width') + 'px', 'height' : calcStageDimension(stage, 'height') + 'px'}"> 
                     <div class="stage-background" ng-style="{'background' : stage.background}"></div>
                     <div class="design-zone">
