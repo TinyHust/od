@@ -151,6 +151,14 @@ if(!class_exists('Nbdesigner_Settings_Frontend')){
                         'type' 		=> 'number'
                     ),
                     array(
+                        'title' => __( 'Min image upload resolution', 'web-to-print-online-designer'),
+                        'id' 		=> 'nbdesigner_mindpi_upload',
+                        'css'         => 'width: 65px',
+                        'default'	=> '0',
+                        'subfix'        => ' DPI',
+                        'type' 		=> 'number'
+                    ),                    
+                    array(
                         'title' => __( 'Enable images from url', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_enable_image_url',
                         'default'	=> 'yes',

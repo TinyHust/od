@@ -7,6 +7,7 @@
             <?php include_once('tools-image.php'); ?>
             <?php include_once('tools-draw.php'); ?>
             <?php include_once('tools-qrcode.php'); ?>
+            <?php include_once('tools-group.php'); ?>
         </div>
         <div flex="none" layout-align="center center" layout="row" class="config-general">
             <?php include_once('tools-genaral.php'); ?>

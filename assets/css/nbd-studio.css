@@ -10,6 +10,28 @@ p,  h3, h4, input, textarea, span {
 input, textarea, span {
     font-size: 14px;
 }
+.ps-scrollbar-y-rail, .ps-scrollbar-x-rail {
+    background-color: transparent !important;
+}
+.ps-scrollbar-y, .ps-scrollbar-x {
+    -webkit-box-shadow: inset 0 0 5px #aaa;
+    -moz-box-shadow: inset 0 0 5px #aaa;
+    box-shadow: inset 0 0 5px #aaa;
+    background: transparent !important;    
+}
+.scrollable .scrollable-bar {
+    background: transparent !important;
+    border-color: rgba(255,255,255,0) !important;    
+}
+.scrollable .scrollable-bar-y .scrollable-slider{
+    -webkit-box-shadow: inset 0 0 5px #aaa;
+    -moz-box-shadow: inset 0 0 5px #aaa;
+    box-shadow: inset 0 0 5px #aaa;
+    background: transparent !important;    
+    cursor: pointer;
+    border: none !important;
+    border-radius: 4px;    
+}
 .md-tooltip {
     font-size: 10px;
     text-transform: uppercase;
@@ -37,11 +59,8 @@ md-icon.md-default-theme, md-icon {
     border: 1px solid #607d8b;
     color: #607d8b;
 }
-.blue-grey .primary-menu.active {
-    background: #607d8b;
-}
-.blue-grey .nbd-element-inner:hover {
-    background: #607d8b;
+#selectedTab {
+    background-color: #607d8b;
 }
 /** End. Theme **/
 .header-fixed {
@@ -61,16 +80,8 @@ md-icon.md-default-theme, md-icon {
     line-height: 64px;
     min-width: 320px;
 }
-.md-button.md-icon-button.menu {
-    height: 48px;
-    width: 48px;
-}
 md-icon.bold {
     color: #000 !important;
-}
-md-icon.menu {
-    height: 32px;
-    width: 32px;
 }
 .nbd-mag-20 {
     margin-bottom: 20px !important;
@@ -209,14 +220,31 @@ md-icon.menu {
 .stage-content {
     position: relative;
 }
-.stage-background, .stage-grid, .design-zone, .stage-overlay {
+.stage-background, .stage-grid, .design-zone, .stage-overlay, .stage-guideline, .stage-snaplines {
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
 }
-.stage-grid, .stage-overlay {
+.guideline {
+    position: absolute;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+.guideline-notation {
+    top: 5px;
+    left: 5px;
+    white-space: nowrap;
+    position: absolute;
+    z-index: 2;
+    background: #fff;
+    padding: 0 15px;
+    pointer-events: none;
+}
+.stage-grid, .stage-overlay, .stage-guideline, .stage-snaplines {
     pointer-events: none;
 }
 .stages-inner {
@@ -244,11 +272,12 @@ md-icon.menu {
 }
 .page-toolbar {
     width: 40px;
-    height: 500px;
     display: inline-block;
-    position: absolute;
     margin-left: 5px;
-    top: 10px;
+    vertical-align: top;
+    top: 50px;
+    position: absolute;
+    height: 100%;
 }
 .page-toolbar-inner {
     width: 100%;
@@ -431,6 +460,22 @@ md-color-picker .md-color-picker-input-container .md-color-picker-preview {
     -webkit-animationanimation:0.5s zoomIn ease;
     animation:0.5s zoomIn ease;
 }
+.panel-list-item.ng-hide-add {
+    -webkit-animationanimation:0.5s fadeOutLeft ease;
+    animation:0.5s fadeOutLeft ease;
+}
+.panel-list-item.ng-hide-remove{
+    -webkit-animationanimation:0.5s fadeInLeft ease;
+    animation:0.5s fadeInLeft ease;  
+}
+.panel-list-cat1.ng-hide-add {
+    -webkit-animationanimation:0.5s fadeOutRight ease;
+    animation:0.5s fadeOutRight ease;
+}
+.panel-list-cat.ng-hide-remove{
+    -webkit-animationanimation:0.5s fadeInRight ease;
+    animation:0.5s fadeInRight ease;  
+}
 .nbd-on-process.active {
     z-index: 99;
     opacity: 1;
@@ -561,8 +606,8 @@ md-toast svg path {
     outline: none;
 }
 .typo-item.ng-enter{
-    -webkit-animationanimation:0.5s fadeInDown ease;
-    animation:0.5s fadeInDown ease;    
+    -webkit-animationanimation:1s fadeInDown ease;
+    animation:1s fadeInDown ease;    
 }
 .list-layers {
     padding-top: 0;
@@ -632,9 +677,6 @@ md-toast svg path {
     -ms-transition: all 0.4s;
     transition: all 0.4s; 
 }
-.nbd-element-inner:hover md-icon.element-icon,  .nbd-element-inner:hover p {
-    color: #fff;
-}
 .sidebar-scroll-top {
     position: fixed;
     top: 0px;
@@ -655,6 +697,178 @@ md-toast svg path {
 }
 .no-margin-right {
     margin-right: 0px;
+}
+#selectedTab {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    width: 60px;
+    height: 60px;  
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    transform: translateY(0);
+    -webkit-transition: transform .4s ease-out;    
+    -moz-transition: transform .4s ease-out;    
+    transition: transform .4s ease-out;    
+}
+.sidebar-1 #selectedTab {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    transform: translateY(0);    
+}
+.sidebar-2 #selectedTab {
+    -webkit-transform: translateY(60px);
+    -moz-transform: translateY(60px);
+    transform: translateY(60px);    
+}
+.sidebar-3 #selectedTab {
+    -webkit-transform: translateY(120px);
+    -moz-transform: translateY(120px);
+    transform: translateY(120px);    
+}
+.sidebar-4 #selectedTab {
+    -webkit-transform: translateY(180px);
+    -moz-transform: translateY(180px);
+    transform: translateY(180px);    
+}
+.sidebar-5 #selectedTab {
+    -webkit-transform: translateY(240px);
+    -moz-transform: translateY(240px);
+    transform: translateY(240px);    
+}
+.sidebar-6 #selectedTab {
+    -webkit-transform: translateY(300px);
+    -moz-transform: translateY(300px);
+    transform: translateY(300px);    
+}
+.sidebar-7 #selectedTab {
+    -webkit-transform: translateY(360px);
+    -moz-transform: translateY(360px);
+    transform: translateY(360px);    
+}
+.snapline {
+    position: absolute;
+    background-position: center;
+    cursor: row-resize;    
+}
+.snapline.horizontal {
+    top: -9999px;
+    left: 0;  
+    width: 100%;
+    height: 3px!important; 
+    background-image: linear-gradient(to right,rgba(214,96,96,.95) 1px,transparent 1px);
+    background-size: 2px 1px;    
+    background-repeat: repeat-x;
+}
+.snapline.vertical {
+    left: -9999px;
+    top: 0; 
+    height: 100%;
+    width: 3px!important;   
+    background-image: linear-gradient(to bottom,rgba(214,96,96,.95) 1px,transparent 1px);
+    background-size: 1px 2px;    
+    background-repeat: repeat-y;
+}
+.notation-guiline {
+    width: 30px;
+    height: 0;
+    border-top-width: 2px;
+    border-top-style: solid;
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: 10px;
+}
+.movement {
+    position: absolute;
+    left: 405px;
+    bottom: 15px;
+    z-index: 3;
+    opacity: 0.3;
+}
+.movement:hover {
+    opacity: 1;
+}
+.movement .md-button {
+    background: #fff !important;
+}
+.movement .md-button md-icon {
+    color: #888 !important;
+}
+.zoom-range {
+    position: absolute; 
+    left: -15px; 
+    list-style: none; 
+    bottom: 40px; 
+    width: 80px; 
+    display: block; 
+    background: #fff; 
+    min-width: 60px; 
+    padding: 5px 0; 
+    z-index: 21;
+}
+.zoom-range li{
+    padding: 5px 15px; 
+    font-size: 13px; 
+    cursor: pointer; 
+    position: relative;
+}
+.zoom-range li:focus {
+    outline: none;
+}
+.zoom-range li:hover {
+    background-color: rgba(158,158,158,0.2);
+}
+.zoom-range li.active{
+    background: #607d8b;
+}
+.zoom-range li.active span {
+    color: #fff;
+}
+.panel-item {
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;   
+}
+.panel-item:focus {
+    outline: none;
+}
+.panel-item span {
+    color: #fff;
+}
+.panel-item img {
+    max-width: 100%;
+}
+.panel-item.no-margin-right {
+    margin-right: 0px;
+} 
+.panel-item md-icon {
+    min-width: 40px;
+    min-height: 40px;
+    margin-bottom: 10px;
+    display: block;    
+    color: #fff;
+}
+.panel-item.ng-enter{
+    -webkit-animationanimation:1s fadeInDown ease;
+    animation:1s fadeInDown ease;    
+}
+.panel-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.panel-inner {
+    padding: 15px;
+    background: #607d8b;
+}
+.search {
+    background: #fff;
 }
 .animate300 {
   -webkit-animation-duration: 0.3s;
@@ -765,9 +979,6 @@ md-dialog.md-color-picker-dialog {
 }
 .logo {
     display: inline-block;
-}
-.logo svg {
-    height: 40px;
 }
 .logo .text-copy {
     fill: none;

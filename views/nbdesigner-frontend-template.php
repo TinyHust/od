@@ -107,6 +107,7 @@
             $reference_product = (isset($_GET['reference_product']) &&  $_GET['reference_product'] != '') ? $_GET['reference_product'] : '';
             $order_item_folder = (isset($_GET['order_item_folder']) &&  $_GET['order_item_folder'] != '') ? $_GET['order_item_folder'] : '';
             $template_priority = (isset($_GET['priority']) &&  $_GET['priority'] != '') ? $_GET['priority'] : '';
+            $edit_item = (isset($_GET['edit_item']) &&  $_GET['edit_item'] != '') ? $_GET['edit_item'] : '';
             $user_id = (get_current_user_id() > 0) ? get_current_user_id() : session_id();
             $ui_mode = 1;/*1: iframe popup, 2: div popup, 3: studio*/   
             $product = wc_get_product($product_id);
@@ -178,6 +179,7 @@
                 task    :   "<?php echo $task; ?>",
                 template_priority   :   "<?php echo $template_priority; ?>",
                 template_folder   :   "<?php echo $template_folder; ?>",
+                edit_item   :   "<?php echo $edit_item; ?>",
                 save_status :   <?php if ($task == 'edit_template') echo 1; else echo 0; ?>,
                 first_time_edit_temp    :   0,
                 product_id  :   "<?php echo $product_id; ?>",
@@ -194,7 +196,7 @@
                 nbdesigner_dropbox_app_id   :   "<?php echo nbdesigner_get_option('nbdesigner_dropbox_app_id'); ?>",
                 instagram_redirect_uri    : "<?php echo NBDESIGNER_PLUGIN_URL.'includes/auth-instagram.php'; ?>",
                 dropbox_redirect_uri    : "<?php echo NBDESIGNER_PLUGIN_URL.'includes/auth-dropbox.php'; ?>",
-                product_data  :   <?php echo json_encode(nbd_get_product_info($user_id, $product_id, $vid, $task, $reference_product, $template_folder, $order_id, $order_item_folder)); ?>
+                product_data  :   <?php echo json_encode(nbd_get_product_info($user_id, $product_id, $vid, $task, $reference_product, $template_folder, $order_id, $order_item_folder, $edit_item)); ?>
             };                  
             var _colors = NBDESIGNCONFIG['_palette'].split(','),
             colorPalette = [], row = [];
@@ -217,8 +219,12 @@
             <?php 
                 $settings = nbdesigner_get_all_frontend_setting();
                 foreach ($settings as $key => $val):
+                    if(is_numeric($val)):
             ?>
-            NBDESIGNCONFIG['<?php echo $key; ?>'] = <?php echo $val; ?>;
+                NBDESIGNCONFIG['<?php echo $key; ?>'] = <?php echo $val; ?>;
+                <?php else: ?>
+                NBDESIGNCONFIG['<?php echo $key; ?>'] = "<?php echo $val; ?>";    
+                <?php endif; ?>    
             <?php endforeach; ?>
             <?php if($ui_mode == 1): ?>
                 nbd_window = window.parent;
@@ -228,7 +234,7 @@
         </script>
     </head>
     <?php if(NBDESIGNER_MODE_DEV): ?>
-    <body ng-controller="DesignerController" ng-style="{'background-image' : 'url(<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/'+backgroundId+'.png)'}">
+    <body ng-controller="DesignerController" ng-cloak ng-style="{'background-image' : 'url(<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/'+backgroundId+'.png)'}">
     <?php else: ?>
     <body ng-controller="DesignerController" >    
     <?php endif; ?>    

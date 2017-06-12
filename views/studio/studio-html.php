@@ -14,13 +14,15 @@
         <link type="text/css" href="<?php echo NBDESIGNER_ASSETS_URL .'libs/css/angular-material.css'; ?>" rel="stylesheet" media="all">
         <link type="text/css" href="<?php echo NBDESIGNER_CSS_URL .'nbdstuido-bundle.css'; ?>" rel="stylesheet" media="all">
         <link type="text/css" href="<?php echo NBDESIGNER_CSS_URL .'nbd-studio.css'; ?>" rel="stylesheet" media="all">
+        <link type="text/css" href="<?php echo NBDESIGNER_CSS_URL .'ng-scrollable.min.css'; ?>" rel="stylesheet" media="all">
         <script type="text/javascript" >
             var NBDCONFIG = {
                 svgUrl  :   "<?php echo NBDESIGNER_ASSETS_URL. 'svgs/' ; ?>",
                 fontUrl :   "<?php echo NBDESIGNER_PLUGIN_URL. 'data/google-font-images/' ; ?>",
                 typoUrl :   "<?php echo NBDESIGNER_PLUGIN_URL. 'data/typography/' ; ?>",
                 nonce_get   :   "<?php echo wp_create_nonce('nbd-get-data'); ?>",
-                ajax_url :   "<?php echo admin_url('admin-ajax.php'); ?>"
+                ajax_url :   "<?php echo admin_url('admin-ajax.php'); ?>",
+                task    :   'typography', /* tasks: design, template, typography */ 
             };
         </script>  
         <style>
@@ -60,7 +62,7 @@
         <script type='text/javascript' src="<?php echo NBDESIGNER_ASSETS_URL.'libs/angular-material-1.1.3.js'; ?>"></script>
         <script type='text/javascript' src="<?php echo NBDESIGNER_JS_URL.'nbd-studio-bundle.js'; ?>"></script>
         <!-- <script type='text/javascript' src="<?php echo NBDESIGNER_JS_URL.'mdColorPicker.js'; ?>"></script> -->
-     
+        <script type='text/javascript' src="<?php echo NBDESIGNER_JS_URL.'ng-scrollable.min.js'; ?>"></script>
         <script type='text/javascript' src="<?php echo NBDESIGNER_JS_URL.'nbd-studio.js'; ?>"></script>
     </body>    
 </html>

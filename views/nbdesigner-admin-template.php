@@ -2,8 +2,13 @@
 <div class="wrap">
     <?php  
         $primary = get_post_meta($_GET['pid'], '_nbdesigner_admintemplate_primary', true);
-        $link_add_template = getUrlPageNBD('template').'?product_id='.$_GET['pid'].'&priority=extra&task=create_template'; 
-        if(!$primary) $link_add_template = getUrlPageNBD('template').'?product_id='.$_GET['pid'].'&priority=primary&task=create_template'; 
+        $priority = 'extra';
+        if(!$primary) $priority = 'primary';
+        $link_add_template = add_query_arg(array(
+                'product_id' => $_GET['pid'],
+                'priority' =>  $priority,
+                'task'  =>  'create_template'
+            ), getUrlPageNBD('template'));           
     ?>  
     <div class="wrap">
         <h1 class="nbd-title">

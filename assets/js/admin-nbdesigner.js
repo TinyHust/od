@@ -715,6 +715,7 @@ var NBDESIGNADMIN = {
             jQuery(this).find('.bg_type').attr('name', name + '[' + key + '][bg_type]');
             jQuery(this).find('.hidden_overlay_src').attr('name', name + '[' + key + '][img_overlay]');
             jQuery(this).find('.show_overlay').attr('name', name + '[' + key + '][show_overlay]');
+            jQuery(this).find('.include_overlay').attr('name', name + '[' + key + '][include_overlay]');
             jQuery(this).find('.hidden_nbd_version').attr('name', name + '[' + key + '][version]');
         });
         this.loopConfigAreaDesign();

@@ -30,11 +30,19 @@ class Nbdesigner_Studio {
         switch ($_REQUEST['type']) {
             case 'typography':
                 $path = NBDESIGNER_PLUGIN_DIR . '/data/typography/typography.json';
+                $data = file_get_contents($path);
                 break;
+            case 'illustrator':
+                $pathCat = NBDESIGNER_PLUGIN_DIR . '/data/illustrator/illustrator-categories.json';
+                $path = NBDESIGNER_PLUGIN_DIR . '/data/illustrator/illustrators.json';
+                $_data = array();
+                $_data['cat'] = file_get_contents($pathCat);
+                $_data['illustrators'] = file_get_contents($path);
+                $data = json_encode($_data);
+                break;                
             default:
                 break;
-        }        
-        $data = file_get_contents($path);
+        }          
         echo $data;
         wp_die();
     }

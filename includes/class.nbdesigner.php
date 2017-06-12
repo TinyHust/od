@@ -1306,7 +1306,15 @@ class Nbdesigner_Plugin {
                 $designer_setting = $this->update_config_product_160($designer_setting);              
             }
         }
+        $designer_setting = $this->update_config_default($designer_setting);
         include_once(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-box-design-setting.php');
+    }
+    public function update_config_default($designer_setting) {
+        $default =  nbd_default_product_setting();    
+        foreach ($designer_setting as $key => $setting){
+            $designer_setting[$key] = array_merge($default, $setting);
+        }
+        return $designer_setting;
     }
     public function update_config_product_160($designer_setting){
         $newSetting = array();
@@ -1664,6 +1672,8 @@ class Nbdesigner_Plugin {
         if(isset($_POST['action'])) return ''; /*Hidden button Start Design on third-party plugin as Quick view*/
         $temp = get_query_var( 'nbds-adid' ) ? get_query_var( 'nbds-adid' ) : 0;
         $ref = get_query_var( 'nbds-ref' ) ? get_query_var( 'nbds-ref' ) : 0;
+        $vid = isset($_GET['variation_id']) ? $_GET['variation_id'] : 0;
+        $edit_item = isset($_GET['edit_item']) ? $_GET['edit_item'] : '';
         if(is_array($att)){
             $pid = absint($att['id']);
         }else{
@@ -1692,6 +1702,11 @@ class Nbdesigner_Plugin {
             if(is_numeric($order)) $src .= '&orderid='.$order;
             if($temp) $src .= '&template_folder='.$temp;
             if($ref) $src .= '&reference_product='.$ref;
+            if($vid > 0) $src .= '&variation_id='.$vid;
+            if($edit_item != '') {
+                $src .= '&edit_item='.$edit_item;
+                $src .= '&task=edit_design';
+            }
             $button .= '<div style="position: fixed; top: 0; left: 0; z-index: 999999; opacity: 0; width: 100%; height: 100%;" id="container-online-designer"><iframe id="onlinedesigner-designer"  width="100%" height="100%" scrolling="no" frameborder="0" noresize="noresize" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" src="' . $src . '"></iframe><span id="closeFrameDesign"  class="nbdesigner_pp_close">&times;</span></div>';
             
             if(is_array($att)){
@@ -1996,10 +2011,10 @@ class Nbdesigner_Plugin {
         echo json_encode($result);
         wp_die();
     }    
-    public function nbdesigner_start_session() {
+    public function nbdesigner_start_session() {       
         if (!session_id()){
             @session_start();
-        }
+        }       
     }
     /**
      * Create table manager template
@@ -2234,10 +2249,11 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             }else if($key == 'config'){
                 $full_name = $path . '/config.json';
             }else{
-                $full_name = $path . '/' . $key . '.jpg';
+                $ext = explode('/', $val["type"])[1];
+                $full_name = $path . '/' . $key . '.' .$ext;
                 $_key = explode('_', $key);                
             }
-            if (move_uploaded_file($val["tmp_name"],$full_name)) {
+            if (move_uploaded_file($val["tmp_name"],$full_name)) {      
                 if($key != 'used_font' && $key != 'config' && $key != 'design'){
                     $image = wp_get_image_editor($full_name); 
                     $_width = nbdesigner_get_option('nbdesigner_thumbnail_width');
@@ -2249,10 +2265,10 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                         $_width = round($_height * $configs[$_key[1]]['area_design_width'] / $configs[$_key[1]]['area_design_height']);
                     }
                     if (!is_wp_error($image)) {
-                        $thumb_file = $path_thumb . '/' . $key . '.png';
+                        $thumb_file = $path_thumb . '/' . $key . '.' .$ext;
                         $image->resize($_width, $_height, 1);
                         $image->set_quality($_quality);
-                        if ($image->save($thumb_file, 'image/png'))
+                        if ($image->save($thumb_file, $val["type"]))
                             $links[$key] = Nbdesigner_IO::secret_image_url($thumb_file);
                     }                    
                 }
@@ -2527,7 +2543,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
     }
     public function nbdesigner_render_cart($title = null, $cart_item = null, $cart_item_key = null) {
         if ($cart_item_key && is_cart()) {
-            $data = WC()->session->get($cart_item_key . '_nbdesigner');         
+            $data = WC()->session->get($cart_item_key . '_nbdesigner');        
             $_show_design = nbdesigner_get_option('nbdesigner_show_in_cart');
             if ($data == 'has_design' && $_show_design == 'yes') {
                 //$product_id = $cart_item['product_id'];
@@ -2540,6 +2556,18 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                     $src = $this->nbdesigner_create_secret_image_url($img);
                     $html .= '<img style="max-width: 60px; max-height: 60px; border-radius: 3px; border: 1px solid #ddd; margin-top: 5px; margin-right: 5px; display: inline-block;" src="' . $src . '"/>';
                 }
+                $link_edit_design = add_query_arg(
+                    array(
+                        'task'    =>  'edit_design', 
+                        'edit_item'  =>  $cart_item_key), 
+                    get_permalink($cart_item['product_id']));
+                if($cart_item['variation_id'] > 0){
+                    $link_edit_design .= '&variation_id=' . $cart_item['variation_id'];
+                    foreach($cart_item['variation'] as $key => $value){
+                        $link_edit_design .= '&'.$key.'=' . $value;
+                    }
+                }
+                $html .= '<br /><a href="'.$link_edit_design.'">Edit design</a>';
                 $html .= '</div>';
                 echo $html;
             } else {
@@ -2803,6 +2831,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         } 
         $allow_extension = array('jpg','jpeg','png','gif');
         $max_size = nbdesigner_get_option('nbdesigner_maxsize_upload');
+        $min_dpi = nbdesigner_get_option('nbdesigner_mindpi_upload');
         $allow_max_size = $max_size * 1024 * 1024;
         $result =   true;
         $res = array();
@@ -2822,12 +2851,18 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         if(!$check){
             $result = false;
             $res['mes'] = __('Invalid file format!', 'web-to-print-online-designer');
-        }    
+        }   
+        if($min_dpi && $min_dpi > 0) {
+            $dpi = nbd_get_dpi($_FILES['file']["tmp_name"]);           
+            if($dpi[0]['x'] < $min_dpi) {
+                $result = false;
+                $res['mes'] = __('Image resolution too low!', 'web-to-print-online-designer');                
+            }
+        }          
         $path = Nbdesigner_IO::create_file_path(NBDESIGNER_TEMP_DIR, $new_name);
-        nbd_get_dpi($_FILES['file']);
         if($result){
             if(move_uploaded_file($_FILES['file']["tmp_name"],$path['full_path'])){
-                $res['mes'] = __('Upload success !', 'web-to-print-online-designer');       
+                $res['mes'] = __('Upload success !', 'web-to-print-online-designer');                 
             }else{
                 $result = false;
                 $res['mes'] = __('Error occurred with file upload!', 'web-to-print-online-designer');            
@@ -2874,19 +2909,79 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         echo json_encode($result);
         wp_die();
     }
-    public function nbdesigner_get_art(){
+    public function _nbdesigner_get_art(){
         if (!wp_verify_nonce($_REQUEST['nonce'], 'nbdesigner-get-data')) {
             die('Security error');
         }   
+        $result = array();
+        $path = $this->plugin_path_data. 'cliparts';
+        $cats = Nbdesigner_IO::get_list_folder($path, 1);
+        foreach ($cats as $key => $cat){
+            $result['cat'][] = array(
+                'name'  => basename($cat),
+                'id'    => $key                
+            );
+            $list = Nbdesigner_IO::get_list_files($path . '/' . basename($cat), 1);
+            $arts = preg_grep('/\.(svg)(?:[\?\#].*)?$/i', $list);
+            foreach($arts as $k => $art) {
+                $result['arts'][] = array(
+                    'name'  => basename($art),
+                    'id'    => $k,
+                    'cat'   => array($key),
+                    'file'  => '',
+                    'url'   => Nbdesigner_IO::convert_path_to_url($art)
+                );
+            }               
+        }       
+        $result['flag'] = 1;
+  
+        echo json_encode($result);
+        wp_die();         
+    }
+    public function nbdesigner_get_art(){
+        if (!wp_verify_nonce($_REQUEST['nonce'], 'nbdesigner-get-data')) {
+            die('Security error');
+        }       
         $result = array();
         $path_cat = $this->plugin_path_data. 'art_cat.json';
         $path_art = $this->plugin_path_data. 'arts.json';
         $result['flag'] = 1;
         $result['cat'] = $this->nbdesigner_read_json_setting($path_cat);
-        $result['arts'] = $this->nbdesigner_read_json_setting($path_art);	        
+        $result['arts'] = $this->nbdesigner_read_json_setting($path_art);	
         echo json_encode($result);
         wp_die();        
     }
+    public function _nbdesigner_get_font(){
+        if (!wp_verify_nonce($_REQUEST['nonce'], 'nbdesigner-get-data')) {
+            die('Security error');
+        }   
+        $result = array();
+        $path = $this->plugin_path_data. 'fonts';
+        $cats = Nbdesigner_IO::get_list_folder($path, 1);
+        foreach ($cats as $key => $cat){
+            $result['cat'][] = array(
+                'name'  => basename($cat),
+                'id'    => $key                
+            );
+            $list = Nbdesigner_IO::get_list_files($path . '/' . basename($cat), 1);
+            $arts = preg_grep('/\.(ttf|woff)(?:[\?\#].*)?$/i', $list);
+            foreach($arts as $k => $art) {
+                $result['fonts'][] = array(
+                    'name'  => pathinfo($art, PATHINFO_FILENAME ),
+                    'id'    => $k,
+                    'cat'   => array($key),
+                    'alias' => 'nbfont' . substr(md5(rand(0, 999999)), 0, 10),
+                    'file'  => '',
+                    'url'   => Nbdesigner_IO::convert_path_to_url($art)
+                );
+            }               
+        }      
+        $path_google_font = $this->plugin_path_data. 'googlefonts.json';
+        $result['google_font'] = $this->nbdesigner_read_json_setting($path_google_font);
+        $result['flag'] = 1;  
+        echo json_encode($result);
+        wp_die();         
+    }    
     public function nbdesigner_get_font(){ 	        
         if (!wp_verify_nonce($_REQUEST['nonce'], 'nbdesigner-get-data')) {
             die('Security error');
@@ -3383,6 +3478,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                 $designer_setting = $this->update_config_product_160($designer_setting);
             }
         }
+        $designer_setting = $this->update_config_default($designer_setting);
         include(NBDESIGNER_PLUGIN_DIR . 'views/nbdesigner-box-design-setting-variation.php');
     }
     public function nbdesigner_save_variation_settings_fields($post_id){

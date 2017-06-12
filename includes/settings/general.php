@@ -106,7 +106,18 @@ if( !class_exists('Nbdesigner_Settings_General') ) {
                             'yes' => __('Yes', 'web-to-print-online-designer'),
                             'no' => __('No', 'web-to-print-online-designer'),
                         )
-                    )
+                    ),
+                    array(
+                        'title' => __('Save latest design', 'web-to-print-online-designer'),
+                        'description' => __('Save customer latest design. When they come back design product, they latest design will be loaded.', 'web-to-print-online-designer'),
+                        'id' => 'nbdesigner_save_latest_design',
+                        'default' => 'yes',
+                        'type' => 'radio',
+                        'options' => array(
+                            'yes' => __('Yes', 'web-to-print-online-designer'),
+                            'no' => __('No', 'web-to-print-online-designer'),
+                        )
+                    )                    
                 ),
                 'admin-notifications' => array(
                     array(

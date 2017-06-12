@@ -1,9 +1,34 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
 <div layout="row" layout-wrap class="header-fixed md-whiteframe-1dp">
-    <div flex="none" class="logo">
-       <md-button class="md-icon-button menu" aria-label="Menu" ng-click="toggleSidebar()">
-           <md-icon md-svg-icon="nbd:menu" class="menu"></md-icon>
-       </md-button>
+    <div class="logo" flex="none" layout-align="center center" layout="row">
+        <md-button class="md-icon-button menu" aria-label="Menu" ng-click="toggleSidebar()">
+            <md-icon md-svg-icon="nbd:menu" class="menu"></md-icon>
+        </md-button>
+        <md-menu-bar style="display: inline-block;">
+            <md-menu >
+                <button class="md-icon-button" aria-label="View"  ng-click="$mdMenu.open()">
+                    <span>View</span>
+                </button >   
+                <md-menu-content width="3">
+                    <md-menu-item>
+                        <md-menu>
+                            <md-button ng-disabled="!snapMode" ng-click="$mdMenu.open()">Snap To</md-button>
+                            <md-menu-content width="3">
+                                <md-menu-item ng-disabled="!showGrid" type="radio" ng-model="snapType" value="grid" ng-change="changeSnapMode('grid')">
+                                    <md-button >Grid</md-button>
+                                </md-menu-item>
+                                <md-menu-item type="radio" ng-model="snapType" value="layer" ng-change="changeSnapMode('layer')">
+                                    <md-button >Layers</md-button>
+                                </md-menu-item> 
+                                <md-menu-item type="radio" ng-model="ctrl.snapType" value="bound" ng-change="changeSnapMode('bound')">
+                                    <md-button >Stage Bounds</md-button>
+                                </md-menu-item>                                 
+                            </md-menu-content>
+                        </md-menu>            
+                    </md-menu-item>                     
+                </md-menu-content>
+            </md-menu>
+        </md-menu-bar>
     </div>
     <div flex="" class="nbd-tools" layout-align="center center" layout="row">   
         <md-button class="md-icon-button" aria-label="Undo" ng-click="undo()">
@@ -15,14 +40,22 @@
             <md-icon md-svg-icon="nbd:redo"></md-icon>
         </md-button>          
         <md-button class="md-icon-button" aria-label="Grid" ng-click="showGrid = !showGrid">
-            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Grid snap</md-tooltip>
-            <md-icon md-svg-icon="nbd:{{!showGrid ? 'grid' : 'grid-off'}}"></md-icon>
-        </md-button>     
+            <md-tooltip md-direction="bottom" ng-class="primaryPalette">{{ !showGrid ? 'Grid' : 'Grid Off' }}</md-tooltip>
+            <md-icon md-svg-icon="nbd:{{ !showGrid ? 'grid' : 'grid-off' }}"></md-icon>
+        </md-button>   
+        <md-button class="md-icon-button" aria-label="Snap" ng-click="snapMode = !snapMode">
+            <md-tooltip md-direction="bottom" ng-class="primaryPalette">{{ !snapMode ? 'Snap' : 'Snap Off' }}</md-tooltip>
+            <md-icon md-svg-icon="nbd:{{ !snapMode ? 'magnet-on' : 'magnet' }}"></md-icon>
+        </md-button>   
+        <md-button class="md-icon-button" aria-label="Guideline" ng-click="showGuideline = !showGuideline">
+            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Guideline</md-tooltip>
+            <md-icon md-svg-icon="nbd:guideline"></md-icon>
+        </md-button>          
         <md-button class="md-icon-button" aria-label="Debug" ng-click="debug()">
-            <md-icon md-svg-icon="nbd:magic" class="bold"></md-icon>
+            <md-icon md-svg-icon="nbd:magic"></md-icon>
         </md-button>    
         <md-button class="md-icon-button" aria-label="Debug2" ng-click="debug2()">
-            <md-icon md-svg-icon="nbd:magic" class="bold"></md-icon>
+            <md-icon md-svg-icon="nbd:magic"></md-icon>
         </md-button>         
     </div>   
     <div flex="none" layout-align="center center" layout="row">
@@ -53,7 +86,7 @@
                 <md-menu-item flex="25">
                     <md-button aria-label="facebook">
                         <div layout="row" flex>
-                            <md-icon md-menu-align-target md-svg-icon="<?php echo $svgUrl.'facebook.svg'; ?>" style="margin: auto 3px auto 0;"></md-icon>
+                            <md-icon md-menu-align-target md-svg-icon="nbd:language" style="margin: auto 3px auto 0;"></md-icon>
                         </div>
                     </md-button>
                 </md-menu-item>                   
@@ -68,7 +101,7 @@
                     <md-button ng-click="ctrl.announceClick(lang.code)"  aria-label="facebook">
                         <div layout="row" flex>
                             <p flex>{{lang.name}}</p>
-                            <md-icon md-menu-align-target md-svg-icon="<?php echo $svgUrl.'number.svg'; ?>" style="margin: auto 3px auto 0;"></md-icon>
+                            <md-icon md-menu-align-target md-svg-icon="nbd:language" style="margin: auto 3px auto 0;"></md-icon>
                         </div>
                     </md-button>
                 </md-menu-item>                                  

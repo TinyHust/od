@@ -27,7 +27,7 @@ class Nbdesigner_IO {
         if (empty($folder))
             return false;
         if (!$levels)
-            return false;
+            return false;        
         $files = array();
         if ($dir = @opendir($folder)) {
             while (($file = readdir($dir) ) !== false) {
@@ -46,6 +46,27 @@ class Nbdesigner_IO {
         }
         @closedir($dir);
         return $files;
+    }
+    public static function get_list_folder($folder = '', $levels = 100){
+        if (empty($folder)) return false;    
+        if (!$levels) return false;          
+        $folders = array();
+        if ($dir = @opendir($folder)) {
+            while (($file = readdir($dir) ) !== false) {
+                if (in_array($file, array('.', '..')))
+                    continue;
+                if (is_dir($folder . '/' . $file)) {
+                    $folders2 = self::get_list_folder($folder . '/' . $file, $levels - 1);
+                    if ($folders2){
+                        $folders = array_merge($folders, $folders2);
+                    }else {
+                        $folders[] = $folder . '/' . $file . '/';
+                    }
+                }    
+            }
+        }
+        @closedir($dir);
+        return $folders;        
     }
     public static function delete_folder($path) {
         if (is_dir($path) === true) {
@@ -239,7 +260,8 @@ function nbdesigner_get_default_setting($key = false){
         'nbdesigner_hex_names' => '',
         'nbdesigner_instagram_app_id' => '',
         'nbdesigner_dropbox_app_id' => '',
-        'nbdesigner_printful_key' => ''
+        'nbdesigner_printful_key' => '',
+        'nbdesigner_mindpi_upload' => 0
     ), $frontend));
     if(!$key) return $nbd_setting;
     return $nbd_setting[$key];
@@ -290,7 +312,8 @@ function default_frontend_setting(){
         'nbdesigner_image_crop' => 1,          
         'nbdesigner_image_shapecrop' => 1,          
         'nbdesigner_draw_brush' => 1,          
-        'nbdesigner_draw_shape' => 1          
+        'nbdesigner_draw_shape' => 1,
+        'nbdesigner_save_latest_design'  => 'yes'
     );
     return $default;
 }
@@ -319,6 +342,7 @@ function nbd_default_product_setting(){
                 'bg_type'   => 'image',
                 'bg_color_value' => "#ffffff",
                 'show_overlay' => 0,
+                'include_overlay' => 1,
                 'version' => NBDESIGNER_NUMBER_VERSION
             )); 
 }
@@ -339,7 +363,7 @@ function getUrlPageNBD($page){
     if($post) return get_page_link($post);
     return '#';
 }
-function nbd_get_product_info($user_id, $product_id, $variation_id = 0, $task = '', $reference_product = '', $template_folder = '', $order_id = '', $order_item_folder = '' ){
+function nbd_get_product_info($user_id, $product_id, $variation_id = 0, $task = '', $reference_product = '', $template_folder = '', $order_id = '', $order_item_folder = '', $edit_item = '' ){
     $path = '';
     $data = array();
     $data['product'] = unserialize(get_post_meta($product_id, '_designer_setting', true));
@@ -357,7 +381,9 @@ function nbd_get_product_info($user_id, $product_id, $variation_id = 0, $task = 
         if($template_folder != ''){
             $path = NBDESIGNER_ADMINDESIGN_DIR . '/' . $product_id . '/' . $template_folder;
         }    
-    }else {
+    }else if($task == 'edit_design'){
+        $path = NBDESIGNER_CUSTOMER_DIR . '/' .$user_id. '/nb_order/' .$edit_item ;
+    } else{
         if($reference_product != ''){
             $path = NBDESIGNER_CUSTOMER_DIR. '/' .$user_id. '/nb_order/' .$reference_product;
             $data['ref'] = unserialize(get_post_meta($reference_product, '_designer_setting', true));
@@ -427,13 +453,18 @@ function is_woo_v3(){
     return true;
 }
 function nbd_get_dpi($filename){
-    $a = fopen($filename,'r');
-    $string = fread($a,20);
-    fclose($a);
+    if(class_exists('Imagick')){
+        $image = new Imagick($filename);
+        $resolutions = $image->getImageResolution();
+    }else{
+        $a = fopen($filename,'r');
+        $string = fread($a,20);
+        fclose($a);
 
-    $data = bin2hex(substr($string,14,4));
-    $x = substr($data,0,4);
-    $y = substr($data,4,4);
-
-    return array(hexdec($x),hexdec($y));
+        $data = bin2hex(substr($string,14,4));
+        $x = substr($data,0,4);
+        $y = substr($data,4,4);  
+        $resolutions = array('x' => hexdec($x), 'y' => hexdec($y));
+    }
+    return array($resolutions);
 }

@@ -96,32 +96,32 @@
             <md-icon md-svg-icon="nbd:arrange"></md-icon>
         </button >  
         <md-menu-content>
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="setStackPosition('bring-front')">
                 <md-icon md-svg-icon="nbd:bring-front"></md-icon>
                 <md-button aria-label="Bring to Front" >
                     Bring to Front
-                    <span class="md-alt-text">{{ 'S-M-]' | keyboardShortcut }}</span>
+                    <span class="md-alt-text">{{ 'M-S-]' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>      
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="setStackPosition('bring-forward')">
                 <md-icon md-svg-icon="nbd:bring-forward"></md-icon>
                 <md-button aria-label="Bring Forward" >
                     Bring Forward
                     <span class="md-alt-text">{{ 'M-]' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>     
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="setStackPosition('send-backward')">
                 <md-icon md-svg-icon="nbd:send-backward"></md-icon>
                 <md-button aria-label="Send Backward" >
                     Send to Backward
                     <span class="md-alt-text">{{ 'M-[' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>      
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="setStackPosition('send-back')">
                 <md-icon md-svg-icon="nbd:send-back"></md-icon>
                 <md-button aria-label="Send to Back" >
                     Send to Back
-                    <span class="md-alt-text">{{ 'S-M-[' | keyboardShortcut }}</span>
+                    <span class="md-alt-text">{{ 'M-S-[' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>              
         </md-menu-content>
@@ -131,42 +131,42 @@
             <md-icon md-svg-icon="nbd:align"></md-icon>
         </button >  
         <md-menu-content>
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="alignLayer('vertical')">
                 <md-icon md-svg-icon="nbd:align-vertical"></md-icon>
                 <md-button aria-label="Align Center" >
                     Align Vertical Center
                     <span class="md-alt-text">{{ 'S-C' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="alignLayer('horizontal')">
                 <md-icon md-svg-icon="nbd:align-horizontal"></md-icon>
                 <md-button aria-label="Align Middle" >
                     Align Horizontal Center
                     <span class="md-alt-text">{{ 'S-M' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>    
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="alignLayer('left')">
                 <md-icon md-svg-icon="nbd:align-left"></md-icon>
                 <md-button aria-label="Align Left" >
                     Align Left
                     <span class="md-alt-text">{{ 'S-L' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="alignLayer('right')">
                 <md-icon md-svg-icon="nbd:align-right"></md-icon>
                 <md-button aria-label="Align Right" >
                     Align Right
                     <span class="md-alt-text">{{ 'S-R' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>  
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="alignLayer('top')">
                 <md-icon md-svg-icon="nbd:align-top"></md-icon>
                 <md-button aria-label="Align Top" >
                     Align Top
                     <span class="md-alt-text">{{ 'S-T' | keyboardShortcut }}</span>
                 </md-button>             
             </md-menu-item>
-            <md-menu-item class="md-indent">
+            <md-menu-item class="md-indent" ng-click="alignLayer('bottom')">
                 <md-icon md-svg-icon="nbd:align-bottom"></md-icon>
                 <md-button aria-label="Align Bottom" >
                     Align Bottom
@@ -176,7 +176,7 @@
         </md-menu-content>
     </md-menu>
 </md-menu-bar>    
-<md-button class="md-icon-button" aria-label="Copy" >
+<md-button class="md-icon-button" aria-label="Copy"  ng-click="duplicateLayer()">
     <md-icon md-svg-icon="nbd:copy"></md-icon>
 </md-button> 
 <md-button class="md-icon-button" aria-label="Delete" ng-click="deleteLayer()">

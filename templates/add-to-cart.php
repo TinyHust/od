@@ -4,7 +4,7 @@ $product = wc_get_product($pid);
 if ($product->is_type('variable')) {
     $attribute_keys = array_keys($product->get_attributes());
 ?>
-    <form class="variations_form cart" method="post" enctype='multipart/form-data' data-product_id="<?php echo absint($product->id); ?>" data-product_variations="<?php echo htmlspecialchars(json_encode($product->get_available_variations())) ?>">
+    <form class="variations_form cart" method="post" enctype='multipart/form-data' data-product_id="<?php echo absint($product->get_id()); ?>" data-product_variations="<?php echo htmlspecialchars(json_encode($product->get_available_variations())) ?>">
         <?php do_action('woocommerce_before_variations_form'); ?>
         <?php if (empty($product->get_available_variations()) && false !== $product->get_available_variations()) : ?>
             <p class="stock out-of-stock"><?php _e('This product is currently out of stock and unavailable.', 'woocommerce'); ?></p>
@@ -56,5 +56,5 @@ if ($product->is_type('variable')) {
 
 <?php
 } else {
-    echo sprintf('<a rel="nofollow" href="%s" data-quantity="%s" data-product_id="%s" data-product_sku="%s" class="%s">%s</a>', esc_url($product->add_to_cart_url()), esc_attr(isset($quantity) ? $quantity : 1 ), esc_attr($product->id), esc_attr($product->get_sku()), esc_attr(isset($class) ? $class : 'button' ), esc_html($product->add_to_cart_text()));
+    echo sprintf('<a rel="nofollow" href="%s" data-quantity="%s" data-product_id="%s" data-product_sku="%s" class="%s">%s</a>', esc_url($product->add_to_cart_url()), esc_attr(isset($quantity) ? $quantity : 1 ), esc_attr($product->get_id()), esc_attr($product->get_sku()), esc_attr(isset($class) ? $class : 'button' ), esc_html($product->add_to_cart_text()));
 }

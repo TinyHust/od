@@ -7,9 +7,14 @@
             $link_create_template_page = getUrlPageNBD('template');
             foreach($pro as $key => $val): 
             $id = $val["id"];    
-            $link_create_template = $link_create_template_page.'?product_id='.$id.'&priority=extra&task=create_template';
+            $priority = 'extra';
             $primary = get_post_meta($id, '_nbdesigner_admintemplate_primary', true);
-            if(!$primary) $link_create_template = $link_create_template_page.'?product_id='.$id.'&priority=primary&task=create_template';
+            if(!$primary) $priority = 'primary';
+            $link_create_template = add_query_arg(array(
+                    'product_id' => $id,
+                    'priority' =>  $priority,
+                    'task'  =>  'create_template'
+                ), getUrlPageNBD('template'));             
             $link_manager_template = add_query_arg(array('pid' => $id, 'view' => 'templates'), admin_url('admin.php?page=nbdesigner_manager_product'));
         ?>
 		<div class="nbdesigner-product">

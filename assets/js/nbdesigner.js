@@ -1,5 +1,7 @@
 jQuery(document).ready(function () {
-    
+    if( jQuery('#triggerDesign').length > 0 ){
+        jQuery('button[name="add-to-cart"]').hide();
+    };
     var width = jQuery(window).innerWidth();
     var height = jQuery(window).height();
     var w = -width;
@@ -45,7 +47,6 @@ var NBDESIGNERPRODUCT = {
 
     },
     hide_iframe_design: function () {
-        console.log('something');
         var height = -jQuery(window).height();
         jQuery('#container-online-designer').removeClass('show');
         jQuery('#container-online-designer').stop().animate({
@@ -54,6 +55,9 @@ var NBDESIGNERPRODUCT = {
         }, 500);
     },
     show_design_thumbnail: function (arr, task) {
+        if( jQuery('#triggerDesign').length > 0 ){
+            jQuery('button[name="add-to-cart"]').show();
+        };
         jQuery('#nbdesigner-preview-title').show();
         jQuery('#nbdesign-new-template').show();
         if(task == 'create_template' || task == 'edit_template'){

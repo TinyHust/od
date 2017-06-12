@@ -116,6 +116,13 @@
                             </a>
                             <img style="display: <?php if($v['show_overlay']) {echo 'inline-block';} else {echo 'none';} ?>"
                                  src="<?php if ($v['img_overlay'] != '') {echo $v['img_overlay'];} else {echo NBDESIGNER_PLUGIN_URL . 'assets/images/overlay.png';} ?>" class="img_overlay"/>                            
+                            <p class="overlay-toggle" style="display: <?php if($v['show_overlay']) {echo 'block';} else {echo 'none';} ?>">
+                                <input type="hidden" value="0" name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][include_overlay]" class="include_overlay"/> 
+                                <input type="checkbox" value="1"  class="include_overlay"
+                                    name="_designer_setting<?php echo $vid; ?>[<?php echo $k; ?>][include_overlay]"  <?php checked($v['include_overlay']); ?>   
+                                    />
+                                <span><?php  _e('Include in final design', 'web-to-print-online-designer'); ?></span>
+                            </p>                            
                         </div>                        
                     </div>
                     <hr style="clear: both;"/>

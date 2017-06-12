@@ -40,12 +40,6 @@
             <md-icon md-svg-icon="nbd:frame" class="element-icon"></md-icon>
             <p>Frames</p>
        </div>
-    </div>    
-    <div class="nbd-element md-whiteframe-2dp no-margin-right">
-        <div md-ink-ripple class="nbd-element-inner" flex layout-align="center center" layout="column" ng-class="primaryPalette">
-            <md-icon md-svg-icon="nbd:illustrator" class="element-icon"></md-icon>
-            <p>Illustrations</p>
-       </div>
     </div>   
     <hr class="nbd-divider">
 </div>    
