@@ -246,7 +246,8 @@ class Nbdesigner_Plugin {
             'url' => admin_url('admin-ajax.php'),
             'sid' => session_id(),
             'nonce' => wp_create_nonce('save-design'),
-            'nonce_get' => wp_create_nonce('nbdesigner-get-data')));
+            'nonce_get' => wp_create_nonce('nbdesigner-get-data'),
+            'hide_cart_button'  =>  nbdesigner_get_option('nbdesigner_hide_button_cart_in_detail_page')));
         wp_enqueue_script('nbdesigner');
     }
     public static function plugin_activation() {
@@ -632,7 +633,7 @@ class Nbdesigner_Plugin {
                 'post_type' => 'product',
                 'post_status' => 'publish',
                 'meta_key' => '_nbdesigner_enable',
-                'orderby' => 'date',
+                'orderby' => 'id',
                 'order' => 'DESC',
                 'posts_per_page'=> -1,
                 'meta_query' => array(
@@ -1275,6 +1276,16 @@ class Nbdesigner_Plugin {
                 }
                 $list_design = array();
                 $list_images = Nbdesigner_IO::get_list_thumbs($path, 1);
+                $path_pdf = NBDESIGNER_PDF_DIR . '/' . $order_id;
+                $_list_pdfs = Nbdesigner_IO::get_list_files($path_pdf, 2);
+                $list_pdfs = array();
+                foreach ($_list_pdfs as $_pdf){
+                    if(is_dir($_pdf)) continue;
+                    $list_pdfs[] = array(
+                        'title' => basename($_pdf),
+                        'url'   =>  Nbdesigner_IO::convert_path_to_url($_pdf)
+                    );
+                }
                 foreach ($list_images as $img){
                     $name = basename($img);
                     $arr = explode('.', $name);
@@ -1753,8 +1764,9 @@ class Nbdesigner_Plugin {
         $reference_product = (isset($_POST['reference_product']) &&  $_POST['reference_product'] != '') ? $_POST['reference_product'] : '';
         $order_item_folder = (isset($_POST['order_item_folder']) &&  $_POST['order_item_folder'] != '') ? $_POST['order_item_folder'] : '';
         $template_priority = (isset($_POST['template_priority']) &&  $_POST['template_priority'] != '') ? $_POST['template_priority'] : '';
+        $edit_item = (isset($_POST['edit_item']) &&  $_POST['edit_item'] != '') ? $_POST['edit_item'] : '';
         $user_id = (get_current_user_id() > 0) ? get_current_user_id() : session_id();         
-        $data = nbd_get_product_info($user_id, $product_id, $variation_id, $task, $reference_product, $template_folder, $order_id, $order_item_folder);  
+        $data = nbd_get_product_info($user_id, $product_id, $variation_id, $task, $reference_product, $template_folder, $order_id, $order_item_folder, $edit_item);  
         if($task != 'create_template' && $task != 'edit_template' && $task != 'redesign' && $template_folder != '' && $product_id != ''){
             $this->update_template_hit($product_id, $template_folder);
         }
@@ -1840,7 +1852,7 @@ class Nbdesigner_Plugin {
         echo json_encode($result);
         wp_die();        
     }
-    public function nbd_save_customer_design(){      
+    public function nbd_save_customer_design(){   
         if (!wp_verify_nonce($_POST['nonce'], 'save-design')) {
             die('Security error');
         }     
@@ -1856,6 +1868,7 @@ class Nbdesigner_Plugin {
         $order_item_folder = (isset($_POST['order_item_folder']) && $_POST['order_item_folder'] != '') ? $_POST['order_item_folder'] : '';
         $order_id = (isset($_POST['order_id']) && $_POST['order_id'] != '') ? $_POST['order_id'] : '';
         $template_folder = (isset($_POST['template_folder']) && $_POST['template_folder'] != '') ? $_POST['template_folder'] : '';
+        $edit_item = (isset($_POST['edit_item']) && $_POST['edit_item'] != '') ? $_POST['edit_item'] : '';
         $save_status = (isset($_POST['save_status']) && $_POST['save_status'] != '') ? absint($_POST['save_status']) : 1;             
         $data = $_FILES;       
         $path = '';      
@@ -1871,7 +1884,9 @@ class Nbdesigner_Plugin {
             }
             $priority = (isset($_POST['priority']) && $_POST['priority'] == 'primary') ? 1 : 0; 
             $path = NBDESIGNER_ADMINDESIGN_DIR . '/' . $product_id . '/' . $template_folder;
-        }else {
+        }else if($task == 'edit_design'){
+            $path = NBDESIGNER_CUSTOMER_DIR . '/' . $user_id . '/nb_order/' . $edit_item;   
+        }else{
             $path = NBDESIGNER_CUSTOMER_DIR . '/' . $user_id . '/nb_order/' . $product_id;   
         }     
         $data_after_save_image = $this->nbdesigner_save_design_to_image2($data, $path, $product_id, $variation_id);          
@@ -1893,7 +1908,9 @@ class Nbdesigner_Plugin {
                     $result['redesign'] = __("Your design has been saved success! Please wait response email!", 'web-to-print-online-designer');
                     update_post_meta($order_id, '_nbdesigner_order_changed', 1);                     
                 }
-            }else {
+            }else if($task == 'edit_design') {
+                $_SESSION['nbdesigner'][$edit_item] = json_encode(Nbdesigner_IO::get_list_thumbs($path . '/thumbs'));
+            }else{
                 $_SESSION['nbdesigner']['nbdesigner_' . $product_id] = json_encode(Nbdesigner_IO::get_list_thumbs($path . '/thumbs'));
             }          
         }else{
@@ -2611,6 +2628,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
         $new_path = $this->plugin_path_data . 'designs/' . $iid . '/nb_order/'.$cart_item_key;
         $this->nbdesigner_copy_dir($old_path, $new_path);
         $path = $new_path . '/thumbs';
+        unset($_SESSION['nbdesigner']['nbdesigner_' . $product_id]);  
         $_SESSION['nbdesigner'][$cart_item_key] = json_encode($this->nbdesigner_list_thumb($path));
     }
     public function nbdesigner_remove_cart_item_design($removed_cart_item_key, $instance){
@@ -2699,7 +2717,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
     }
     public function nbdesigner_send_email($order, $reason, $message){
         global $woocommerce;
-        $user_email = $order->billing_email;
+        $user_email = $order->get_billing_email();
         if (!empty($user_email)) {
             $mailer = $woocommerce->mailer();
             ob_start();
@@ -3752,7 +3770,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             $pdf->setPrintHeader(false);
             $pdf->setPrintFooter(false);       
             $pdf->SetAutoPageBreak(TRUE, 0);              
-        }             
+        }  
         foreach($pdfs as $key => $_pdf){
             $customer_design = $_pdf['customer-design'];    
             $bTop = (float)$_pdf['bleed-top'];
@@ -3839,7 +3857,7 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
                 if(!file_exists($folder)){
                     wp_mkdir_p($folder);
                 }
-                $output_file = $folder .'/'. $key .'_'.time().'.pdf';
+                $output_file = $folder .'/'. $key .$_pdf['name'].'.pdf';
                 $pdf->Output($output_file, 'F');              
                 $result[] = array(
                     'link' => Nbdesigner_IO::convert_path_to_url($output_file),
@@ -3852,11 +3870,11 @@ CREATE TABLE {$wpdb->prefix}nbdesigner_templates (
             if(!file_exists($folder)){
                 wp_mkdir_p($folder);
             }
-            $output_file = $folder .'/'. $order_id .'_'. time() .'.pdf';
+            $output_file = $folder .'/'. $order_id .'_all' .'.pdf';
             $pdf->Output($output_file, 'F');              
             $result[] = array(
                 'link' => Nbdesigner_IO::convert_path_to_url($output_file),
-                'title' => $_pdf['name']
+                'title' => $order_id
             );                
         }        
         echo json_encode($result);

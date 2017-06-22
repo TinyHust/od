@@ -48,7 +48,9 @@ var langjs = {
     "CAT" : "Categories",
     "TERM_ALERT" : "Please read and accept the terms",
     "PRODUCTS"  :   "Products",
-    "RESET_DESIGN" : "Reset Design"
+    "RESET_DESIGN" : "Reset Design",
+    "FIT" : "Fit",
+    "FILL" : "Fill"
 };
 var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "Blue", "Light Blue", "Cyan", "Teal", "Green", "Light Green", "Lime", "Yellow", "Amber", "Orange", "Deep Orange", "Brown", "Grey", "Blue Grey"];
 /**
@@ -424,7 +426,7 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
         /* Adjust stage */
         $scope.zoomStage = function(command){
             var stage = $scope.stages[$scope.currentStage],
-                currentScale = stage.currentScale;
+                currentScale = stage.currentScale; 
             if(command == '-' ){
                 if(currentScale > 0){
                     currentScale = currentScale - 1;
@@ -512,7 +514,7 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
             $scope.currentStage = parseInt(next);
             nbdPlg.switchStageTo(parseInt(next));
         }; 
-        $scope.fitStagesWithWindow = function(){
+        $scope.initStages = function(){
             var maxWidth = $scope.workBenchWidth - 480,
                 maxHeight = $scope.workBenchHeight - 228;
             _.each($scope.stages, function(stage, index){
@@ -531,6 +533,7 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
                 stage.marginLeft = [];
                 stage.marginTop = [];                
                 stage._scaleRange = [];
+                stage.zooms = [];
                 if(currentScale < stage.scaleRange[0]) {
                     stage.currentScale = 0;
                 }else if(currentScale > stage.scaleRange[stage.scaleRange.length - 1]){
@@ -557,8 +560,14 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
                     stage.safeContentWidth.push((stage.width - 2 * stage._marginLeft - 2 * stage._bleedLeft) * val);
                     stage.marginTop.push((stage._marginTop + stage._bleedTop) * val);
                     stage.safeContentHeight.push((stage.height - 2 * stage._marginTop - 2 * stage._bleedTop) * val);                    
-                    stage._scaleRange.push( val / currentScale )
+                    stage._scaleRange.push( val / currentScale );
+                    if(index != stage.fillScale && index != stage.fitScale) {
+                        stage.zooms.push({'index': index, 'value' : $scope._round( val * 100) + '%'});
+                    }
                 });
+                stage.zooms.push({'index': stage.fillScale, 'value' : $scope.i18nLangs['FILL']});
+                stage.zooms.push({'index': stage.fitScale, 'value' : $scope.i18nLangs['FIT']});
+                //todo with clipto shape...
             });
         };
         /** Adjust stage **/
@@ -817,8 +826,13 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
         };  
         $scope.showGrid = false;
         $scope.snapMode = false;
+        $scope.selectMode = false;
         $scope.changeSnapMode = function(type) {
             $scope.snapType = type;
+        };
+        $scope.changeSelectMode = function(){
+            $scope.selectMode = !$scope.selectMode;
+            nbdPlg.dragState();
         };
         $scope.snapType = 'layer'; /* grid, layer, stage bounds  */
         $scope.showGuideline = false;
@@ -828,13 +842,24 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
         $scope.isUndoable = false;
         /** General **/
         /* Tool */
+        $scope.changeColor = function(color){
+            nbdPlg.changeColor(color);
+            $scope.cancelDialog();
+        };
         $scope.addTypography = function(){
             nbdPlg.addText();
         };
         $scope.addImage = function(){
-            var url = 'http://dev.cmsmart.net:3000/wp46/wp-content/uploads/nbdesigner/temp/2017/05/14/1494730938cb93980b.png';
+            var url = 'http://dev.cmsmart.net:3000/wp46/wp-content/uploads/nbdesigner/temp/2017/06/15/1497500795d0f88bfb.jpg';
+            //var url = 'http://dev.cmsmart.net:3000/wp46/wp-content/uploads/nbdesigner/temp/2017/05/14/1494730938cb93980b.png';
             nbdPlg.addImage(url);
         };
+        $scope.addRect = function(){
+            nbdPlg.addRect();
+        };
+        $scope.addCircle = function(){
+            nbdPlg.addCircle();
+        };        
         $scope.addGroup = function(){
             nbdPlg.addGroup();
         };  
@@ -887,11 +912,15 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
         $scope.showContextMenu = function(posX, posY){         
             if($scope.isActiveLayer){
                 var contextMenu = angular.element(document.getElementById('nbd-contextmenu'));
-                if($scope.workBenchWidth < (posX + 200)) posX = $scope.workBenchWidth - 200;
-                if($scope.workBenchHeight < (posY + 150)) posY = $scope.workBenchHeight - 150;
-                contextMenu.css({'top': posY + 'px', 'left': posX + 'px'});
-                $scope.openContextMenu = true;
-                if ($scope.$root.$$phase !== "$apply" && $scope.$root.$$phase !== "$digest") $scope.$apply()
+                $timeout(function(){
+                    var height = contextMenu[0].clientHeight,
+                    width = contextMenu[0].clientWidth;
+                    if($scope.workBenchWidth < (posX + width + 15)) posX = $scope.workBenchWidth - width - 15;
+                    if($scope.workBenchHeight < (posY + height + 15)) posY = $scope.workBenchHeight - height - 15;
+                    contextMenu.css({'top': posY + 'px', 'left': posX + 'px'});
+                },10);
+                $scope.openContextMenu = true;  
+                if ($scope.$root.$$phase !== "$apply" && $scope.$root.$$phase !== "$digest") $scope.$apply()  
             }
         };
         $scope.boundingRect = {left: 0, top: 0};
@@ -909,7 +938,7 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
             }else if(NBDCONFIG['task'] == 'design'){
                 $scope.stages = [{'id': 0, 'width' : 200, 'height' : 200, 'currentScale': 0, 'background' : 'white', 'name' : 'Typography'}]
             }
-            $scope.fitStagesWithWindow();
+            $scope.initStages();
             $scope.currentStage = 0;            
         };
         $scope.addStage = function(){
@@ -946,7 +975,7 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
         };
         $scope.debug = function($val){
             //$scope.openSaveAlert(3000);
-            nbdPlg.dragState();
+            //nbdPlg.log();
         };
         $scope.debug2 = function($val){
             nbdPlg.loadLayerFromJson();
@@ -1041,6 +1070,7 @@ var nbdPlg = {
     mouseDownState: false,
     mouseUpState: false,
     currentActionType: null,
+    itemInfo: {},
     init : function(stages){
         this.stages = stages;
         var self = this;
@@ -1109,13 +1139,18 @@ var nbdPlg = {
         
         currentStage['canvas'] = _canvas;
     },
-    dragState : function(){
+    dragState : function( force ){
         var _canvas = this.stages[this.currentStage]['canvas'];
+        if(force) {
+            _canvas.dragState = false;
+            return;
+        }
         if(angular.isUndefined( _canvas.dragState )){
             _canvas.dragState = true;
         }else {
             _canvas.dragState = ! _canvas.dragState;
         }
+        if(_canvas.dragState) _canvas.deactivateAll();
     },
     mouseMoveStage: function(opts){
         var _canvas = this.stages[this.currentStage]['canvas'];
@@ -1128,6 +1163,7 @@ var nbdPlg = {
     switchStageTo : function(stageId){
         this.currentStage = stageId;
         this.getActiveLayerInfo( true );
+        this.dragState(true);
     },
     mouseDownStage : function(options){
         this.mouseDownState = true
@@ -1146,7 +1182,8 @@ var nbdPlg = {
             var scope = this.getAppScope();
             this.getActiveLayerInfo(true);
             this.hideLayerPositionLabel();
-        }
+        };
+        this.hideLayerPositionLabel();
     },   
     pathCreated : function(options){
         //todo
@@ -1202,6 +1239,7 @@ var nbdPlg = {
         scope.isGroup = false;
         this.isItem = false;
         this.isGroup = false;
+        console.log(options);
         this.updateApp();
     },   
     getActiveLayerInfo: function( programmatically ){
@@ -1218,6 +1256,7 @@ var nbdPlg = {
                 case 'text': 
                 case 'curvedText': 
                     this.currentActionType = 'text';
+                    this.getTextLayerInfo(item);
                     break;
                 case 'image': 
                 case 'custom-image': 
@@ -1238,11 +1277,13 @@ var nbdPlg = {
             }
         }else if( _canvas.getActiveGroup() ){
             this.isItem = false;    
+            this.itemInfo = {};
             this.isGroup = true;
             this.isActiveLayer = true;
             this.currentActionType = 'group';
         }else {
             this.isActiveLayer = false;
+            this.itemInfo = {};
         };
         if( programmatically ){
             var scope = this.getAppScope(); 
@@ -1253,6 +1294,41 @@ var nbdPlg = {
             scope.currentActionType = this.currentActionType;            
             this.updateApp();
         }
+    },
+    getLayerGeneralInfo : function(item){
+        this.itemInfo = {};
+        this.itemInfo = {
+            'stroke'  :   item.getStroke(),
+            'strokeWidth'  :   item.getStrokeWidth(),
+            'angle'  :   item.angle,
+            'fill' : item.getFill()
+        };
+    },
+    getTextLayerInfo: function(item){
+        this.getLayerGeneralInfo(item);
+        var infos = this.itemInfo;
+        angular.extend(infos, {
+            'type'  :   item.type,
+            'text'  :   item.getText(),
+            'textAlign' :   item.textAlign,
+            'fontFamily' :   item.get('fontName'),
+            'stroke' :   item.get('fontName'),
+            'fontStyle'  :   item.fontStyle,
+            'textDecoration'    :   item.textDecoration,
+            'lineHeight'    :   item.lineHeight,
+        }); 
+    },
+    setItemParameters : function(parameters, itemId){
+        var params = JSON.parse(parameters),
+            _canvas = this.stages[this.currentStage]['canvas'],    
+            item = _canvas.item(this.getLayerById(last.element.itemId));
+            if(typeof params.src !== "undefined"){
+                fabric.Image.fromURL(params.src, function(op) {
+                    item.getElement().setAttribute("src", params.src);  
+                })	            
+            } 
+        item.set(params);  
+        item.setCoords();            
     },
     getAppScope: function(){
         return angular.element(document.getElementById("nbd-workbench")).scope();
@@ -1300,6 +1376,7 @@ var nbdPlg = {
         positionEl.css({'left': -9999 + 'px', 'top': -9999 + 'px'});
     },
     intersectLayer: function(){
+        // only for test, remove on release
         var stage = this.stages[this.currentStage],
         _canvas = stage['canvas'],
         item = _canvas.getActiveObject(),
@@ -1378,16 +1455,45 @@ var nbdPlg = {
         var iText = new fabric.IText('Hello World!', {
             left: 10,
             top: 20,
-            fontFamily: 'Roboto'
+            noScaleCache: false,
+            fontFamily: '"Roboto", sans-serif'
         });
         this.stages[this.currentStage]['canvas'].add(iText);     
-        this.adjustLayerAfterAdded('add');
+        this.adjustLayerAfterAdded('add');    
+    },
+    changeTextDecoration : function(item, type){
+        //do action undo
+        switch(type){
+            case 'bold': 
+                if(item.fontStyle == 'bold'){
+                    item.setFontStyle("normal");
+                }else {
+                    item.setFontStyle("bold");
+                }
+                break;
+            case 'italic': 
+                //todo
+                break;
+            case 'underlined': 
+                //todo
+                break;
+            case 'strikethrough': 
+                //todo
+                break;          
+            case 'overline': 
+                //todo
+                break;               
+        }
+    },
+    changeTextAlign : function(item, type){
+        
     },
     /* End. Text */
     /* Image */
     addImage : function(url){
         var self = this;
         fabric.Image.fromURL(url, function(op) {
+            op.set({fill: '#ff0000'});
             self.stages[self.currentStage]['canvas'].add(op);
             /// do action to fit image with stage
             self.adjustLayerAfterAdded('add');
@@ -1413,10 +1519,32 @@ var nbdPlg = {
         this.stages[this.currentStage]['canvas'].add(group);
         this.adjustLayerAfterAdded();
     },
+    addRect : function(){
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            fill: '#607d8b',
+            width: 100,
+            height: 100,
+            opacity: 1
+        });
+        this.stages[this.currentStage]['canvas'].add(rect);
+        this.adjustLayerAfterAdded();
+    },
+    addCircle : function(){
+        var rect = new fabric.Circle({
+            left: 0,
+            top: 0,
+            fill: '#607d8b',
+            radius: 50,
+            opacity: 1
+        });
+        this.stages[this.currentStage]['canvas'].add(rect);
+        this.adjustLayerAfterAdded();
+    },    
     /* End Image */
     /* Manipulate layer */
     addLayer : function(type, data){},
-    getLayerInfo : function(){},
     adjustLayerAfterAdded : function(effect){
         this.hideLayerPositionLabel();
         var _canvas = this.stages[this.currentStage]['canvas'],
@@ -1519,7 +1647,6 @@ var nbdPlg = {
                     _setLayerPosition('top', bound.height + bound.top - _canvas.height, item);
                     break;  
                 case 'left':
-                    console.log(1);
                     _setLayerPosition('left', bound.left, item);
                     break;
                 case 'right':
@@ -1536,21 +1663,39 @@ var nbdPlg = {
                     left: _bound.left,
                     top: _bound.top,
                     right: _bound.left + _bound.width,
-                    bottom: _bound.top + _bound.height,
-                };      
-            items.forEach(function(item){
+                    bottom: _bound.top + _bound.height
+                };   
+            var _leftPosition = [],   
+                _topPosition = [],   
+                totalWidth = 0,
+                totalHeight = 0;
+            items.forEach(function(item, index){
                 var bound = item.getBoundingRect();
                 if(bound.left < position.left) position.left = bound.left;
                 if(bound.top < position.top) position.top = bound.top;
                 if(bound.left + bound.width > position.right) position.right = bound.left + bound.width;
                 if(bound.top + bound.height > position.bottom) position.bottom = bound.top + bound.height;
+                _leftPosition.push({index: index, value: bound.left});
+                _topPosition.push({index: index, value: bound.top});
+                totalWidth += bound.width;
+                totalHeight += bound.height;
             });
             switch(command) {
                 case 'horizontal':
-                    
+                    items.forEach(function(item){
+                        var bound = item.getBoundingRect(),
+                        _top = bound.top + bound.height / 2 - (position.top + position.bottom) / 2;
+                        _setLayerPosition('top', _top, item);
+                        item.setCoords();                        
+                    });
                     break;
                 case 'vertical':
-                    
+                    items.forEach(function(item){
+                        var bound = item.getBoundingRect(),
+                        _left = bound.left + bound.width / 2 - (position.left + position.right) / 2;
+                        _setLayerPosition('left', _left, item);
+                        item.setCoords();                        
+                    });                    
                     break;    
                 case 'top':
                     items.forEach(function(item){
@@ -1583,7 +1728,39 @@ var nbdPlg = {
                         _setLayerPosition('left', _right, item);
                         item.setCoords();
                     });                      
-                    break;                 
+                    break;  
+                case 'dis-horizontal':
+                    leftPosition = _.sortBy(_leftPosition, [function(o) { return o.value; }]);
+                    var space = (position.right - position.left - totalWidth) / (items.length - 1);
+                    leftPosition.forEach(function(_item, _index){
+                        var index = _item.index;
+                        if(_index > 0 && _index < items.length - 1){
+                            var item = items[index],
+                            previous_item = items[leftPosition[_index-1].index],
+                            bound = item.getBoundingRect(),
+                            previous_item_bound = previous_item.getBoundingRect(),
+                            _left = bound.left - previous_item_bound.left - previous_item_bound.width - space;
+                            _setLayerPosition('left', _left, item);
+                            item.setCoords();                            
+                        }
+                    });
+                    break;
+                case 'dis-vertical':
+                    topPosition = _.sortBy(_topPosition, [function(o) { return o.value; }]);
+                    var space = (position.bottom - position.top - totalHeight) / (items.length - 1);
+                    topPosition.forEach(function(_item, _index){
+                        var index = _item.index;
+                        if(_index > 0 && _index < items.length - 1){
+                            var item = items[index],
+                            previous_item = items[topPosition[_index-1].index],
+                            bound = item.getBoundingRect(),
+                            previous_item_bound = previous_item.getBoundingRect(),
+                            _top = bound.top - previous_item_bound.top - previous_item_bound.height - space;
+                            _setLayerPosition('top', _top, item);
+                            item.setCoords();   
+                        }
+                    });                 
+                    break;                  
             };
             group.addWithUpdate().setCoords();
         }       
@@ -1714,23 +1891,103 @@ var nbdPlg = {
         this.renderStage();
         //todo something with history
     },
+    changeColor : function(color){
+        var _canvas = this.stages[this.currentStage]['canvas'],
+        info = this.getActiveLayerInfo();
+    },
     undo : function(){
-        var _stage = this.stages[this.currentStage];
+        var _stage = this.stages[this.currentStage],
+            _canvas = _stage['canvas'];    
         if( _stage.undos.lenght > 0 ){
-            
+            var last = _stage.undos.pop(),
+                _parameters = last.parameters;    
+            if(last.interaction === 'remove') {
+                _canvas.add(last.element);
+                last.interaction = 'add';
+            } else if(last.interaction === 'add') {
+                var item = _canvas.item(this.getLayerById(last.element.itemId));
+                _canvas.remove(item);
+                last.interaction = 'remove';
+            } else {
+                var item = _canvas.item(this.getLayerById(last.element.itemId)),
+                    parameters = JSON.parse(_parameters);
+                _.each(parameters, function(val, key) {
+                    parameters[key] = item.get(key);
+                });
+                _parameters = JSON.stringify(parameters);
+                this.setItemParameters(last.parameters, last.element.itemId);  
+            } 
+            this.setHistory(false, {
+                element: last.element,
+                parameters: _parameters,
+                interaction: last.interaction
+            }); 
+            this.renderStage();            
         }
     }, 
-    redo : function(){}, 
+    redo : function(){
+        var _stage = this.stages[this.currentStage],
+            _canvas = _stage['canvas'];    
+        if( _stage.redos.lenght > 0 ){
+            var last = _stage.redos.pop(),
+                _parameters = last.parameters;    
+            if(last.interaction === 'remove') {
+                _canvas.add(last.element);
+                last.interaction = 'add';
+            } else if(last.interaction === 'add') {
+                var item = _canvas.item(this.getLayerById(last.element.itemId));
+                _canvas.remove(item);
+                last.interaction = 'remove';
+            } else {
+                var item = _canvas.item(this.getLayerById(last.element.itemId)),
+                    parameters = JSON.parse(_parameters);
+                _.each(parameters, function(val, key) {
+                    parameters[key] = item.get(key);
+                });
+                _parameters = JSON.stringify(parameters);
+                this.setItemParameters(last.parameters, last.element.itemId);  
+            } 
+            this.setHistory({
+                element: last.element,
+                parameters: _parameters,
+                interaction: last.interaction
+            }); 
+            this.renderStage();            
+        }        
+    }, 
     setHistory: function(undo, redo){
         var _stage = this.stages[this.currentStage];
         if (undo) {
             if(angular.isUndefined(_stage.undos)) _stage.undos = [];
             _stage.undos.push(undo);
             if(_stage.undos.length > 20) _stage.undos.shift();
+            _stage.isUndoable = true;
         }else{
             if(angular.isUndefined(_stage.redos)) _stage.redos = [];
-            _stage.undos.push(redo);
+            _stage.isRedoable = true;
+            _stage.redos.push(redo);
         }
+        var scope = this.getAppScope();
+        scope.isRedoable = _stage.isRedoable;
+        scope.isUndoable = _stage.isUndoable;
+        this.updateApp();
+    },
+    updateStatusUndoRedo : function(){
+        var _stage = this.stages[this.currentStage];
+        if(angular.isUndefined(_stage.undos)){
+            stage.isUndoable = (_stage.undos.length > 0) ? true : false;
+        }else {
+            _stage.isUndoable = false;
+        }
+        if(angular.isUndefined(_stage.redos)){
+            stage.isRedoable = (_stage.redos.length > 0) ? true : false;
+        }else {
+            _stage.isRedoable = false;
+        }
+        var scope = this.getAppScope();
+        scope.isRedoable = _stage.isRedoable;
+        scope.isUndoable = _stage.isUndoable;
+        this.updateApp();        
     },
     clearHistory : function(){
         var _stage = this.stages[this.currentStage];
@@ -1749,6 +2006,9 @@ var nbdPlg = {
     zoomStage : function(scaleIndex){
         var _stage = this.stages[this.currentStage];
         _stage.currentScale = scaleIndex;
+        if(_stage.canvas.getActiveObject() && _stage.canvas.getActiveObject().isEditing){
+            _stage.canvas.getActiveObject().exitEditing();
+        }         
         this.setStageDimensions(_stage.widthRange[scaleIndex], _stage.heightRange[scaleIndex]);
         _stage['canvas'].setZoom(_stage._scaleRange[scaleIndex]);
         this.updateLayerPositionLabel();
@@ -1785,8 +2045,7 @@ var nbdPlg = {
             group = _canvas.getActiveGroup();
             boudingRect = item.getBoundingRect(),
             isEditing = item.isEditing;             
-        console.log('item-left: '+item.getLeft(), ', bound-left: ' + boudingRect.left, ', bound-width: ' + boudingRect.width);
-        console.log(_canvas.get('zoom'));
+        console.log(stage.redos.length);    
     },
     itemToJson: function(item){
         var item = item ? item : this.stages[this.currentStage]['canvas'].getActiveObject();
@@ -1927,7 +2186,12 @@ document.addEventListener('DOMContentLoaded', function(){
                     /* Press Ctrl + [ Send layer backward */ 
                     case 219:
                         nbdPlg.setStackPosition('send-backward');
-                        break;                        
+                        break;   
+                    /* Press Ctrl + D Select/Deselect All layers */     
+                    case 68:
+                        nbdPlg.dragState();
+                        scope.selectMode = !scope.selectMode;
+                        break;   
                 }
             }
             nbdPlg.updateApp();

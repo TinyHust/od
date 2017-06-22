@@ -177,7 +177,6 @@ md-icon.bold {
     left: 0;
     background: #fff;
     height: 100%;
-    border-right: 1px solid #ddd;
 }
 .primary-menu-con {
     position: relative;
@@ -813,6 +812,9 @@ md-toast svg path {
     cursor: pointer; 
     position: relative;
 }
+.zoom-range li span{ 
+    font-size: 12px;
+}
 .zoom-range li:focus {
     outline: none;
 }
@@ -866,9 +868,13 @@ md-toast svg path {
 .panel-inner {
     padding: 15px;
     background: #607d8b;
+    font-size: 0;
 }
 .search {
     background: #fff;
+}
+#nbd-contextmenu md-menu-content {
+    max-height: 350px;
 }
 .animate300 {
   -webkit-animation-duration: 0.3s;

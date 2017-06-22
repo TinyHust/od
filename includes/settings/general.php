@@ -29,7 +29,18 @@ if( !class_exists('Nbdesigner_Settings_General') ) {
                             '2' => __('End of catalog item', 'web-to-print-online-designer'),
                             '3' => __('Do not show', 'web-to-print-online-designer')
                         )
-                    ),                    
+                    ),  
+                    array(
+                        'title' => __('Hide button Add to cart before complete design', 'web-to-print-online-designer'),
+                        'id' => 'nbdesigner_hide_button_cart_in_detail_page',
+                        'description' => __( 'Only show button Add to cart after customer complete they design.', 'web-to-print-online-designer'),
+                        'default'	=> 'no',
+                        'type' 		=> 'radio',
+                        'options'   => array(
+                            'yes' => __('Yes', 'web-to-print-online-designer'),
+                            'no' => __('No', 'web-to-print-online-designer')
+                        ) 
+                    ),                      
                     array(
                         'title' => __( 'Preview thumbnail width', 'web-to-print-online-designer'),
                         'id' 		=> 'nbdesigner_thumbnail_width',

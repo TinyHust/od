@@ -3,7 +3,8 @@
 <p>
     <?php 
         $label = __('Create Template', 'web-to-print-online-designer'); 
-        if((isset($_GET['p']) && $_GET['p'] == 'primary') || isset($_GET['redesign'])) $label = __('Edit Template', 'web-to-print-online-designer'); 
+        if((isset($_GET['p']) && $_GET['p'] == 'primary') || isset($_GET['edit_template'])) $label = __('Edit Template', 'web-to-print-online-designer'); 
+        if(isset($_GET['task']) && $_GET['task'] == 'edit_template') $label = __('Edit Template', 'web-to-print-online-designer'); 
     ?>
     <a class="button nbdesign-button nbdesigner-disable" id="triggerDesign" ><img class="nbdesigner-img-loading rotating" src="<?php  echo NBDESIGNER_PLUGIN_URL.'assets/images/loading.png'; ?>"/><?php echo $label; ?></a>    
     <a class="button" id="nbdesign-new-template" style="display: none;"><?php _e('Add Template', 'web-to-print-online-designer'); ?></a>    

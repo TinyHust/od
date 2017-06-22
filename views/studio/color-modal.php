@@ -21,7 +21,7 @@
                     </div>                 
                     <h3 style="font-size: 14px; text-transform: uppercase;">Trendy</h3>
                     <div ng-repeat="colors in palette" class="palette-con">                    
-                        <div ng-repeat="color in colors" class="nbd-color" ng-style="{'background': color}" ng-click="debug(color)">
+                        <div ng-repeat="color in colors" class="nbd-color" ng-style="{'background': color}" ng-click="changeColor(color)">
                             <md-tooltip md-direction="top" ng-class="primaryPalette">{{color}}</md-tooltip>
                             <span class="color-shadow"></span>
                         </div>    

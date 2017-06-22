@@ -4,7 +4,8 @@
         <div>
             <div class="bg-style">
                 <h3>{{(langs['CHOOSE_STYLE']) ? langs['CHOOSE_STYLE'] : "Choose style"}}</h3>
-                <img ng-click="changeBackgroundId(n)" ng-repeat="n in [] | range: 55" ng-src="<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/{{n}}.png" class="bg-style-tem"/>      
+                <img ng-click="changeBackgroundId(n)" ng-repeat="n in [] | range: 55" ng-src="<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/{{n}}.png" class="bg-style-tem"/><!--      
+                 --><span ng-click="removeBackgroundImage()" class="background-none"></span>
             </div>
         </div>    
         <span id="toggle-config-style"><i class="fa fa-cog"></i></span>   

@@ -185,7 +185,7 @@ function nbd_file_get_contents($url){
             $result = curl_exec($ch);
             curl_close($ch);          
         }
-    }	        
+    }	
     return $result;    
 }
 function hex_code_to_rgb($code){        
@@ -313,7 +313,8 @@ function default_frontend_setting(){
         'nbdesigner_image_shapecrop' => 1,          
         'nbdesigner_draw_brush' => 1,          
         'nbdesigner_draw_shape' => 1,
-        'nbdesigner_save_latest_design'  => 'yes'
+        'nbdesigner_save_latest_design'  => 'yes',
+        'nbdesigner_hide_button_cart_in_detail_page'    =>  'no'
     );
     return $default;
 }

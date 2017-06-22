@@ -1,7 +1,7 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
 <div class="nbd-side-bar" ng-style="{'height': (workBenchHeight - 64) + 'px'}">
     <div class="side-bar-inner">
-        <div class="primary-menu-container" style="z-index: 2">
+        <div class="primary-menu-container md-whiteframe-3dp" style="z-index: 2">
             <div class="primary-menu-con sidebar-7">
                 <div id="selectedTab"></div>
                 <div class="primary-menu slideInLeft animate500" flex layout-align="center center" layout="column">

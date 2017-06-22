@@ -367,6 +367,11 @@
         <p class="result-pdf">
             <?php wp_nonce_field( 'nbdesigner_pdf_nonce'); ?>
             <a href="javascript:void(0)" class="button-primary" id="create_pdf"><?php _e('Create PDF', 'web-to-print-online-designer'); ?></a>
+            <?php foreach ($list_pdfs as $_pdf): ?>   
+                <a class="pdf-file" href="<?php echo $_pdf['url'] ?>" download>
+                    <img src="<?php echo NBDESIGNER_PLUGIN_URL . 'assets/images/file/pdf.png'; ?>"/><br /><?php echo $_pdf['title'] ?>
+                </a>
+            <?php  endforeach; ?> 
         </p>            
         </div>    
         <script>

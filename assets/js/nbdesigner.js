@@ -1,6 +1,6 @@
 jQuery(document).ready(function () {
-    if( jQuery('#triggerDesign').length > 0 ){
-        jQuery('button[name="add-to-cart"]').hide();
+    if( jQuery('#triggerDesign').length > 0 && nbds_frontend.hide_cart_button == 'yes'){
+        jQuery('button[type="submit"].single_add_to_cart_button').hide();
     };
     var width = jQuery(window).innerWidth();
     var height = jQuery(window).height();
@@ -56,7 +56,7 @@ var NBDESIGNERPRODUCT = {
     },
     show_design_thumbnail: function (arr, task) {
         if( jQuery('#triggerDesign').length > 0 ){
-            jQuery('button[name="add-to-cart"]').show();
+            jQuery('button[type="submit"].single_add_to_cart_button').show();
         };
         jQuery('#nbdesigner-preview-title').show();
         jQuery('#nbdesign-new-template').show();

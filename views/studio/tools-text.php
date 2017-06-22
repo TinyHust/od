@@ -21,7 +21,6 @@
                 No fonts matching "{{searchFont}}" were found.
             </md-not-found>    
         </md-autocomplete>
-        <md-tooltip md-direction="bottom" ng-class="primaryPalette">Font</md-tooltip>
     </div>    
     <div class="comboinput">
         <md-input-container md-no-float class="md-block">
@@ -42,7 +41,7 @@
     </div>    
     <md-menu md-offset="0 72">
         <md-button class="md-icon-button nbd-mag-0" aria-label="Text decoraton" ng-click="$mdMenu.open($event)">
-            <md-icon md-svg-icon="nbd:text-decoration" class="bold"></md-icon>
+            <md-icon md-svg-icon="nbd:text-decoration"></md-icon>
             <md-tooltip md-direction="bottom" ng-class="primaryPalette">Decoration</md-tooltip>
         </md-button>   
         <md-menu-content width="3" flex layout="row">
@@ -115,56 +114,7 @@
     <md-button class="md-icon-button nbd-mag-0" aria-label="Shadow" ng-click="toggleSubMenu('shadow')">
         <md-tooltip md-direction="bottom" ng-class="primaryPalette">Shadow</md-tooltip>
         <md-icon md-svg-icon="nbd:shadow"></md-icon>
-    </md-button>  
-    <md-menu md-offset="-20 60">
-        <md-button class="md-icon-button nbd-mag-0" aria-label="Background" ng-click="$mdMenu.open($event)">
-            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Background</md-tooltip>
-            <md-icon md-svg-icon="nbd:paint-bucket"></md-icon>
-        </md-button>   
-        <md-menu-content width="3" flex layout="row">
-            <md-menu-item flex="33" class="nbd-dropdown-menu">
-                <md-button aria-label="Color" ng-click="_showColorDialog('background')">
-                    <div layout="row" flex>
-                        <div style="width: 24px; height: 24px; margin: 0 auto; display: inline-block;" ng-style="{'background' : currentTextColor}"></div>
-                        <md-tooltip md-direction="bottom" ng-class="primaryPalette">Color</md-tooltip>
-                    </div>
-                </md-button>
-            </md-menu-item>          
-            <md-menu-item flex="33" class="nbd-dropdown-menu">
-                <md-button aria-label="Pattern">
-                    <div layout="row" flex>
-                        <md-icon md-menu-align-target md-svg-icon="nbd:pattern" style="margin: 0 auto;"></md-icon>
-                        <md-tooltip md-direction="bottom" ng-class="primaryPalette">Pattern</md-tooltip>
-                    </div>
-                </md-button>
-            </md-menu-item>  
-            <md-menu-item flex="33" class="nbd-dropdown-menu">
-                <md-button aria-label="None">
-                    <div layout="row" flex>
-                        <md-icon md-menu-align-target md-svg-icon="nbd:forbidden" class="bold" style="margin: 0 auto;"></md-icon>
-                        <md-tooltip md-direction="bottom" ng-class="primaryPalette">None</md-tooltip>
-                    </div>
-                </md-button>
-            </md-menu-item>         
-        </md-menu-content>           
-    </md-menu>    
-    <md-menu md-offset="-20 60">
-        <md-button class="md-icon-button nbd-mag-0" aria-label="Opacity" ng-click="$mdMenu.open($event)">
-            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Opacity</md-tooltip>
-            <md-icon md-svg-icon="nbd:opacity"></md-icon>
-        </md-button>          
-        <md-menu-content width="3" flex layout="row" style="overflow: hidden;">
-            <md-menu-item flex="100" class="nbd-dropdown-menu">
-                <md-slider-container >
-                    <span flex="20">Opacity</span>
-                    <md-slider flex="60" class="md-primary" aria-label="Opacity" min="0" max="1" step="0.01" flex  ng-model="currentLayerOpacity" id="layer-opacity"></md-slider>
-                    <md-input-container flex="20">
-                        <input flex type="number" min="0" max="1" step="0.01" ng-model="currentLayerOpacity" aria-label="X" aria-controls="layer-opacity"> 
-                    </md-input-container>        
-                </md-slider-container>
-            </md-menu-item> 
-        </md-menu-content>
-    </md-menu>    
+    </md-button>     
     <md-menu md-offset="-20 60">
         <md-button class="md-icon-button nbd-mag-0" aria-label="Spacing" ng-click="$mdMenu.open($event)">
             <md-tooltip md-direction="bottom" ng-class="primaryPalette">Spacing</md-tooltip>

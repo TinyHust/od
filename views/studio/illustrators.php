@@ -21,7 +21,7 @@
         <div ng-show="hideIllustratorCat" class="panel-list-item">
             <div class="panel-items" ng-repeat="_cat in listIllustratorCategories" ng-show="currentIllustratorCat == _cat.id">
                 <p  style="color: #fff;">
-                    <md-button class="md-icon-button nbd-mag-0" aria-label="Text decoraton" ng-click="showIllustratorCat()">
+                    <md-button class="md-icon-button nbd-mag-0" aria-label="Back" ng-click="showIllustratorCat()">
                         <md-icon md-svg-icon="nbd:back" style="color: #fff;"></md-icon>
                     </md-button>                  
                     {{_cat.name}}

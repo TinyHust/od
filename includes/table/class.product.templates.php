@@ -54,7 +54,7 @@ class Product_Template_List_Table extends WP_List_Table {
             $item = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}nbdesigner_templates WHERE id = $id");
             if($item->folder == 'primary') return;
             $path = NBDESIGNER_ADMINDESIGN_DIR. '/' .$item->product_id. '/' .$item->folder;
-            if (Nbdesigner_IO::delete_folder($path)) {
+            if (Nbdesigner_IO::delete_folder($path) || !file_exists($path)) {
                 $wpdb->delete("{$wpdb->prefix}nbdesigner_templates", array('id' => $id), array('%d'));
             }            
         }

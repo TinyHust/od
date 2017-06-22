@@ -55,7 +55,7 @@
         </style>
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {
-                window.parent.NBDESIGNERPRODUCT.nbdesigner_ready();
+                window.parent.NBDESIGNERPRODUCT.nbdesigner_ready();                           
             });           
         </script>
     </head>
@@ -77,8 +77,8 @@
         <meta content="Netbaseteam" name="author">
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/jquery-ui.min.css'; ?>" rel="stylesheet" media="all" />
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/font-awesome.min.css'; ?>" rel="stylesheet" media="all" />
-        <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
-        <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300italic,300' rel='stylesheet' type='text/css'>
+<!--        <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>-->
+        <link href='https://fonts.googleapis.com/css?family=Audiowide|Roboto:400,100,300italic,300' rel='stylesheet' type='text/css'>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/bootstrap.min.css'; ?>" rel="stylesheet" media="all"/>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/bundle.css'; ?>" rel="stylesheet" media="all"/>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/owl.carousel.css'; ?>" rel="stylesheet" media="all"/>
@@ -112,7 +112,9 @@
             $ui_mode = 1;/*1: iframe popup, 2: div popup, 3: studio*/   
             $product = wc_get_product($product_id);
             $vid = 0;
-            if( $product->is_type( 'variable' ) ) { 
+            if($task == 'edit_design'){
+                $vid = $variation_id;
+            }else if( $product->is_type( 'variable' ) ) { 
                 $available_variations = $product->get_available_variations();   
                 if(is_woo_v3()){
                     $default_attributes = $product->get_default_attributes();  
@@ -144,7 +146,7 @@
                 $origin_folder = '';
             }
         ?>
-        <script type="text/javascript">
+        <script type="text/javascript">           
             var NBDESIGNCONFIG = {
                 lang_code   :   "<?php echo str_replace('-', '_', get_bloginfo('language')); ?>",
                 lang_rtl    :   "<?php if(is_rtl()){ echo 'rtl'; } else {  echo 'ltr';  } ?>",
@@ -197,7 +199,7 @@
                 instagram_redirect_uri    : "<?php echo NBDESIGNER_PLUGIN_URL.'includes/auth-instagram.php'; ?>",
                 dropbox_redirect_uri    : "<?php echo NBDESIGNER_PLUGIN_URL.'includes/auth-dropbox.php'; ?>",
                 product_data  :   <?php echo json_encode(nbd_get_product_info($user_id, $product_id, $vid, $task, $reference_product, $template_folder, $order_id, $order_item_folder, $edit_item)); ?>
-            };                  
+            };      
             var _colors = NBDESIGNCONFIG['_palette'].split(','),
             colorPalette = [], row = [];
             for(var i=0; i < _colors.length; ++i) {
@@ -234,7 +236,7 @@
         </script>
     </head>
     <?php if(NBDESIGNER_MODE_DEV): ?>
-    <body ng-controller="DesignerController" ng-cloak ng-style="{'background-image' : 'url(<?php echo NBDESIGNER_PLUGIN_URL ?>assets/images/background/'+backgroundId+'.png)'}">
+    <body ng-controller="DesignerController" >
     <?php else: ?>
     <body ng-controller="DesignerController" >    
     <?php endif; ?>    

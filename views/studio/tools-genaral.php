@@ -1,56 +1,57 @@
 <?php if (!defined('ABSPATH')) exit; // Exit if accessed directly  ?>
+<md-menu md-offset="-20 60">
+    <md-button class="md-icon-button nbd-mag-0" aria-label="Background" ng-click="$mdMenu.open($event)">
+        <md-tooltip md-direction="bottom" ng-class="primaryPalette">Background</md-tooltip>
+        <md-icon md-svg-icon="nbd:paint-bucket"></md-icon>
+    </md-button>   
+    <md-menu-content width="3" flex layout="row">
+        <md-menu-item flex="33" class="nbd-dropdown-menu">
+            <md-button aria-label="Color" ng-click="_showColorDialog('background')">
+                <div layout="row" flex>
+                    <div style="width: 24px; height: 24px; margin: 0 auto; display: inline-block;" ng-style="{'background' : currentTextColor}"></div>
+                    <md-tooltip md-direction="bottom" ng-class="primaryPalette">Color</md-tooltip>
+                </div>
+            </md-button>
+        </md-menu-item>          
+        <md-menu-item flex="33" class="nbd-dropdown-menu">
+            <md-button aria-label="Pattern">
+                <div layout="row" flex>
+                    <md-icon md-menu-align-target md-svg-icon="nbd:pattern" style="margin: 0 auto;"></md-icon>
+                    <md-tooltip md-direction="bottom" ng-class="primaryPalette">Pattern</md-tooltip>
+                </div>
+            </md-button>
+        </md-menu-item>  
+        <md-menu-item flex="33" class="nbd-dropdown-menu">
+            <md-button aria-label="None">
+                <div layout="row" flex>
+                    <md-icon md-menu-align-target md-svg-icon="nbd:forbidden" class="bold" style="margin: 0 auto;"></md-icon>
+                    <md-tooltip md-direction="bottom" ng-class="primaryPalette">None</md-tooltip>
+                </div>
+            </md-button>
+        </md-menu-item>         
+    </md-menu-content>           
+</md-menu>    
+<md-menu md-offset="-20 60">
+    <md-button class="md-icon-button nbd-mag-0" aria-label="Opacity" ng-click="$mdMenu.open($event)">
+        <md-tooltip md-direction="bottom" ng-class="primaryPalette">Opacity</md-tooltip>
+        <md-icon md-svg-icon="nbd:opacity"></md-icon>
+    </md-button>          
+    <md-menu-content width="3" flex layout="row" style="overflow: hidden;">
+        <md-menu-item flex="100" class="nbd-dropdown-menu">
+            <md-slider-container >
+                <span flex="20">Opacity</span>
+                <md-slider flex="60" class="md-primary" aria-label="Opacity" min="0" max="1" step="0.01" flex  ng-model="currentLayerOpacity" id="layer-opacity"></md-slider>
+                <md-input-container flex="20">
+                    <input flex type="number" min="0" max="1" step="0.01" ng-model="currentLayerOpacity" aria-label="X" aria-controls="layer-opacity"> 
+                </md-input-container>        
+            </md-slider-container>
+        </md-menu-item> 
+    </md-menu-content>
+</md-menu> 
 <md-menu-bar class="nbd-menu-bar">
     <md-menu>
-        <button  class="md-icon-button" aria-label="Position"  ng-click="$mdMenu.open()">
-            <md-icon md-svg-icon="nbd:position"></md-icon>
-        </button >   
-        <md-menu-content>
-            <md-menu-item class="md-indent">
-                <md-icon md-svg-icon="nbd:move-left"></md-icon>
-                <md-button aria-label="Move Left" >
-                    Move Left
-                    <span class="md-alt-text">&#8592;</span>
-                </md-button>             
-            </md-menu-item>    
-            <md-menu-item class="md-indent">
-                <md-icon md-svg-icon="nbd:move-right"></md-icon>
-                <md-button aria-label="Move Right" >
-                    Move Right
-                    <span class="md-alt-text">&#8594;</span>
-                </md-button>             
-            </md-menu-item>     
-            <md-menu-item class="md-indent">
-                <md-icon md-svg-icon="nbd:move-up"></md-icon>
-                <md-button aria-label="Move Up" >
-                    Move Up
-                    <span class="md-alt-text">&#8593;</span>
-                </md-button>             
-            </md-menu-item>    
-            <md-menu-item class="md-indent">
-                <md-icon md-svg-icon="nbd:move-down"></md-icon>
-                <md-button aria-label="Move Down" >
-                    Move Down
-                    <span class="md-alt-text">&#8595;</span>
-                </md-button>             
-            </md-menu-item>     
-            <md-menu-item class="md-indent">
-                <md-icon md-svg-icon="nbd:zoom-out-layer"></md-icon>
-                <md-button aria-label="Move Up" >
-                    Zoom out Layer
-                    <span class="md-alt-text">{{ 'S-' | keyboardShortcut }} -</span>
-                </md-button>             
-            </md-menu-item>    
-            <md-menu-item class="md-indent">
-                <md-icon md-svg-icon="nbd:zoom-in-layer"></md-icon>
-                <md-button aria-label="Move Down" >
-                    Zoom in Layer
-                    <span class="md-alt-text">{{ 'S-' | keyboardShortcut }} +</span>
-                </md-button>             
-            </md-menu-item>                
-        </md-menu-content>
-    </md-menu>    
-    <md-menu>
         <button  class="md-icon-button" aria-label="Rotate"  ng-click="$mdMenu.open()">
+            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Rotate</md-tooltip>
             <md-icon md-svg-icon="nbd:rotate"></md-icon>
         </button >   
         <md-menu-content>
@@ -93,6 +94,7 @@
     </md-menu>
     <md-menu>
         <button  class="md-icon-button" aria-label="Arrange"  ng-click="$mdMenu.open()">
+            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Arrange</md-tooltip>
             <md-icon md-svg-icon="nbd:arrange"></md-icon>
         </button >  
         <md-menu-content>
@@ -128,7 +130,8 @@
     </md-menu>
     <md-menu>
         <button  class="md-icon-button" aria-label="Align"  ng-click="$mdMenu.open()">
-            <md-icon md-svg-icon="nbd:align"></md-icon>
+            <md-tooltip md-direction="bottom" ng-class="primaryPalette">Align</md-tooltip>
+            <md-icon md-svg-icon="nbd:align-position"></md-icon>
         </button >  
         <md-menu-content>
             <md-menu-item class="md-indent" ng-click="alignLayer('vertical')">

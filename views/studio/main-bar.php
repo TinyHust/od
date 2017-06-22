@@ -31,11 +31,11 @@
         </md-menu-bar>
     </div>
     <div flex="" class="nbd-tools" layout-align="center center" layout="row">   
-        <md-button class="md-icon-button" aria-label="Undo" ng-click="undo()">
+        <md-button class="md-icon-button" aria-label="Undo" ng-click="undo()" ng-disabled="!isUndoable">
             <md-tooltip md-direction="bottom" ng-class="primaryPalette">Undo</md-tooltip>
             <md-icon md-svg-icon="nbd:undo"></md-icon>
         </md-button>  
-        <md-button class="md-icon-button" aria-label="Redo" ng-click="redo()">
+        <md-button class="md-icon-button" aria-label="Redo" ng-click="redo()" ng-disabled="!isRedoable">
             <md-tooltip md-direction="bottom" ng-class="primaryPalette">Redo</md-tooltip>
             <md-icon md-svg-icon="nbd:redo"></md-icon>
         </md-button>          
@@ -51,10 +51,11 @@
             <md-tooltip md-direction="bottom" ng-class="primaryPalette">Guideline</md-tooltip>
             <md-icon md-svg-icon="nbd:guideline"></md-icon>
         </md-button>          
-        <md-button class="md-icon-button" aria-label="Debug" ng-click="debug()">
-            <md-icon md-svg-icon="nbd:magic"></md-icon>
+        <md-button class="md-icon-button" aria-label="Select All" ng-click="changeSelectMode()">
+            <md-tooltip md-direction="bottom" ng-class="primaryPalette">{{ !selectMode ? 'Select All' : 'Deselect All' }}</md-tooltip>
+            <md-icon md-svg-icon="nbd:{{ !selectMode ? 'select' : 'deselect' }}"></md-icon>
         </md-button>    
-        <md-button class="md-icon-button" aria-label="Debug2" ng-click="debug2()">
+        <md-button class="md-icon-button" aria-label="Debug2" ng-click="debug()">
             <md-icon md-svg-icon="nbd:magic"></md-icon>
         </md-button>         
     </div>   

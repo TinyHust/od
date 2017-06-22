@@ -136,7 +136,8 @@ html {
 
 body {
     background-color: #fff; 
-    background-image: url(../images/pattern.jpg);
+/*    background-image: url(../images/pattern.jpg);*/
+    background-color: #f1f1f1;
     margin: 0;
     font-family: 'Roboto', sans-serif;
     font-weight: 300
@@ -1335,7 +1336,7 @@ img.layer_thumb {
     margin: 0 auto;
     text-align: center;
     top: 0;
-    overflow: hidden
+/*    overflow: hidden*/
 }
 
 .view_container {
@@ -1361,7 +1362,8 @@ img.layer_thumb {
     position: relative;
     overflow: hidden;
     width: 100%;
-    height: 100%
+    height: 100%;
+    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 5px 8px 0 rgba(0,0,0,.14), 0 1px 14px 0 rgba(0,0,0,.12);
 }
 
 .container-image img {
@@ -2978,6 +2980,7 @@ img.pattern_img {
     position: relative;
     overflow: hidden;
     max-height: 240px;
+/*    font-size: 0;*/
 }
 #config-style .config-style-con #toggle-config-style {
     position: absolute;
@@ -3004,7 +3007,7 @@ img.pattern_img {
     color: #394264;
     margin: 0 0 10px 0;
 }
-.bg-style-tem {
+.bg-style-tem, .background-none {
     display: inline-block;
     width: 20px;
     height: 20px;
@@ -3012,6 +3015,22 @@ img.pattern_img {
     margin-left: 5px;
     margin-bottom: 5px;
     cursor: pointer;
+}
+.background-none {
+    position: relative;
+    vertical-align: top;
+}
+.background-none:after {
+    width: 25px;
+    height: 1px;
+    position: absolute;
+    display: block;
+    transform: rotate(45deg);
+    transform-origin: top left;
+    background: red;
+    top: 0;
+    left: 0;
+    content: '';    
 }
 .con-webcam {
     width: 400px;

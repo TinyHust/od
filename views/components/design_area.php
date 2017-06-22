@@ -74,13 +74,12 @@
         <span class="fa fa-angle-right right shadow" aria-hidden="true" ng-show="currentVariant.numberFrame > 4"></span>
         <div class="container-inner-frame">
             <div class="container_item">
-                <a class="box-thumb" data-name="{{orientation.source.orientation_name}}" ng-class="{active: currentVariant.orientationActive == orientation.name}" ng-repeat="orientation in currentVariant.info" ng-click="changeOrientation(orientation)">
+                <a class="box-thumb nbd-tooltip-frame" data-placement="top" data-lang="{{orientation.source.orientation_name}}" ng-class="{active: currentVariant.orientationActive == orientation.name}" ng-repeat="orientation in currentVariant.info" ng-click="changeOrientation(orientation)">
                     <img width="40" height="40" ng-show="orientation.source['bg_type'] == 'image'" ng-src="{{orientation.source['img_src']}}"  spinner-on-load/>
                     <i ng-show="orientation.source['bg_type'] == 'color'" 
                        ng-style="{'background': orientation.source['bg_color_value']}" ></i>
                     <i ng-show="orientation.source['bg_type'] == 'tran'" 
                        class="background-transparent" ></i>
-                       {{orientation}}
                 </a>
             </div>
         </div>

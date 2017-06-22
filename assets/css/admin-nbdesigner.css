@@ -71,6 +71,7 @@
     position: relative;
     border: 2px solid #f0c6f6;
     margin-bottom: 10px;
+    box-sizing: content-box;
 }
 .nbdesigner-image-original {
     position: absolute;	
