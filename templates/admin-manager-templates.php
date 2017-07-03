@@ -7,7 +7,7 @@
         if(isset($_GET['task']) && $_GET['task'] == 'edit_template') $label = __('Edit Template', 'web-to-print-online-designer'); 
     ?>
     <a class="button nbdesign-button nbdesigner-disable" id="triggerDesign" ><img class="nbdesigner-img-loading rotating" src="<?php  echo NBDESIGNER_PLUGIN_URL.'assets/images/loading.png'; ?>"/><?php echo $label; ?></a>    
-    <a class="button" id="nbdesign-new-template" style="display: none;"><?php _e('Add Template', 'web-to-print-online-designer'); ?></a>    
+    <a class="button nbdesign-button" id="nbdesign-new-template" style="display: none;"><?php _e('Add Template', 'web-to-print-online-designer'); ?></a>    
 </p>
 <div style="position: fixed; top: 0; left: 0; z-index: 999999; opacity: 0; width: 100%; height: 100%;" id="container-online-designer">
     <iframe id="onlinedesigner-designer"  

@@ -319,6 +319,10 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
         cursorColor: '#000',
         cursorDuration: 500
     });
+    fabric.Canvas.prototype.set({
+        preserveObjectStacking : true,
+        selectionColor: 'rgba(100, 100, 255, 0.5)'
+    });
     fabric.Canvas.prototype.getAbsoluteCoords = function(object) {
         return {
             left: object.left + this._offset.left,
@@ -527,11 +531,15 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
                 stage.contentWidth = [];
                 stage.contentHeight = [];
                 stage.bleedLeft = [];
+                stage.bleedRight = [];
                 stage.bleedTop = [];
+                stage.bleedBottom = [];
                 stage.safeContentWidth = [];
                 stage.safeContentHeight = [];
                 stage.marginLeft = [];
+                stage.marginRight = [];
                 stage.marginTop = [];                
+                stage.marginBottom = [];                
                 stage._scaleRange = [];
                 stage.zooms = [];
                 if(currentScale < stage.scaleRange[0]) {
@@ -554,12 +562,16 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
                     stage.heightRange.push(stage.height * val);
                     stage.bleedLeft.push(stage._bleedLeft * val);
                     stage.contentWidth.push((stage.width - 2 * stage._bleedLeft) * val);
+                    stage.bleedRight.push((stage.width - stage._bleedLeft) * val);
                     stage.bleedTop.push(stage._bleedTop * val);
                     stage.contentHeight.push((stage.height - 2 * stage._bleedTop) * val);
+                    stage.bleedBottom.push((stage.height - stage._bleedTop) * val);
                     stage.marginLeft.push((stage._marginLeft + stage._bleedLeft) * val);
                     stage.safeContentWidth.push((stage.width - 2 * stage._marginLeft - 2 * stage._bleedLeft) * val);
+                    stage.marginRight.push((stage.width - stage._marginLeft - stage._bleedLeft) * val);
                     stage.marginTop.push((stage._marginTop + stage._bleedTop) * val);
                     stage.safeContentHeight.push((stage.height - 2 * stage._marginTop - 2 * stage._bleedTop) * val);                    
+                    stage.marginBottom.push((stage.height - stage._marginTop - stage._bleedTop) * val);                    
                     stage._scaleRange.push( val / currentScale );
                     if(index != stage.fillScale && index != stage.fitScale) {
                         stage.zooms.push({'index': index, 'value' : $scope._round( val * 100) + '%'});
@@ -837,6 +849,14 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
         $scope.snapType = 'layer'; /* grid, layer, stage bounds  */
         $scope.showGuideline = false;
         $scope.currentElement = 'illustrations';
+        $scope.showWarming = false;
+        /* init configuration */
+        $scope.viewConfig = {
+            showWarningOutOfSafeZone: true, 
+            showWarningLowerResolution: true, 
+            showRuler: true, 
+            zoom: true
+        };
         /* History */
         $scope.isRedoable = false;
         $scope.isUndoable = false;
@@ -850,7 +870,8 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
             nbdPlg.addText();
         };
         $scope.addImage = function(){
-            var url = 'http://dev.cmsmart.net:3000/wp46/wp-content/uploads/nbdesigner/temp/2017/06/15/1497500795d0f88bfb.jpg';
+            //var url = 'http://dev.cmsmart.net:3000/wp46/wp-content/uploads/nbdesigner/temp/2017/06/15/1497500795d0f88bfb.jpg';
+            var url = 'http://dev.cmsmart.net:3000/wp46/wp-content/uploads/nbdesigner/temp/2017/06/26/14984487075112277e.jpeg';
             //var url = 'http://dev.cmsmart.net:3000/wp46/wp-content/uploads/nbdesigner/temp/2017/05/14/1494730938cb93980b.png';
             nbdPlg.addImage(url);
         };
@@ -930,7 +951,7 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
             if(NBDCONFIG['task'] == 'typography'){
                 //Load product information
                 $scope.stages = [
-                    {'id': 0, 'width' : 500, 'height' : 300, '_bleedLeft': 15, '_bleedTop': 15, '_marginLeft': 15, '_marginTop': 15, 'currentScale': 0, 'background' : 'white', 'name' : 'Front'}, 
+                    {'id': 0, 'width' : 500, 'height' : 500, '_bleedLeft': 15, '_bleedTop': 15, '_marginLeft': 15, '_marginTop': 15, 'currentScale': 0, 'background' : 'white', 'name' : 'Front'}, 
                     {'id': 1, 'width' : 800, 'height' : 200, '_bleedLeft': 15, '_bleedTop': 15, '_marginLeft': 15, '_marginTop': 15, 'currentScale': 0, 'background' : 'grey', 'name' : 'Back'}, 
                     {'id': 2, 'width' : 500, 'height' : 500, '_bleedLeft': 15, '_bleedTop': 15, '_marginLeft': 15, '_marginTop': 15, 'currentScale': 0, 'background' : 'black', 'name' : 'Left'}, 
                     {'id': 3, 'width' : 300, 'height' : 800, '_bleedLeft': 15, '_bleedTop': 15, '_marginLeft': 15, '_marginTop': 15, 'currentScale': 0, 'background' : '#607d8b', 'name' : 'Right'} 
@@ -975,10 +996,7 @@ var MATERIALCOLORTEMPLATE = ["Red", "Pink", "Purple", "Deep Purple", "Indigo", "
         };
         $scope.debug = function($val){
             //$scope.openSaveAlert(3000);
-            //nbdPlg.log();
-        };
-        $scope.debug2 = function($val){
-            nbdPlg.loadLayerFromJson();
+            nbdPlg.log();
         };
     }).config(function($mdThemingProvider, $mdIconProvider, $provide){
         $mdIconProvider.iconSet('nbd', NBDCONFIG['svgUrl'] + 'nbd-icons.svg');
@@ -1088,55 +1106,64 @@ var nbdPlg = {
         //_canvas.selection = false;
         
         _canvas.setDimensions({'width' : currentWidth, 'height' : currentHeight});
-        //_canvas.setZoom(currentStage.scaleRange[currentStage.currentScale]);
+        /* Configuration background, overlay and clipTo */
+//        _canvas.clipTo = function(ctx) {
+//            ctx.arc(_canvas.width/2, _canvas.height/2, _canvas.width/2, 0, Math.PI * 2, true);
+//        };
+        _canvas.backgroundColor = "#ddd";
+        /* End configuration */    
         _canvas.calcOffset().renderAll();
-        
         _canvas.on("mouse:down", function(options){
-            self.mouseDownStage();
+            self.mouseDownStage(options);
         });
         _canvas.on("mouse:over", function(options){
-            self.mouseOverStage();
+            self.mouseOverStage(options);
         });
         _canvas.on("mouse:out", function(options){
-            self.mouseOutStage();
+            self.mouseOutStage(options);
         });
         _canvas.on("mouse:move", function(options){
             self.mouseMoveStage(options);
         });        
         _canvas.on("mouse:up", function(options){
-            self.mouseUpStage();
+            self.mouseUpStage(options);
         });
         _canvas.on("path:created", function(options){
-            self.pathCreated();
+            self.pathCreated(options);
         });
         _canvas.on("object:added", function(options){
-            self.objectAdded();
+            self.objectAdded(options);
         });
         _canvas.on("object:selected", function(options){
-            self.objectSelected();
+            self.objectSelected(options);
         });
         _canvas.on("object:scaling", function(options){
-            self.objectScaling();
+            self.objectScaling(options);
         });
         _canvas.on("object:moving", function(options){
-            self.objectMoving();
+            self.objectMoving(options);
         });
         _canvas.on("object:rotating", function(options){
             self.objectRotating();
         });
         _canvas.on("object:modified", function(options){
-            self.objectModified();
+            self.objectModified(options);
         });
         _canvas.on("before:render", function(options){
-            self.beforeRender();
+            self.beforeRender(options);
         });
         _canvas.on("after:render", function(options){
-            self.afterRender();
+            self.afterRender(options);
         });
         _canvas.on("selection:cleared", function(options){
             self.selectionCleared();
         });
-        
+        _canvas.on("text:editing:entered", function(options){
+            self.editingEntered(options);
+        });     
+        _canvas.on("text:selection:changed", function(options){
+            self.selectionChanged(options);
+        });           
         currentStage['canvas'] = _canvas;
     },
     dragState : function( force ){
@@ -1166,23 +1193,47 @@ var nbdPlg = {
         this.dragState(true);
     },
     mouseDownStage : function(options){
-        this.mouseDownState = true
+        this.mouseDownState = true;
+        if(options.target){  
+            var item = options.target;
+            this.removeBoundingRect(item.itemId);
+        }  
     },
     mouseOverStage : function(options){
-        //todo
+        if(options.target && options.target.itemId != this.itemInfo.itemId ){  
+            var item = options.target;
+            var left = item.oCoords.tl.x,
+                top = item.oCoords.tl.y,
+                width = Math.sqrt(Math.pow(item.oCoords.tl.x - item.oCoords.tr.x, 2) + Math.pow(item.oCoords.tl.y - item.oCoords.tr.y, 2 )),
+                height = Math.sqrt(Math.pow(item.oCoords.tl.x - item.oCoords.bl.x, 2) + Math.pow(item.oCoords.tl.y - item.oCoords.bl.y, 2 )),
+                angle = item.angle,
+            position = {
+                width: width,
+                height: height,
+                top: top,
+                left: left,
+                transform : angle
+            };
+            this.showBoundingRect(item.itemId, position);
+        }
     },    
     mouseOutStage : function(options){
-        //todo
+        if(options.target){  
+            var item = options.target;
+            this.removeBoundingRect(item.itemId);
+        }
     },  
     mouseUpStage : function(options){
         this.mouseDownState = false;
         var _canvas = this.stages[this.currentStage]['canvas'],
-            group =  _canvas.getActiveGroup();   
+            group =  _canvas.getActiveGroup(),   
+            item =  _canvas.getActiveObject();   
         if(group){
             var scope = this.getAppScope();
             this.getActiveLayerInfo(true);
             this.hideLayerPositionLabel();
         };
+        if(!item) this.itemInfo = {};
         this.hideLayerPositionLabel();
     },   
     pathCreated : function(options){
@@ -1192,13 +1243,14 @@ var nbdPlg = {
         //todo
     },      
     objectSelected : function(options){
-        var _canvas = this.stages[this.currentStage]['canvas'];
+        var _canvas = this.stages[this.currentStage]['canvas'];       
         if(_canvas.dragState){
             _canvas.discardActiveObject();
             return;
         }
         var scope = this.getAppScope();
         this.getActiveLayerInfo();
+        this.removeBoundingRect(this.itemInfo.itemId);
         scope.isItem = this.isItem;
         scope.isGroup = this.isGroup;
         scope.isActiveLayer = this.isActiveLayer;
@@ -1224,13 +1276,20 @@ var nbdPlg = {
     },     
     objectModified : function(options){
         this.updateLayerPositionLabel();
+        this.updateWarningStatus();
     },   
     beforeRender : function(options){
         //todo
     },     
     afterRender : function(options){
         //todo
-    },     
+    },   
+    editingEntered : function(options){
+        //console.log(options);
+    },
+    selectionChanged : function(options){
+        //console.log(options);
+    },    
     selectionCleared : function(options){
         var scope = this.getAppScope();
         this.isActiveLayer = false;                
@@ -1239,7 +1298,6 @@ var nbdPlg = {
         scope.isGroup = false;
         this.isItem = false;
         this.isGroup = false;
-        console.log(options);
         this.updateApp();
     },   
     getActiveLayerInfo: function( programmatically ){
@@ -1261,6 +1319,7 @@ var nbdPlg = {
                 case 'image': 
                 case 'custom-image': 
                     this.currentActionType = 'image';
+                    this.getLayerGeneralInfo(item);
                     break;
                 case 'rect':     
                 case 'triangle':     
@@ -1271,6 +1330,7 @@ var nbdPlg = {
                     break;    
                 case 'path-group':
                     this.currentActionType = 'illustrator';
+                    this.getLayerGeneralInfo(item);
                     break;
                 default:
                     this.currentActionType = null;
@@ -1301,7 +1361,8 @@ var nbdPlg = {
             'stroke'  :   item.getStroke(),
             'strokeWidth'  :   item.getStrokeWidth(),
             'angle'  :   item.angle,
-            'fill' : item.getFill()
+            'fill' : item.getFill(),
+            'itemId': item.itemId
         };
     },
     getTextLayerInfo: function(item){
@@ -1375,6 +1436,29 @@ var nbdPlg = {
         positionEl = angular.element(document.getElementById('bounding-position-' + stageIndex));
         positionEl.css({'left': -9999 + 'px', 'top': -9999 + 'px'});
     },
+    showBoundingRect: function(id, position){
+        var stageIndex = this.currentStage,
+            _id = 'b-' + stageIndex + '-' + id,
+            boundEl = document.createElement("DIV"),
+            parentEl = document.getElementById("bounding-layers-" + stageIndex);
+        _.each(position, function(val, index){
+            if(index == "transform"){
+                boundEl.style[index] = "rotate("+val+"deg)";
+            }else{
+                boundEl.style[index] = val + 'px';
+            }
+        });
+        boundEl.classList.add("bounding-layer");
+        boundEl.setAttribute("id", _id);
+        parentEl.appendChild(boundEl);
+    },
+    removeBoundingRect: function(id){
+        var stageIndex = this.currentStage,
+            _id = 'b-' + stageIndex + '-' + id,
+            boundEl = document.getElementById(_id),
+            parentEl = document.getElementById("bounding-layers-" + stageIndex);
+        if(boundEl) parentEl.removeChild(boundEl);    
+    },
     intersectLayer: function(){
         // only for test, remove on release
         var stage = this.stages[this.currentStage],
@@ -1440,6 +1524,18 @@ var nbdPlg = {
         hLine.css('top', '-9999px'); hcLine.css('top', '-9999px');       
         vLine.css('left', '-9999px'); vcLine.css('left', '-9999px');       
     },
+    updateWarningStatus : function(){       
+        var _stage = this.stages[this.currentStage],
+            _canvas = _stage.canvas;
+        if(_canvas.dragState){
+            var item = _canvas.getActiveObject(),
+                bound = item.getBoundingRect();
+
+            if(bound.left < _stage.bleedLeft[_stage.currentScale]){
+                console.log(111);
+            }             
+        }    
+    },
     Ungroup: function(){
         this.stages[this.currentStage].canvas.deactivateAll().renderAll();
         this.getActiveLayerInfo( true );
@@ -1456,7 +1552,7 @@ var nbdPlg = {
             left: 10,
             top: 20,
             noScaleCache: false,
-            fontFamily: '"Roboto", sans-serif'
+            fontFamily: "'Roboto', sans-serif"
         });
         this.stages[this.currentStage]['canvas'].add(iText);     
         this.adjustLayerAfterAdded('add');    
@@ -1542,6 +1638,17 @@ var nbdPlg = {
         this.stages[this.currentStage]['canvas'].add(rect);
         this.adjustLayerAfterAdded();
     },    
+    addSvg: function(url){
+        url = 'http://dev.cmsmart.net:3000/wp46/wp-content/uploads/nbdesigner/cliparts/2017/06/24/family-sticker-funny-boy-skating.svg';
+        var _this = this;
+        fabric.loadSVGFromURL(url, function(ob, op) {
+            _this.stages[_this.currentStage]['canvas'].add((new fabric.PathGroup(ob, op)).set({
+                left: 100,
+                top: 100
+            }));
+            _this.adjustLayerAfterAdded('add');    
+        })
+    },
     /* End Image */
     /* Manipulate layer */
     addLayer : function(type, data){},
@@ -1566,9 +1673,9 @@ var nbdPlg = {
                         self.renderStage();
                     },
                     onComplete: function(){
-                        if(index == 0){
+                        //if(index == 0){
                             _canvas.setActiveObject(_canvas.item(index)); 
-                        };
+                        //};
                         self.renderStage();       
                     },
                     easing: fabric.util.ease['easeInQuad']
@@ -2045,7 +2152,9 @@ var nbdPlg = {
             group = _canvas.getActiveGroup();
             boudingRect = item.getBoundingRect(),
             isEditing = item.isEditing;             
-        console.log(stage.redos.length);    
+        //item.setSelectionStyles({fill:  '#ff0000'});    
+        ///this.renderStage();
+        console.log(item);
     },
     itemToJson: function(item){
         var item = item ? item : this.stages[this.currentStage]['canvas'].getActiveObject();

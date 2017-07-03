@@ -7,7 +7,7 @@
         <md-menu-bar style="display: inline-block;">
             <md-menu >
                 <button class="md-icon-button" aria-label="View"  ng-click="$mdMenu.open()">
-                    <span>View</span>
+                    <span>Edit</span>
                 </button >   
                 <md-menu-content width="3">
                     <md-menu-item>
@@ -28,6 +28,33 @@
                     </md-menu-item>                     
                 </md-menu-content>
             </md-menu>
+            <md-menu>
+                <button class="md-icon-button" aria-label="View"  ng-click="$mdMenu.open()">
+                    <span>View</span>
+                </button >  
+                <md-menu-content width="4">
+                    <md-menu-item class="md-indent">
+                        <md-menu>
+                            <md-button ng-click="$mdMenu.open()">Show warning</md-button>
+                            <md-menu-content width="3">
+                                <md-menu-item type="checkbox" ng-model="viewConfig.showWarningOutOfSafeZone" value="true" ng-change="viewConfig.showWarningOutOfSafeZone = false">
+                                    <md-button >Out of safe zone</md-button>
+                                </md-menu-item>    
+                                <md-menu-item type="checkbox" ng-model="viewConfig.showWarningOutOfSafeZone" value="true" ng-change="viewConfig.showWarningOutOfSafeZone = false">
+                                    <md-button >Lower resolution</md-button>
+                                </md-menu-item>                                  
+                            </md-menu-content>                          
+                        </md-menu>
+                    </md-menu-item>
+                    <md-menu-item ng-model="viewConfig.showWarningOutOfSafeZone" class="md-indent">
+                        <md-icon md-svg-icon="nbd:check"></md-icon>
+                        <md-button ng-click="debug('undo', $event)">
+                            Show ruler
+                            <span class="md-alt-text">{{ 'M-R' | keyboardShortcut }}</span>
+                        </md-button>                        
+                    </md-menu-item>
+                </md-menu-content>                
+            </md-menu>            
         </md-menu-bar>
     </div>
     <div flex="" class="nbd-tools" layout-align="center center" layout="row">   

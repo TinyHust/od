@@ -219,7 +219,7 @@ md-icon.bold {
 .stage-content {
     position: relative;
 }
-.stage-background, .stage-grid, .design-zone, .stage-overlay, .stage-guideline, .stage-snaplines {
+.stage-background, .stage-grid, .design-zone, .stage-overlay, .stage-guideline, .stage-snaplines, .bounding-layers {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -243,7 +243,33 @@ md-icon.bold {
     padding: 0 15px;
     pointer-events: none;
 }
-.stage-grid, .stage-overlay, .stage-guideline, .stage-snaplines {
+.bounding-layer {
+    position: absolute;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: dashed;
+    border-color: #ddd;
+    box-shadow: 0 0 3px rgba(255,255,255,0.5);
+    transform-origin: left top;
+    box-sizing: border-box;
+}
+.nbd-warning {
+    right: 15px;
+    top: 5px;
+    position: absolute;    
+    font-size: 12px;
+}
+.nbd-warning p {
+    display: inline-block;
+    margin: 0;
+}
+.nbd-warning md-icon{
+    color: #fe8301;
+    display: inline-block;
+    vertical-align: top;    
+    margin-right: 5px;
+}
+.stage-grid, .stage-overlay, .stage-guideline, .stage-snaplines, .bounding-layers {
     pointer-events: none;
 }
 .stages-inner {

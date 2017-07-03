@@ -5,10 +5,11 @@
 <!--    <span id="show_grid" ng-hide="modeMobile" class="fa fa-th shadow hover-shadow" ng-click="showGrid()"></span>-->    
 <!--    <span id="mobile" ng-show="modeMobile" class="fa fa-eye shadow hover-shadow"></span>-->
     <span id="debug" ng-show="state == 'dev'" class="fa fa-magic shadow hover-shadow" ng-click="debug()"></span>
-    <span id="show_grid" ng-hide="modeMobile" class="fa fa-search shadow hover-shadow nbd-tooltip-i18n" data-lang="PREVIEW" data-placement="left"  data-toggle="modal" data-target="#dg-preview" ng-click="preview()"></span>    
+    <!-- <span id="show_grid" ng-hide="modeMobile" class="fa fa-search shadow hover-shadow nbd-tooltip-i18n" data-lang="PREVIEW" data-placement="left"  data-toggle="modal" data-target="#dg-preview" ng-click="preview()"></span> -->   
     <span class="fa fa-plus shadow hover-shadow nbd-tooltip-i18n" aria-hidden="true" data-lang="ZOOM_IN" data-placement="left"  ng-click="zoomIn()"></span>
-    <span class="fa fa-minus shadow hover-shadow nbd-tooltip-i18n" aria-hidden="true" data-lang="ZOOM_OUT" data-placement="left"  ng-click="zoomOut()"></span>	
+    <span class="fa fa-minus shadow hover-shadow nbd-tooltip-i18n" aria-hidden="true" data-lang="ZOOM_OUT" data-placement="left"  ng-click="zoomOut()"></span>	   
     <span id="expand_feature" class="fa fa-id-card shadow hover-shadow nbd-tooltip-i18n" data-lang="TEMPLATE" data-placement="left"  data-toggle="modal" data-target="#dg-expand-feature" ng-click="loadAdminListDesign()"></span>
+    <span class="fa fa-cube shadow hover-shadow nbd-tooltip-i18n" data-lang="PRODUCTS" data-placement="left"  data-toggle="modal" data-target="#dg-load-product" ng-click="loadListProduct()"></span>
     <span class="fa fa-paint-brush shadow hover-shadow nbd-tooltip-i18n" aria-hidden="true" data-lang="DISABLE_DRAW_MODE" data-placement="left" ng-click="disableDrawMode()" ng-show="canvas.isDrawingMode" ng-class="canvas.isDrawingMode ? 'disabledraw' : ''"></span>  
     <span class="fa fa-object-group shadow hover-shadow deactive-group nbd-tooltip-i18n" data-lang="DESELECT_GROUP" data-placement="left" aria-hidden="true"  ng-click="deactiveGroup()" ng-show="showAlignToolbar"></span>
 </div>

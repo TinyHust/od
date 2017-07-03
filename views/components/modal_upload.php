@@ -83,7 +83,7 @@
                             <img id="loading_fb_upload" class="hidden" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/images/ajax-loader.gif'; ?>" />
                         </div>
                     </div>
-                    <div id="nbdesigner_instagram" class="tab-pane">
+                    <div id="nbdesigner_instagram" class="tab-pane" ng-show="settings['nbdesigner_enable_instagram_photo'] == 'yes'">
                         <?php 
                             $insID = nbdesigner_get_option('nbdesigner_instagram_app_id');
                             if($insID == ''): ?>

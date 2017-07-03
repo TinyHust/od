@@ -221,7 +221,7 @@ button {
 .ps-container .ps-scrollbar-y {
     width: 6px!important;
     right: 0!important;
-    max-height: 100px;
+/*    max-height: 100px;*/
     background-color: #394264
 }
 
@@ -734,7 +734,7 @@ input.form-control:focus {
     border: 1px solid #394264;
     border-radius: 8px;
     top: 9px;
-    font-family: Audiowide, sans-serif;
+    font-family: Roboto, sans-serif;
     opacity: 0;
     visibility: hidden;
     -webkit-transition: all .4s;
@@ -781,7 +781,7 @@ input.form-control:focus {
 #info .info_after {
     position: absolute;
     display: block;
-    font-family: 'Audiowide', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 14px;
     top: -25px;
     left: 0;
@@ -1237,7 +1237,28 @@ img.layer_thumb {
     background: #fff;
     cursor: pointer
 }
-
+#info.ui-mode-2 {
+    border-radius: 22px;
+    width: initial;
+    padding: 0 15px;
+    line-height: 38px;
+    border: 2px solid #394264;
+    font-weight: bold;
+    box-sizing: content-box;
+}
+#info.ui-mode-2 p {
+    font-weight: bold;
+    margin: 0;    
+    display: inline-block;
+    color: #394264;
+    text-transform: uppercase;
+}
+#info.ui-mode-2 p span {
+    position: initial;
+    visibility: visible;
+    background: transparent;    
+    opacity: 1;    
+}
 .container_info {
     position: relative
 }
@@ -1440,8 +1461,8 @@ img.layer_thumb {
     display: inline-block;
     width: 40px;
     height: 40px;
-/*    border: 1px solid #ddd;
-    border-radius: 4px;*/
+    border: 1px solid #ddd;
+    /*border-radius: 4px;*/
     margin: 0 10px 0 0;
     z-index: 4;
     cursor: pointer;
@@ -1733,7 +1754,7 @@ img.layer_thumb {
     margin: 0;
     padding: 15px 10px;
     font-size: 15px;
-    font-family: 'Audiowide', sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin-bottom: 15px;
     border-bottom: 1px solid #ddd;
     color: #394264
@@ -1752,7 +1773,7 @@ img.layer_thumb {
 
 #helpdesk .inner-help ul li {
     display: inline-block;
-/*    font-family: 'Audiowide', sans-serif;*/
+/*    font-family: 'Roboto', sans-serif;*/
     margin: 0;
     padding: 0;
     border-radius: 0;
@@ -1766,7 +1787,7 @@ img.layer_thumb {
     padding: 5px;
     cursor: pointer;
     text-transform: uppercase;
-/*    font-family: 'Audiowide', sans-serif;*/
+/*    font-family: 'Roboto', sans-serif;*/
     font-size: 11px;
     text-align: center;
     width: 100%
@@ -2145,7 +2166,7 @@ img.layer_thumb {
     margin-top: 10px;
     margin-left: 50px;
     font-weight: 700;
-    font-family: 'Audiowide', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 20px;
     line-height: 30px
 }
@@ -2557,16 +2578,17 @@ img.pattern_img {
     background: #fff;
     border-radius: 3px;
     padding: 5px 10px;
-    font-size: 10px;
+    font-size: 12px;
     color: #394264;
     box-shadow: 0 6px 13px 0 rgba(0, 0, 0, .23);
     line-height: 15px;
-    font-family: 'Audiowide', sans-serif;
+    font-family: 'Roboto', sans-serif;
     cursor: pointer;
     -webkit-animation: first_message 1.5s infinite ease-in-out;
     -moz-animation: first_message 1.5s infinite ease-in-out;
     -o-animation: first_message 1.5s infinite ease-in-out;
     animation: first_message 1.5s infinite ease-in-out;
+    font-weight: bold;
     z-index: 99
 }
 .translate-switch {
@@ -2579,7 +2601,7 @@ img.pattern_img {
     -o-transition: all 0.3s; 
     transition: all 0.3s; 
     z-index: 100;
-    font-family: 'Audiowide', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 10px;
     color: #394264;
     visibility: hidden;
@@ -2630,7 +2652,7 @@ img.pattern_img {
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
     content: '';
-    box-shadow: 0 6px 13px 0 rgba(0, 0, 0, .23);
+/*    box-shadow: 0 6px 13px 0 rgba(0, 0, 0, .23);*/
 }
 @-webkit-keyframes first_message {
     0% {
@@ -2666,7 +2688,7 @@ img.pattern_img {
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
     content: '';
-    box-shadow: 0 6px 13px 0 rgba(0, 0, 0, .23)
+/*    box-shadow: 0 6px 13px 0 rgba(0, 0, 0, .23)*/
 }
 
 .first_visitor {
@@ -2724,8 +2746,9 @@ img.pattern_img {
 }
 
 #container_layer h3 {
-    font-family: 'Audiowide', sans-serif;
-    font-size: 13px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
     padding-left: 5px;
     margin-top: 13px;
     border-bottom: 1px solid #ddd;
@@ -2998,7 +3021,7 @@ img.pattern_img {
     opacity: 0.5;
 }
 #config-style h3 {
-    font-family: 'Audiowide', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 13px;
     border-bottom: 1px solid #ddd;
     padding-bottom: 15px;
@@ -3070,7 +3093,7 @@ img.pattern_img {
     height: 30px;
     background: transparent;
     z-index: 6;
-    position: absolute;
+    position: fixed;
     text-align: center;
     top: 5px;
     font-size: 0;
@@ -3219,7 +3242,7 @@ img.pattern_img {
     background-position: 0 0, 10px 10px;
     -webkit-background-size: 20px 20px;
     background-size: 20px 20px;    
-    border: 1px solid #394264;
+/*    border: 1px solid #394264;*/
 }
 .nbd-cat.dropdown-menu>li>a {
     position: relative;
@@ -3235,4 +3258,17 @@ img.pattern_img {
     text-decoration: underline;
     margin-left: 15px;
     vertical-align: top;    
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+.side-name {
+    font-weight: bold;
+    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 5px 8px 0 rgba(0,0,0,.14), 0 1px 14px 0 rgba(0,0,0,.12);
+    border: 1px solid #394264;
+    color: #394264;
+    position: fixed;
+    top: 10px;
+    left: 10px;    
+    padding: 5px 10px;
 }

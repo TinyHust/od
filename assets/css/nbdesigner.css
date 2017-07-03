@@ -340,8 +340,7 @@
     opacity: 0.3;
 }
 .nbdesigner-pagination-con .tablenav-pages span.pagination-links > a,
-.nbdesigner-pagination-con .tablenav-pages span.pagination-links > span ,
-#nbdesign-new-template{
+.nbdesigner-pagination-con .tablenav-pages span.pagination-links > span {
     width: 30px;
     height: 30px;
     display: inline-block;

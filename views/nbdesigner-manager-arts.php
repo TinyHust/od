@@ -17,8 +17,8 @@
 						<tr valign="top">
 							<th scope="row" class="titledesc"><?php echo __("File upload", 'web-to-print-online-designer'); ?> </th>
 							<td class="forminp-text">
-								<input type="file" name="svg" value="" accept=".svg"/><br />
-								<div style="font-size: 11px; font-style: italic;"><?php _e('Allow extensions: svg', 'web-to-print-online-designer'); ?></div>
+								<input type="file" name="svg" value="" accept=".svg,image/*"/><br />
+								<div style="font-size: 11px; font-style: italic;"><?php _e('Allow extensions: svg, png, jpg, jpeg', 'web-to-print-online-designer'); ?></div>
 							</td>
 						</tr>				
 					</table>

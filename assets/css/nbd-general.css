@@ -32,3 +32,15 @@ h1.nbd-title {
     padding: 16px;
     border: 1px solid #ddd;    
 }
+.nbd-user-settings label {
+    display: inline-block;
+    width: 200px;
+    margin-right: 6px;
+    padding-top: 4px;
+    padding-right: 10px;
+    color: #23282d;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    vertical-align: top;
+}

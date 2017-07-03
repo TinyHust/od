@@ -9,9 +9,14 @@
         </div> 
         <div class="guideline-notation md-whiteframe-2dp" ng-show="showGuideline">
             <p><span class="notation-guiline" style="border-top-color: red;"></span> Bleed<br /></p>
-            <p><span class="notation-guiline" style="border-top-color: blue; border-top-style: dashed;"></span> Trim Line<br /></p>
-            <p><span class="notation-guiline" style="border-top-color: green;"></span> Safe Zone</p>
-        </div>        
+            <p><span class="notation-guiline" style="border-top-color: blue;"></span> Trim Line<br /></p>
+            <p><span class="notation-guiline" style="border-top-color: green; border-top-style: dashed;"></span> Safe Zone</p>
+        </div> 
+        <div class="nbd-warning" ng-show="showWarming">
+            <md-icon md-svg-icon="nbd:warning"></md-icon>
+            <p>Careful - there's something to check before you go to print</p>
+            <p>Keep layer inside the safety line<br />to make sure it doesn't get cut off.</p>
+        </div>
         <div class="stage" ng-repeat="stage in stages" ng-repeat="stage in stages" on-finish-render-canvas="stageRepeatFinished" 
              ng-class="{'hidden':$index > 0}" id="stage-container-{{stage.id}}">
             <div class="stage-inner">
@@ -36,6 +41,11 @@
                             <rect width="100%" height="100%" fill="url(#grid100)" />
                         </svg>                        
                     </div>
+                    <div class="bounding-layers">
+                        <div style="position: relative; width: 100%; height: 100%;" class="bounding-layers-inner" id="bounding-layers-{{stage.id}}">
+                            
+                        </div>
+                    </div>
                     <div ng-show="snapMode" class="stage-snaplines">
                         <div style="position: relative; width: 100%; height: 100%;">
                             <div id="horizontal-line-{{stage.id}}" class="snapline horizontal"></div>
@@ -56,12 +66,12 @@
                     <div class="stage-guideline" ng-show="showGuideline">
                         <div style="position: relative; width: 100%; height: 100%;">
                             <div class="guideline" style="width: 100%; height: 100%; border-color: red;"></div>
-                            <div class="guideline" style="border-color: blue; border-style: dashed;" ng-style="{'width': stage.contentWidth[stage.currentScale] + 'px', 
+                            <div class="guideline" style="border-color: blue;" ng-style="{'width': stage.contentWidth[stage.currentScale] + 'px', 
                                 'height': stage.contentHeight[stage.currentScale] + 'px',
                                 'left': stage.bleedLeft[stage.currentScale] + 'px',    
                                 'top': stage.bleedTop[stage.currentScale] + 'px'}">
                             </div>
-                            <div class="guideline" style="border-color: green;" ng-style="{'width': stage.safeContentWidth[stage.currentScale] + 'px', 
+                            <div class="guideline" style="border-color: green; border-style: dashed;" ng-style="{'width': stage.safeContentWidth[stage.currentScale] + 'px', 
                                 'height': stage.safeContentHeight[stage.currentScale] + 'px',
                                 'left': stage.marginLeft[stage.currentScale] + 'px',    
                                 'top': stage.marginTop[stage.currentScale] + 'px'}">

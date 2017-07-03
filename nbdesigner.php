@@ -140,6 +140,9 @@ if (!defined('NBDESIGNER_PAGE_CREATE_TEMPLATE')) {
 if (!defined('NBDESIGNER_PAGE_STUDIO')) {   
     define('NBDESIGNER_PAGE_STUDIO', 'designer-studio');
 }
+if (!defined('NBDESIGNER_PAGE_CREATE_YOUR_OWN')) {   
+    define('NBDESIGNER_PAGE_CREATE_YOUR_OWN', 'create-your-own');
+}
 
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-util.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-settings.php');
@@ -147,8 +150,11 @@ require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-debug.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class-helper.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/table/class.product.templates.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.nbdesigner.php');
+require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.my.design.php');
 require_once(NBDESIGNER_PLUGIN_DIR . 'includes/class.studio.php');
 
+
+register_activation_hook( __FILE__, array( 'My_Design_Endpoint', 'install' ) );
 register_activation_hook( __FILE__, array( 'Nbdesigner_Plugin', 'plugin_activation' ) );
 register_deactivation_hook( __FILE__, array( 'Nbdesigner_Plugin', 'plugin_deactivation' ) );
 $prefix = is_network_admin() ? 'network_admin_' : '';       

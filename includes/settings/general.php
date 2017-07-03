@@ -6,6 +6,17 @@ if( !class_exists('Nbdesigner_Settings_General') ) {
             return apply_filters('nbdesigner_general_settings', array(
                 'general-settings' => array(      
                     array(
+                        'title' => __('Show design tool', 'web-to-print-online-designer'),
+                        'id' => 'nbdesigner_page_design_tool',
+                        'default' => '1',
+                        'description' => __( 'Show design tool in product detail page or open new page', 'web-to-print-online-designer'),
+                        'type' => 'radio',
+                        'options' => array(
+                            '1' => __('In product detail page', 'web-to-print-online-designer'),
+                            '2' => __('Open new page', 'web-to-print-online-designer')
+                        )
+                    ),                      
+                    array(
                         'title' => __('Position of button design', 'web-to-print-online-designer'),
                         'id' => 'nbdesigner_position_button_product_detail',
                         'default' => '1',
@@ -103,7 +114,7 @@ if( !class_exists('Nbdesigner_Settings_General') ) {
                         'type' 		=> 'radio',
                         'options'   => array(
                             'cm' => __('cm', 'web-to-print-online-designer'),
-                            'in' => __('inch', 'web-to-print-online-designer'),
+                            'in' => __('in', 'web-to-print-online-designer'),
                             'mm' => __('mm', 'web-to-print-online-designer')
                         )                        
                     ),         
@@ -128,7 +139,18 @@ if( !class_exists('Nbdesigner_Settings_General') ) {
                             'yes' => __('Yes', 'web-to-print-online-designer'),
                             'no' => __('No', 'web-to-print-online-designer'),
                         )
-                    )                    
+                    ),
+                    array(
+                        'title' => __('Allow customer re-design after order', 'web-to-print-online-designer'),
+                        'description' => __('After order, customer can edit they design before it is approved or rejected.', 'web-to-print-online-designer'),
+                        'id' => 'allow_customer_redesign_after_order',
+                        'default' => 'yes',
+                        'type' => 'radio',
+                        'options' => array(
+                            'yes' => __('Yes', 'web-to-print-online-designer'),
+                            'no' => __('No', 'web-to-print-online-designer'),
+                        )
+                    )                        
                 ),
                 'admin-notifications' => array(
                     array(

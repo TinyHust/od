@@ -17,9 +17,9 @@
                 <img alt="image uploaded" ng-src="{{layer.src}}" ng-hide="layer.type === 'text'" width="20" height="20" class="layer_thumb"/>
                 <span>{{layer.name}}</span>
                 <span class="pull-right">
-                    <a style="margin-right: 10px;" class="nbdesigner_visible_layer" href="javascript:void(0)" ng-click="toggleVisibleLayer(layer)"><i class="fa" aria-hidden="true" ng-class="layer.class === 'lock' ? 'fa-eye-slash' : 'fa-eye'"></i></a>
-                    <a style="margin-right: 10px;" class="nbdesigner_lock_layer" href="javascript:void(0)" ng-click="toggleLockLayer(layer)"><i class="fa" aria-hidden="true" ng-class="layer.class === 'lock' ? 'fa-lock' : 'fa-unlock-alt'"></i></a>
-                    <a ng-click="deleteLayer(layer)" href="javascript:void(0)">
+                    <a style="margin-right: 10px;" class="nbdesigner_visible_layer" href="javascript:void(0)" ng-click="toggleVisibleLayer(layer)" title="Toggle visible"><i class="fa" aria-hidden="true" ng-class="layer.class === 'lock' ? 'fa-eye-slash' : 'fa-eye'"></i></a>
+                    <a style="margin-right: 10px;" class="nbdesigner_lock_layer" href="javascript:void(0)" ng-click="toggleLockLayer(layer)" title="Toggle lock"><i class="fa" aria-hidden="true" ng-class="layer.class === 'lock' ? 'fa-lock' : 'fa-unlock-alt'"></i></a>
+                    <a ng-click="deleteLayer(layer)" href="javascript:void(0)" title="Delete">
                         <i class="fa fa-trash-o delete"></i>
                     </a>       
                 </span>

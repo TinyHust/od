@@ -261,7 +261,9 @@ function nbdesigner_get_default_setting($key = false){
         'nbdesigner_instagram_app_id' => '',
         'nbdesigner_dropbox_app_id' => '',
         'nbdesigner_printful_key' => '',
-        'nbdesigner_mindpi_upload' => 0
+        'nbdesigner_mindpi_upload' => 0,
+        'allow_customer_redesign_after_order' => 'yes',
+        'nbdesigner_page_design_tool' => 1
     ), $frontend));
     if(!$key) return $nbd_setting;
     return $nbd_setting[$key];
@@ -358,7 +360,10 @@ function getUrlPageNBD($page){
             break; 
         case 'studio':
             $post_name = NBDESIGNER_PAGE_STUDIO; 
-            break;             
+            break;       
+        case 'create':
+            $post_name = NBDESIGNER_PAGE_CREATE_YOUR_OWN; 
+            break;           
     }
     $post = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_name='".$post_name."'"); 
     if($post) return get_page_link($post);
@@ -431,6 +436,11 @@ if ( ! function_exists( 'is_nbd_studio' ) ) {
         return is_page( nbd_get_page_id( 'studio' ) );
     }    
 }
+if ( ! function_exists( 'is_nbd_design_page' ) ) {
+    function is_nbd_design_page(){
+        return is_page( nbd_get_page_id( 'create_your_own' ) );
+    }    
+}
 if( !function_exists('nbd_get_page_id')){
     function nbd_get_page_id($page){
         $page = apply_filters( 'nbdesigner_' . $page . '_page_id', get_option('nbdesigner_' . $page . '_page_id' ) );
@@ -468,4 +478,97 @@ function nbd_get_dpi($filename){
         $resolutions = array('x' => hexdec($x), 'y' => hexdec($y));
     }
     return array($resolutions);
+}
+/**
+ * Locate template.
+ *
+ * Locate the called template.
+ * Search Order:
+ * 1. /themes/theme/web-to-print-online-designer/$template_name
+ * 2. /themes/theme/$template_name
+ * 3. /plugins/web-to-print-online-designer/templates/$template_name.
+ *
+ * @since 1.3.1
+ *
+ * @param 	string 	$template_name			Template to load.
+ * @param 	string 	$string $template_path	        Path to templates.
+ * @param 	string	$default_path			Default path to template files.
+ * @return 	string 					Path to the template file.
+ */    
+function nbdesigner_locate_template($template_name, $template_path = '', $default_path = '') {
+    // Set variable to search in web-to-print-online-designer folder of theme.
+    if (!$template_path) :
+        $template_path = 'web-to-print-online-designer/';
+    endif;
+    // Set default plugin templates path.
+    if (!$default_path) :
+        $default_path = NBDESIGNER_PLUGIN_DIR . 'templates/'; // Path to the template folder
+    endif;
+    // Search template file in theme folder.
+    $template = locate_template(array(
+        $template_path . $template_name,
+        $template_name
+    ));
+    // Get plugins template file.
+    if (!$template) :
+        $template = $default_path . $template_name;
+    endif;
+    return apply_filters('nbdesigner_locate_template', $template, $template_name, $template_path, $default_path);
+}
+/**
+ * Get template.
+ *
+ * Search for the template and include the file.
+ *
+ * @since 1.3.1
+ *
+ * @see wcpt_locate_template()
+ *
+ * @param string 	$template_name			Template to load.
+ * @param array 	$args				Args passed for the template file.
+ * @param string 	$string $template_path	        Path to templates.
+ * @param string	$default_path			Default path to template files.
+ */
+function nbdesigner_get_template($template_name, $args = array(), $tempate_path = '', $default_path = '') {
+    if (is_array($args) && isset($args)) :
+        extract($args);
+    endif;
+    $template_file = nbdesigner_locate_template($template_name, $tempate_path, $default_path);
+    if (!file_exists($template_file)) :
+        _doing_it_wrong(__FUNCTION__, sprintf('<code>%s</code> does not exist.', $template_file), '1.3.1');
+        return;
+    endif;
+    include $template_file;
+}
+function nbd_get_language($code){
+    $data = array();
+    $data['mes'] = 'success';    
+    $path = NBDESIGNER_PLUGIN_DIR . 'data/language.json';
+    $path_data = NBDESIGNER_DATA_DIR . '/data/language.json';
+    if(file_exists($path_data)) $path = $path_data;
+    $list = json_decode(file_get_contents($path)); 
+    $path_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/'.$code.'.json';
+    $path_data_lang = NBDESIGNER_DATA_DIR . '/data/language/'.$code.'.json';
+    if(file_exists($path_data_lang)) $path_lang = $path_data_lang;
+    $path_original_lang = NBDESIGNER_PLUGIN_DIR . 'data/language/en_US.json';
+    if(!file_exists($path_lang)) $path_lang = $path_original_lang;
+    $lang_original = json_decode(file_get_contents($path_original_lang)); 
+    $lang = json_decode(file_get_contents($path_lang));
+    if(is_array($lang)){
+        $data_langs = (array)$lang[0];
+        if(is_array($lang_original)){
+            $data_langs_origin = (array)$lang_original[0];
+            $data_langs = array_merge($data_langs_origin, $data_langs);
+        }
+        $data['langs'] = $data_langs;
+        $data['code'] = $code;
+    }else{
+        $data['mes'] = 'error';
+    }
+    if(is_array($list)){
+        $data['cat'] = $list;
+    }else{
+        $data['mes'] = 'error';
+    }    
+    return $data;
 }

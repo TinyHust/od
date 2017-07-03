@@ -16,7 +16,7 @@
                     <button ng-click="importDesign()" class="btn btn-primary shadow nbdesigner_upload btn-dialog">{{(langs['APPLY']) ? langs['APPLY'] : "Apply"}}</button>
                 </div>
                 <div class="nbdesigner-list-template" id="nbdesigner-list-template">  
-                    <h3>Have {{_.size(adminListTemplate)}} templates</h3>
+                    <h3>Have {{_.size(adminListTemplate)}} {{(_.size(adminListTemplate) > 1) ? 'templates' : 'template'}}</h3>
                     <img ng-repeat="tem in adminListTemplate | limitTo : adminTemplatePageSize" ng-src="{{tem['src']}}" class="nbdesigner-template shadow hover-shadow" ng-click="loadExtraAdminDesign(tem['id'])"/>
                     <div ng-show="_.size(adminListTemplate) > 8 && _.size(adminListTemplate) > adminTemplatePageSize">
                         <button class="btn btn-primary shadow nbdesigner_upload btn-dialog" ng-click="adminTemplatePageSize = adminTemplatePageSize + 8">{{(langs['MORE']) ? langs['MORE'] : "More"}}</button>

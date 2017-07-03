@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <?php
     $hide_on_mobile = nbdesigner_get_option('nbdesigner_disable_on_smartphones');
-    if(wp_is_mobile() && $hide_on_mobile == 'yes'):                           
+    if(wp_is_mobile() && $hide_on_mobile == 'yes'):      
 ?>
-<html lang="<?php echo str_replace('-', '_', get_bloginfo('language')); ?>" ng-app="app">
+<html lang="<?php echo str_replace('-', '_', get_bloginfo('language')); ?>">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -53,11 +53,13 @@
                 text-decoration: none;
             }
         </style>
+        <?php if(isset($_GET['task']) &&  $_GET['task'] != 'design'): ?>
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {
                 window.parent.NBDESIGNERPRODUCT.nbdesigner_ready();                           
             });           
         </script>
+        <?php endif; ?>
     </head>
     <body>
         <p><img src="<?php echo NBDESIGNER_PLUGIN_URL . 'assets/images/mobile.png'; ?>" /></p>
@@ -66,7 +68,7 @@
     </body>
 </html>
 <?php else: ?>
-<html lang="<?php echo str_replace('-', '_', get_bloginfo('language')); ?>" ng-app="app">
+<html lang="<?php echo str_replace('-', '_', get_bloginfo('language')); ?>">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -77,11 +79,10 @@
         <meta content="Netbaseteam" name="author">
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/jquery-ui.min.css'; ?>" rel="stylesheet" media="all" />
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/font-awesome.min.css'; ?>" rel="stylesheet" media="all" />
-<!--        <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>-->
-        <link href='https://fonts.googleapis.com/css?family=Audiowide|Roboto:400,100,300italic,300' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300italic,300' rel='stylesheet' type='text/css'>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/bootstrap.min.css'; ?>" rel="stylesheet" media="all"/>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/bundle.css'; ?>" rel="stylesheet" media="all"/>
-        <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/owl.carousel.css'; ?>" rel="stylesheet" media="all"/>
+        <!-- <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/owl.carousel.css'; ?>" rel="stylesheet" media="all"/> -->
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/tooltipster.bundle.min.css'; ?>" rel="stylesheet" media="all"/>
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/style.min.css'; ?>" rel="stylesheet" media="all">
         <link type="text/css" href="<?php echo NBDESIGNER_PLUGIN_URL .'assets/css/custom.css'; ?>" rel="stylesheet" media="all">
@@ -109,10 +110,10 @@
             $template_priority = (isset($_GET['priority']) &&  $_GET['priority'] != '') ? $_GET['priority'] : '';
             $edit_item = (isset($_GET['edit_item']) &&  $_GET['edit_item'] != '') ? $_GET['edit_item'] : '';
             $user_id = (get_current_user_id() > 0) ? get_current_user_id() : session_id();
-            $ui_mode = 1;/*1: iframe popup, 2: div popup, 3: studio*/   
+            $ui_mode = is_nbd_design_page() ? 2 : 1;/*1: iframe popup, 2: div popup, 3: studio*/
             $product = wc_get_product($product_id);
             $vid = 0;
-            if($task == 'edit_design'){
+            if($task == 'edit_design' || $task == 'redesign' || $task == 'design'){
                 $vid = $variation_id;
             }else if( $product->is_type( 'variable' ) ) { 
                 $available_variations = $product->get_available_variations();   
@@ -185,7 +186,7 @@
                 save_status :   <?php if ($task == 'edit_template') echo 1; else echo 0; ?>,
                 first_time_edit_temp    :   0,
                 product_id  :   "<?php echo $product_id; ?>",
-                variation_id  :   "<?php echo $product_id; ?>",
+                variation_id  :   "<?php echo $variation_id; ?>",
                 assets_url  :   "<?php echo NBDESIGNER_PLUGIN_URL . 'assets/'; ?>",
                 reference_product  :   "<?php echo $reference_product; ?>",
                 order_item_folder  :   "<?php echo $order_item_folder; ?>",
@@ -198,6 +199,7 @@
                 nbdesigner_dropbox_app_id   :   "<?php echo nbdesigner_get_option('nbdesigner_dropbox_app_id'); ?>",
                 instagram_redirect_uri    : "<?php echo NBDESIGNER_PLUGIN_URL.'includes/auth-instagram.php'; ?>",
                 dropbox_redirect_uri    : "<?php echo NBDESIGNER_PLUGIN_URL.'includes/auth-dropbox.php'; ?>",
+                cart_url    :   "<?php echo esc_url( wc_get_cart_url() ); ?>",
                 product_data  :   <?php echo json_encode(nbd_get_product_info($user_id, $product_id, $vid, $task, $reference_product, $template_folder, $order_id, $order_item_folder, $edit_item)); ?>
             };      
             var _colors = NBDESIGNCONFIG['_palette'].split(','),
@@ -232,14 +234,12 @@
                 nbd_window = window.parent;
             <?php else: ?>      
                 nbd_window = window;
-            <?php endif; ?>     
+            <?php endif; ?>  
+            var NBDESIGNLANG = <?php echo json_encode(nbd_get_language(str_replace('-', '_', get_bloginfo('language'))));  ?>  
         </script>
     </head>
-    <?php if(NBDESIGNER_MODE_DEV): ?>
-    <body ng-controller="DesignerController" >
-    <?php else: ?>
-    <body ng-controller="DesignerController" >    
-    <?php endif; ?>    
+    <body ng-app="app">      
+        <div style="width: 100%; height: 100%;" ng-controller="DesignerController" ng-cloak>
         <div class="od_loading"></div>
         <div class="container-fluid" id="designer-controller">
             <?php
@@ -260,6 +260,7 @@
             include_once('components/modal_config_art.php');
             include_once('components/modal_share.php');		
             include_once('components/modal_expand_feature.php');		
+            include_once('components/modal_products.php');		
             ?>
         </div>
         <div id="od_config" ng-class="modeMobile ? 'mobile' : 'modepc'">	
@@ -273,7 +274,7 @@
             <span class="hide-tool-config fa fa-chevron-down e-shadow e-hover-shadow item-config" ng-hide="modeMobile" ng-style="{'display' : (pop.text == 'block' || pop.art == 'block' || pop.qrcode == 'block' || pop.clipArt == 'block' || pop.draw == 'block') ? 'block' : 'none'}"></span>
         </div>
         <?php
-        if(NBDESIGNER_MODE_DEV){
+        if(!NBDESIGNER_MODE_DEV){
             include_once('components/config_style.php');           
         }
         include_once('components/popover_layer.php');
@@ -316,12 +317,13 @@
         <?php else: ?>
         <script type='text/javascript' src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/libs/lodash.js'; ?>"></script>
         <?php endif; ?>
-        <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/bundle.min.js'; ?>"></script>
+        <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/_bundle.min.js'; ?>"></script>
         <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/fabric.curvedText.js'; ?>"></script>
         <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/fabric.removeColor.js'; ?>"></script>
         <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/_layout.js'; ?>"></script>
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/spectrum/1.3.0/js/spectrum.min.js"></script>    
-        <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/designer.min.js'; ?>"></script>		
+        <script type="text/javascript" src="<?php echo NBDESIGNER_PLUGIN_URL .'assets/js/designer.min.js'; ?>"></script>	
+        </div>
     </body>
 </html>
 <?php endif; ?>
